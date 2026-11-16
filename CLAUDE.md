@@ -82,7 +82,8 @@ One package (about one PR) per session, on its own `claude/…` branch:
 
 - **Shared-file hotspots**: `locales/en.default.json`, `config/settings_schema.json`, `config/settings_data.json`, `layout/theme.liquid`, `snippets/bs-design-tokens.liquid`, `assets/base.css`. Keep edits small, rebase often, and never rework a hotspot wholesale inside a package.
 - Fetch and rebase on `origin/main` before every push. The theme editor commits to `main`.
-- Validate before pushing: `node .claude/skills/shopify-liquid/scripts/validate.js --theme-path . --files "<changed files>"` (run `npm install` in `.claude/skills/shopify-liquid` first). Theme Check also runs in CI.
+- Validate before pushing: `OPT_OUT_INSTRUMENTATION=true node .claude/skills/shopify-liquid/scripts/validate.js --theme-path "$(pwd)" --files "<changed files>"` (run `npm install` in `.claude/skills/shopify-liquid` first; the theme path must be absolute). Theme Check also runs in CI.
+- Shopify skills in `.claude/skills/`: `shopify-liquid` (theme guidance and validator), `shopify-custom-data` (metafields and metaobjects; read it before defining the brand metafields), `shopify-dev` (docs search). Their scripts report usage to Shopify unless `OPT_OUT_INSTRUMENTATION=true` is set, so always set it.
 - Commit messages describe the storefront-visible change, not the file mechanics.
 
 ## Store access
