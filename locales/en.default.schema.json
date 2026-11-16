@@ -1210,6 +1210,11 @@
         "logo_help": {
           "content": "Edit your logo in [theme settings](/editor?context=theme&category=logo)"
         },
+        "wholesale_label": {
+          "label": "Order Wholesale button label",
+          "info": "The button links to the ordering portal set in Theme settings > Wholesale. It is hidden when that link or this label is blank.",
+          "default": "Order Wholesale"
+        },
         "logo_position": {
           "label": "Logo position",
           "options__1": {

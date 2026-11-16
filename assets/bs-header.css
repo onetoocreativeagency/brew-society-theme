@@ -1,0 +1,33 @@
+/* Brew Society header: wordmark fallback, Cart link, Order Wholesale pill. */
+
+/* Shop name set as the wordmark when no logo image is uploaded.
+   The sizes are the logo lockup in Figma (Navigation 4203:5306), not steps of the type scale. */
+.header__wordmark {
+  display: block;
+  font-size: 3.4rem;
+  font-weight: var(--bs-weight-demibold);
+  line-height: var(--bs-leading-display);
+  letter-spacing: var(--bs-tracking-display);
+  color: rgb(var(--color-foreground));
+  white-space: nowrap;
+}
+
+@media screen and (min-width: 990px) {
+  .header__wordmark {
+    font-size: clamp(4.2rem, 3.3vw, 5.7rem);
+  }
+}
+
+.header__cart-link {
+  display: flex;
+  align-items: center;
+}
+
+.button.header__wholesale {
+  min-height: 6.3rem;
+  padding: 0 var(--bs-space-32);
+  font-size: var(--bs-text-large);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-button);
+  white-space: nowrap;
+}

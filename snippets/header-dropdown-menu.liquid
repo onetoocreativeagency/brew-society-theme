@@ -25,6 +25,7 @@
                 >
                   {{- link.title | escape -}}
                 </span>
+                {%- render 'bs-menu-count', link: link -%}
                 {{- 'icon-caret.svg' | inline_asset_content -}}
               </summary>
               <ul
@@ -97,6 +98,7 @@
             >
               {{- link.title | escape -}}
             </span>
+            {%- render 'bs-menu-count', link: link -%}
           </a>
         {%- endif -%}
       </li>
