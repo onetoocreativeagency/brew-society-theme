@@ -1,15 +1,14 @@
 {% comment %}
   Brand typeface: TT Commons Pro, self-hosted from theme assets.
 
-  Two files are licensed and shipped:
-    500 Medium  body copy and headings
-    700 Bold    emphasis
+  Three files are licensed and shipped:
+    500 Medium    body copy and headings
+    600 DemiBold  card titles, wordmark
+    700 Bold      emphasis
 
-  The Figma also uses DemiBold (600) for card titles and the wordmark, and
-  Regular (400) in a few places. Those files are not supplied, so the browser
-  resolves 600 to the Bold file and 400 to the Medium file. To add either
-  weight later, drop the woff2 into assets/ and add a matching @font-face
-  block here.
+  The Figma uses Regular (400) in a few places. That file is not supplied,
+  so the browser resolves 400 to the Medium file. To add it later, drop the
+  woff2 into assets/ and add a matching @font-face block here.
 
   Must be rendered inside a {% style %} or <style> block.
 {% endcomment %}
@@ -19,6 +18,13 @@
   font-weight: 500;
   font-display: swap;
   src: url('{{ 'tt-commons-pro-medium.woff2' | asset_url }}') format('woff2');
+}
+@font-face {
+  font-family: 'TT Commons Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('{{ 'tt-commons-pro-demibold.woff2' | asset_url }}') format('woff2');
 }
 @font-face {
   font-family: 'TT Commons Pro';

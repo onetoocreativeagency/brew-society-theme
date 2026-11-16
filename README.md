@@ -33,4 +33,4 @@ shopify theme check
 
 ## Fonts
 
-The brand typeface **TT Commons Pro** is self-hosted from `assets/` and wired up in `snippets/bs-font-face.liquid`. Two weights ship: Medium 500 and Bold 700. The designs also call for DemiBold 600 and Regular 400; without those files the browser uses Bold and Medium in their place. Dawn's font pickers are removed; the size scales remain editable in Theme settings → Typography.
+The brand typeface **TT Commons Pro** is self-hosted from `assets/` and wired up in `snippets/bs-font-face.liquid`. Three weights ship: Medium 500, DemiBold 600 and Bold 700. The designs use a little Regular 400; without that file the browser uses Medium in its place. Dawn's font pickers are removed; the size scales remain editable in Theme settings → Typography.
