@@ -323,6 +323,17 @@
         }
       }
     },
+    "wholesale": {
+      "name": "Wholesale",
+      "settings": {
+        "paragraph": {
+          "content": "Wholesale orders are placed in the Pepper ordering portal. Every Order Wholesale button on the site links here."
+        },
+        "wholesale_portal_url": {
+          "label": "Ordering portal link"
+        }
+      }
+    },
     "cart": {
       "name": "Cart",
       "settings": {

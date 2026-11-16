@@ -46,7 +46,7 @@ Every brand and every product type is a Shopify **collection**. Two collection t
 - `/collections` (list-collections) — the Brands catalogue: brand cards grouped under product-type headings, Exclusive first. No filter JS.
 - **Buy panel**: Dawn's quick-add modal and `/products/<handle>` are one component. Don't design or build them separately.
 - **Cart**: drawer (theme setting `cart_type` is `drawer`).
-- **Wholesale** is not sold on Shopify. Every wholesale CTA links out to the Pepper ordering portal (ABN required). No customer-account or B2B work.
+- **Wholesale** is not sold on Shopify. Every wholesale CTA links out to the Pepper ordering portal (ABN required). No customer-account or B2B work. The portal link is the theme setting `settings.wholesale_portal_url` (Theme settings → Wholesale). Every Order Wholesale button reads it; never hard-code the URL or add a second setting for it. Hide the button when it is blank.
 
 Collection metafields (namespace `brand`, definitions TBC with the client's spreadsheet): `logo` (file), `category` (list of text), `exclusive` (boolean), `status` (Imported exclusive / Local exclusive / Distributed), `channels` (list), `summary` (multi-line text), `website` (URL), `pepper_url` (URL). Plus a collection `type` metafield distinguishing brand from product-type collections. Make every namespace.key configurable in Theme settings rather than hard-coded.
 
@@ -86,4 +86,4 @@ One package (about one PR) per session, on its own `claude/…` branch:
 
 ## Store access
 
-TBC. No store is connected yet. When one is, record here: the myshopify domain, the preview theme id (`?preview_theme_id=…`), and whether the sandbox can reach it, so sessions can verify rendered pages themselves.
+TBC. No store is connected yet. Until one is, verify with Theme Check, the validate script, and a throwaway static HTML harness (not committed) that loads the theme CSS with representative markup and is screenshotted with the pre-installed Playwright at 1728 and 393 wide. When one is, record here: the myshopify domain, the preview theme id (`?preview_theme_id=…`), and whether the sandbox can reach it, so sessions can verify rendered pages themselves.
