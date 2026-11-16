@@ -4,21 +4,46 @@
   "sections": {
     "footer": {
       "type": "footer",
-      "blocks": {},
-      "block_order": [],
+      "blocks": {
+        "menu": {
+          "type": "menu",
+          "settings": {
+            "menu": "main-menu"
+          }
+        },
+        "wholesale_button": {
+          "type": "wholesale_button",
+          "settings": {
+            "label": "Order Wholesale"
+          }
+        },
+        "social_links": {
+          "type": "social_links",
+          "settings": {
+            "linkedin_url": ""
+          }
+        },
+        "contact": {
+          "type": "contact",
+          "settings": {
+            "address": "37 Naxos Way, Keysborough VIC 3173",
+            "email": "info@brewsociety.com.au",
+            "phone": "1300 372 904"
+          }
+        }
+      },
+      "block_order": [
+        "menu",
+        "wholesale_button",
+        "social_links",
+        "contact"
+      ],
       "settings": {
-        "color_scheme": "scheme-1",
-        "newsletter_enable": true,
-        "newsletter_heading": "Subscribe to our emails",
-        "enable_follow_on_shop": true,
-        "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true,
-        "show_policy": true,
+        "color_scheme": "scheme-2",
+        "policy_menu": "footer",
         "margin_top": 0,
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 192,
+        "padding_bottom": 32
       }
     }
   },

@@ -1006,6 +1006,52 @@
     "footer": {
       "name": "Footer",
       "blocks": {
+        "menu": {
+          "name": "Big menu",
+          "settings": {
+            "menu": {
+              "label": "Menu",
+              "info": "Links to all collections, all products or a collection show a grey count after the label."
+            }
+          }
+        },
+        "wholesale_button": {
+          "name": "Order Wholesale button",
+          "settings": {
+            "paragraph": {
+              "content": "Links to the ordering portal set in [theme settings](/editor?context=theme&category=wholesale). The button is hidden while that link is blank."
+            },
+            "label": {
+              "label": "Button label",
+              "default": "Order Wholesale"
+            }
+          }
+        },
+        "social_links": {
+          "name": "Social links",
+          "settings": {
+            "paragraph": {
+              "content": "Shows a text link for every account set in [theme settings](/editor?context=theme&category=social%20media), plus LinkedIn below."
+            },
+            "linkedin_url": {
+              "label": "LinkedIn link"
+            }
+          }
+        },
+        "contact": {
+          "name": "Contact details",
+          "settings": {
+            "address": {
+              "label": "Address"
+            },
+            "email": {
+              "label": "Email"
+            },
+            "phone": {
+              "label": "Phone"
+            }
+          }
+        },
         "link_list": {
           "name": "Menu",
           "settings": {
@@ -1045,6 +1091,14 @@
         }
       },
       "settings": {
+        "image": {
+          "label": "Image",
+          "info": "Shown above the legal links, for example a product line-up."
+        },
+        "policy_menu": {
+          "label": "Legal links menu",
+          "info": "Small links at the bottom left, for example Legal and Shipping."
+        },
         "newsletter_enable": {
           "label": "Email signup"
         },
