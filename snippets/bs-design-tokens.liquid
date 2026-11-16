@@ -1,0 +1,65 @@
+{% comment %}
+  Brew Society design tokens. Names mirror the Figma variables.
+  Rendered inside the {% style %} block of every layout that loads base.css,
+  because base.css depends on them.
+
+  Type: rem values ride the html base size (10px x body scale); large and up
+  also multiply the merchant heading scale.
+{% endcomment %}
+:root {
+  --bs-text-x-small: 0.9rem;
+  --bs-text-small: 1.2rem;
+  --bs-text-paragraph: 1.6rem;
+  --bs-text-large: calc(2.1rem * var(--font-heading-scale));
+  --bs-text-x-large: calc(2.8rem * var(--font-heading-scale));
+  --bs-text-2x-large: calc(3.8rem * var(--font-heading-scale));
+  --bs-text-3x-large: calc(5.1rem * var(--font-heading-scale));
+  --bs-text-4x-large: calc(6.7rem * var(--font-heading-scale));
+  --bs-text-5x-large: calc(9rem * var(--font-heading-scale));
+  --bs-text-6x-large: calc(12rem * var(--font-heading-scale));
+  --bs-text-7x-large: calc(16rem * var(--font-heading-scale));
+  --bs-text-8x-large: calc(21.3rem * var(--font-heading-scale));
+  --bs-text-9x-large: calc(28.3rem * var(--font-heading-scale));
+
+  --bs-weight-regular: 400;
+  --bs-weight-medium: 500;
+  --bs-weight-demibold: 600;
+
+  --bs-leading-display: 0.8;
+  --bs-leading-heading: 1;
+  --bs-leading-body: 1.5;
+  --bs-tracking-display: -0.035em;
+  --bs-tracking-button: -0.025em;
+
+  /* Accents for bespoke CSS only. Section backgrounds use color schemes. */
+  --bs-color-blue: #2C36FF;
+  --bs-color-blue-tint: #DBDDFF;
+  --bs-color-grey: #B4B4B4;
+  --bs-color-black: #0A0100;
+  --bs-color-white: #FCF8F7;
+  --bs-color-stone: #F0EFEF;
+
+  --bs-space-4: 4px;
+  --bs-space-8: 8px;
+  --bs-space-16: 16px;
+  --bs-space-24: 24px;
+  --bs-space-32: 32px;
+  --bs-space-40: 40px;
+  --bs-space-48: 48px;
+  --bs-space-64: 64px;
+  --bs-space-80: 80px;
+  --bs-space-96: 96px;
+  --bs-space-128: 128px;
+  --bs-space-160: 160px;
+  --bs-space-192: 192px;
+  --bs-space-256: 256px;
+
+  --bs-gutter: 12px;
+  --bs-grid-gap: 16px;
+}
+
+@media screen and (min-width: 750px) {
+  :root {
+    --bs-gutter: 24px;
+  }
+}

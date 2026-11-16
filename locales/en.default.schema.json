@@ -204,6 +204,9 @@
         },
         "body_scale": {
           "label": "Scale"
+        },
+        "paragraph__brand_font": {
+          "content": "The brand typeface TT Commons Pro is built into the theme. Only the size scales can be changed here."
         }
       }
     },

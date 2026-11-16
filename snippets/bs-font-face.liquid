@@ -1,0 +1,36 @@
+{% comment %}
+  Brand typeface: TT Commons Pro, self-hosted from theme assets.
+  Weights: 400 Regular, 500 Medium (body and headings), 600 DemiBold.
+
+  The woff2 files are licensed and are NOT in the repo yet. Add them to
+  assets/ under these exact filenames and no code change is needed:
+    tt-commons-pro-regular.woff2
+    tt-commons-pro-medium.woff2
+    tt-commons-pro-demibold.woff2
+
+  Must be rendered inside a {% style %} or <style> block.
+{% endcomment %}
+{% comment %}Remove the MissingAsset disable below once the licensed font files are in assets/.{% endcomment %}
+{% comment %}theme-check-disable MissingAsset{% endcomment %}
+@font-face {
+  font-family: 'TT Commons Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('{{ 'tt-commons-pro-regular.woff2' | asset_url }}') format('woff2');
+}
+@font-face {
+  font-family: 'TT Commons Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('{{ 'tt-commons-pro-medium.woff2' | asset_url }}') format('woff2');
+}
+@font-face {
+  font-family: 'TT Commons Pro';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('{{ 'tt-commons-pro-demibold.woff2' | asset_url }}') format('woff2');
+}
+{% comment %}theme-check-enable MissingAsset{% endcomment %}

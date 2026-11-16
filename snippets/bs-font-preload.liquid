@@ -1,0 +1,7 @@
+{% comment %}
+  Preloads the self-hosted TT Commons Pro weight used for almost all copy
+  (Medium). Rendered from the <head> of each layout.
+{% endcomment %}
+{% comment %}theme-check-disable AssetPreload, MissingAsset{% endcomment %}
+<link rel="preload" as="font" href="{{ 'tt-commons-pro-medium.woff2' | asset_url }}" type="font/woff2" crossorigin>
+{% comment %}theme-check-enable AssetPreload, MissingAsset{% endcomment %}
