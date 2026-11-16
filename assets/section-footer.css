@@ -141,3 +141,113 @@
     width: min(100%, 100.4rem);
   }
 }
+
+/* Optional call-to-action band (hidden layer "Frame 156" in Figma). */
+.footer__cta {
+  text-align: center;
+}
+
+.footer__cta-eyebrow {
+  margin: 0 0 var(--bs-space-40);
+  color: var(--bs-color-grey);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-heading);
+}
+
+.footer__cta-heading {
+  max-width: 104.8rem;
+  margin: 0 auto;
+  line-height: 0.85;
+  letter-spacing: -0.025em;
+}
+
+.footer__cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--bs-space-16);
+  margin-top: var(--bs-space-64);
+}
+
+/* Same oversized pill as Order Wholesale, sized to its label. */
+.footer__pill.button {
+  --buttons-radius: 999px;
+  --buttons-radius-outset: 999px;
+  min-height: 14rem;
+  padding: 0 var(--bs-space-48);
+  font-size: var(--bs-text-3x-large);
+  font-weight: var(--bs-weight-medium);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-button);
+}
+
+/* Secondary pill: a tint of the scheme's button colour (blue tint on the default schemes). */
+.footer__pill--tint.button {
+  --color-button-text: var(--color-button);
+  --alpha-button-background: 0.15;
+}
+
+/* Optional pricing sign-up (hidden layer "Newsletter" in Figma). */
+.footer__signup {
+  text-align: left;
+}
+
+.footer__signup-heading {
+  margin: 0 0 var(--bs-space-16);
+  font-size: var(--bs-text-large);
+  line-height: var(--bs-leading-body);
+  letter-spacing: 0;
+}
+
+.footer__signup-field {
+  display: flex;
+  align-items: center;
+  gap: var(--bs-space-8);
+  min-height: 6.4rem;
+  padding: var(--bs-space-8) var(--bs-space-8) var(--bs-space-8) var(--bs-space-24);
+  border-radius: var(--bs-space-16);
+  background-color: rgba(var(--color-foreground), 0.06);
+}
+
+.footer__signup-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--bs-weight-regular);
+}
+
+.footer__signup-field input::placeholder {
+  color: inherit;
+  opacity: 1;
+}
+
+.footer__signup-field button {
+  align-self: stretch;
+  padding: 0 var(--bs-space-16);
+  border: 0;
+  border-radius: var(--bs-space-16);
+  background-color: rgb(var(--color-background));
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.footer__signup-note {
+  margin: var(--bs-space-8) 0 0;
+  padding: 0 calc(var(--bs-space-8) + var(--bs-space-4));
+  color: var(--bs-color-grey);
+  font-size: var(--bs-text-small);
+  line-height: var(--bs-leading-body);
+}
+
+@media screen and (min-width: 750px) {
+  .footer__pill.button {
+    min-height: 15.2rem;
+    padding: 0 7.8rem;
+    font-size: var(--bs-text-4x-large);
+  }
+}

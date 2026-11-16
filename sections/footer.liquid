@@ -24,6 +24,46 @@
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   <div class="footer__inner page-width">
+    {%- assign cta_block = section.blocks | where: 'type', 'call_to_action' | first -%}
+    {%- if cta_block -%}
+      <div class="footer__cta" {{ cta_block.shopify_attributes }}>
+        {%- if cta_block.settings.eyebrow != blank -%}
+          <p class="footer__cta-eyebrow">{{ cta_block.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if cta_block.settings.heading != blank -%}
+          <h2 class="footer__cta-heading hxxl">{{ cta_block.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if cta_block.settings.button_label_1 != blank or cta_block.settings.button_label_2 != blank -%}
+          <div class="footer__cta-buttons">
+            {%- if cta_block.settings.button_label_1 != blank -%}
+              <a
+                {% if cta_block.settings.button_link_1 != blank %}
+                  href="{{ cta_block.settings.button_link_1 }}"
+                {% else %}
+                  role="link" aria-disabled="true"
+                {% endif %}
+                class="footer__pill button"
+              >
+                {{- cta_block.settings.button_label_1 | escape -}}
+              </a>
+            {%- endif -%}
+            {%- if cta_block.settings.button_label_2 != blank -%}
+              <a
+                {% if cta_block.settings.button_link_2 != blank %}
+                  href="{{ cta_block.settings.button_link_2 }}"
+                {% else %}
+                  role="link" aria-disabled="true"
+                {% endif %}
+                class="footer__pill footer__pill--tint button"
+              >
+                {{- cta_block.settings.button_label_2 | escape -}}
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
     {%- if section.blocks.size > 0 -%}
       <div class="footer__main">
         {%- for block in section.blocks -%}
@@ -31,6 +71,49 @@
             {%- when '@app' -%}
               <div class="footer__block" {{ block.shopify_attributes }}>
                 {% render block %}
+              </div>
+            {%- when 'pricing_signup' -%}
+              <div class="footer__block footer__signup" {{ block.shopify_attributes }}>
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="footer__signup-heading">{{ block.settings.heading | escape }}</h2>
+                {%- endif -%}
+                {%- form 'customer', id: 'FooterPricingForm', class: 'footer__signup-form' -%}
+                  <input type="hidden" name="contact[tags]" value="{{ block.settings.customer_tag | escape }}">
+                  <div class="footer__signup-field">
+                    <label class="visually-hidden" for="FooterPricingEmail">{{ 'newsletter.label' | t }}</label>
+                    <input
+                      id="FooterPricingEmail"
+                      type="email"
+                      name="contact[email]"
+                      value="{{ form.email }}"
+                      placeholder="{{ block.settings.placeholder | escape }}"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      autocomplete="email"
+                      {% if form.errors %}
+                        autofocus
+                        aria-invalid="true"
+                        aria-describedby="FooterPricingMessage"
+                      {% elsif form.posted_successfully? %}
+                        aria-describedby="FooterPricingMessage"
+                      {% endif %}
+                      required
+                    >
+                    <button type="submit" name="commit">{{ block.settings.button_label | escape }}</button>
+                  </div>
+                  {%- if form.errors -%}
+                    <p class="footer__signup-note" id="FooterPricingMessage" role="alert">
+                      {{- form.errors.translated_fields.email | capitalize }}
+                      {{ form.errors.messages.email -}}
+                    </p>
+                  {%- elsif form.posted_successfully? -%}
+                    <p class="footer__signup-note" id="FooterPricingMessage" tabindex="-1" autofocus>
+                      {{- block.settings.success_message | escape -}}
+                    </p>
+                  {%- elsif block.settings.small_print != blank -%}
+                    <p class="footer__signup-note">{{ block.settings.small_print | escape }}</p>
+                  {%- endif -%}
+                {%- endform -%}
               </div>
             {%- when 'menu' -%}
               {%- if block.settings.menu.links.size > 0 -%}
@@ -154,6 +237,100 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "call_to_action",
+      "name": "t:sections.footer.blocks.call_to_action.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.footer.blocks.call_to_action.settings.paragraph.content"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "default": "t:sections.footer.blocks.call_to_action.settings.eyebrow.default",
+          "label": "t:sections.footer.blocks.call_to_action.settings.eyebrow.label"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "t:sections.footer.blocks.call_to_action.settings.heading.default",
+          "label": "t:sections.footer.blocks.call_to_action.settings.heading.label"
+        },
+        {
+          "type": "text",
+          "id": "button_label_1",
+          "default": "t:sections.footer.blocks.call_to_action.settings.button_label_1.default",
+          "label": "t:sections.footer.blocks.call_to_action.settings.button_label_1.label",
+          "info": "t:sections.footer.blocks.call_to_action.settings.button_label_1.info"
+        },
+        {
+          "type": "url",
+          "id": "button_link_1",
+          "label": "t:sections.footer.blocks.call_to_action.settings.button_link_1.label"
+        },
+        {
+          "type": "text",
+          "id": "button_label_2",
+          "label": "t:sections.footer.blocks.call_to_action.settings.button_label_2.label",
+          "info": "t:sections.footer.blocks.call_to_action.settings.button_label_2.info"
+        },
+        {
+          "type": "url",
+          "id": "button_link_2",
+          "label": "t:sections.footer.blocks.call_to_action.settings.button_link_2.label"
+        }
+      ]
+    },
+    {
+      "type": "pricing_signup",
+      "name": "t:sections.footer.blocks.pricing_signup.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.footer.blocks.pricing_signup.settings.paragraph.content"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "t:sections.footer.blocks.pricing_signup.settings.heading.default",
+          "label": "t:sections.footer.blocks.pricing_signup.settings.heading.label"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "default": "t:sections.footer.blocks.pricing_signup.settings.placeholder.default",
+          "label": "t:sections.footer.blocks.pricing_signup.settings.placeholder.label"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "t:sections.footer.blocks.pricing_signup.settings.button_label.default",
+          "label": "t:sections.footer.blocks.pricing_signup.settings.button_label.label"
+        },
+        {
+          "type": "text",
+          "id": "small_print",
+          "default": "t:sections.footer.blocks.pricing_signup.settings.small_print.default",
+          "label": "t:sections.footer.blocks.pricing_signup.settings.small_print.label"
+        },
+        {
+          "type": "text",
+          "id": "success_message",
+          "default": "t:sections.footer.blocks.pricing_signup.settings.success_message.default",
+          "label": "t:sections.footer.blocks.pricing_signup.settings.success_message.label"
+        },
+        {
+          "type": "text",
+          "id": "customer_tag",
+          "default": "pricing-request",
+          "label": "t:sections.footer.blocks.pricing_signup.settings.customer_tag.label",
+          "info": "t:sections.footer.blocks.pricing_signup.settings.customer_tag.info"
+        }
+      ]
     },
     {
       "type": "menu",

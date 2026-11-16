@@ -1006,6 +1006,69 @@
     "footer": {
       "name": "Footer",
       "blocks": {
+        "call_to_action": {
+          "name": "Call to action",
+          "settings": {
+            "paragraph": {
+              "content": "A large band that always sits at the top of the footer. Clear a button label to remove that button."
+            },
+            "eyebrow": {
+              "label": "Eyebrow",
+              "default": "Elevate Your Brand"
+            },
+            "heading": {
+              "label": "Heading",
+              "default": "Ready to Grow?"
+            },
+            "button_label_1": {
+              "label": "First button label",
+              "default": "Buy",
+              "info": "Leave blank to hide this button."
+            },
+            "button_link_1": {
+              "label": "First button link"
+            },
+            "button_label_2": {
+              "label": "Second button label",
+              "info": "Leave blank to hide this button. Off by default."
+            },
+            "button_link_2": {
+              "label": "Second button link"
+            }
+          }
+        },
+        "pricing_signup": {
+          "name": "Pricing sign-up",
+          "settings": {
+            "paragraph": {
+              "content": "Adds the email to [customers](/admin/customers) with the tag below and subscribes it to marketing. Sending the pricing document is an automation set up outside the theme."
+            },
+            "heading": {
+              "label": "Heading",
+              "default": "Curious? Download our Pricing"
+            },
+            "placeholder": {
+              "label": "Email field placeholder",
+              "default": "Email Address"
+            },
+            "button_label": {
+              "label": "Button label",
+              "default": "Download"
+            },
+            "small_print": {
+              "label": "Small print",
+              "default": "By submitting your email, you’ll be the first to know about upcoming launches"
+            },
+            "success_message": {
+              "label": "Message after sign-up",
+              "default": "Thanks. Our pricing is on its way to your inbox."
+            },
+            "customer_tag": {
+              "label": "Customer tag",
+              "info": "Added to the customer so an automation can send the pricing."
+            }
+          }
+        },
         "menu": {
           "name": "Big menu",
           "settings": {
