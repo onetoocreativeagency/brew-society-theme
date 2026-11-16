@@ -62,15 +62,6 @@ details[open].menu-opening > .menu-drawer__submenu {
   visibility: hidden; /* hide menus from screen readers when hidden by submenu */
 }
 
-@media screen and (min-width: 750px) {
-  .menu-drawer {
-    width: 40rem;
-    border-width: 0 var(--drawer-border-width) 0 0;
-    border-style: solid;
-    border-color: rgba(var(--color-foreground), var(--drawer-border-opacity));
-  }
-}
-
 .menu-drawer__inner-container {
   position: relative;
   height: 100%;
@@ -85,7 +76,7 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .menu-drawer__navigation {
-  padding: 3rem 0;
+  padding: var(--bs-space-24) 0;
 }
 
 .menu-drawer__inner-submenu {
@@ -95,17 +86,18 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .js .menu-drawer__menu li {
-  margin-bottom: 0.2rem;
+  margin-bottom: var(--bs-space-8);
 }
 
-.menu-drawer__menu-item {
-  padding: 1.1rem 3rem;
+.menu-drawer .menu-drawer__menu-item {
+  padding: 0 var(--bs-gutter);
   text-decoration: none;
-  font-size: 1.8rem;
+  font-size: var(--bs-text-4x-large);
+  line-height: var(--bs-leading-heading);
 }
 
 .menu-drawer summary.menu-drawer__menu-item {
-  padding-right: 5.2rem;
+  padding-right: calc(var(--bs-gutter) + 3.1rem);
 }
 
 .menu-drawer__menu-item--active,
@@ -114,11 +106,6 @@ details[open].menu-opening > .menu-drawer__submenu {
 .menu-drawer__menu-item:hover,
 .menu-drawer__close-button:hover {
   color: rgb(var(--color-foreground));
-  background-color: rgba(var(--color-foreground), 0.04);
-}
-
-.menu-drawer__menu-item--active:hover {
-  background-color: rgba(var(--color-foreground), 0.08);
 }
 
 .js .menu-drawer__menu-item .icon-caret {
@@ -128,7 +115,7 @@ details[open].menu-opening > .menu-drawer__submenu {
 .menu-drawer__menu-item > .svg-wrapper {
   width: 15px;
   position: absolute;
-  right: 3rem;
+  right: var(--bs-gutter);
   top: 50%;
   transform: translateY(-50%);
 }
@@ -151,7 +138,7 @@ details[open].menu-opening > .menu-drawer__submenu {
 
 .menu-drawer__close-button {
   margin-top: 1.5rem;
-  padding: 1.2rem 2.6rem 1.2rem 3rem;
+  padding: 1.2rem var(--bs-gutter);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -170,14 +157,10 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .menu-drawer__utility-links {
-  padding: 0;
-  background-color: rgba(var(--color-foreground), 0.03);
+  display: grid;
+  gap: var(--bs-space-16);
+  padding: var(--bs-space-16) var(--bs-gutter);
   position: relative;
-}
-
-.header--has-localizations .menu-drawer__utility-links,
-.header--has-social .menu-drawer__utility-links {
-  padding: 2rem 3rem;
 }
 
 .menu-drawer .list-social {
