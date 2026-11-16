@@ -147,6 +147,12 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   }
 }
 
+/* Grey count after a menu link (snippets/bs-menu-count.liquid). */
+.bs-menu-count {
+  color: var(--bs-color-grey);
+  margin-left: 0.4rem;
+}
+
 .isolate {
   position: relative;
   z-index: 0;

@@ -1,0 +1,35 @@
+{% comment %}
+  Renders the grey count shown after some menu links in the header and footer
+  (Brands 37, Shop 145). Outputs nothing for links that have no count.
+
+  Accepts:
+  - link: {Object} a menu link
+
+  Counts:
+  - "All collections" link: number of brand collections (template suffix "brand")
+  - "All products" link: number of products in the store
+  - Collection link: number of products in that collection
+
+  Usage:
+  {% render 'bs-menu-count', link: link %}
+{% endcomment %}
+{%- liquid
+  assign bs_count = 0
+  case link.type
+    when 'collections_link'
+      paginate collections by 250
+        for bs_collection in collections
+          if bs_collection.template_suffix == 'brand'
+            assign bs_count = bs_count | plus: 1
+          endif
+        endfor
+      endpaginate
+    when 'catalog_link'
+      assign bs_count = collections.all.products_count
+    when 'collection_link'
+      assign bs_count = link.object.products_count
+  endcase
+-%}
+{%- if bs_count > 0 -%}
+  <span class="bs-menu-count">{{ bs_count }}</span>
+{%- endif -%}

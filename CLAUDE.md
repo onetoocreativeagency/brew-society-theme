@@ -44,6 +44,7 @@ Every brand and every product type is a Shopify **collection**. Two collection t
 - `templates/collection.brand.json` — brand collections (about 35). Hero with logo, tags, summary, Order wholesale on Pepper; product grid with quick add, hidden when the brand has no D2C products.
 - `templates/collection.json` — category collections and `/collections/all` (the Shop), with native Search & Discovery filters.
 - `/collections` (list-collections) — the Brands catalogue: brand cards grouped under product-type headings, Exclusive first. No filter JS.
+- **Menu counts**: the grey numbers after Brands, Shop and collection links come from `snippets/bs-menu-count.liquid` (`{% render 'bs-menu-count', link: link %}`), styled by `.bs-menu-count` in `base.css`. Reuse it wherever a menu is rendered; don't reimplement the counting.
 - **Buy panel**: Dawn's quick-add modal and `/products/<handle>` are one component. Don't design or build them separately.
 - **Cart**: drawer (theme setting `cart_type` is `drawer`).
 - **Wholesale** is not sold on Shopify. Every wholesale CTA links out to the Pepper ordering portal (ABN required). No customer-account or B2B work. The portal link is the theme setting `settings.wholesale_portal_url` (Theme settings → Wholesale). Every Order Wholesale button reads it; never hard-code the URL or add a second setting for it. Hide the button when it is blank.
