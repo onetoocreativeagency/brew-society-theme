@@ -17,13 +17,24 @@
   assign bs_count = 0
   case link.type
     when 'collections_link'
-      paginate collections by 250
+      # Every paginate tag follows the page number in the URL, so on page 2 of a
+      # product grid, paginating collections would return nothing. There the plain
+      # loop is used instead, which reads the first 50 collections.
+      if current_page == 1
+        paginate collections by 250
+          for bs_collection in collections
+            if bs_collection.template_suffix == 'brand'
+              assign bs_count = bs_count | plus: 1
+            endif
+          endfor
+        endpaginate
+      else
         for bs_collection in collections
           if bs_collection.template_suffix == 'brand'
             assign bs_count = bs_count | plus: 1
           endif
         endfor
-      endpaginate
+      endif
     when 'catalog_link'
       assign bs_count = collections.all.products_count
     when 'collection_link'
