@@ -1,0 +1,27 @@
+{% comment %}
+  Loops over every brand collection (template suffix "brand") and renders one
+  piece of output for each through snippets/bs-brand-item.liquid.
+
+  A paginate tag follows the ?page number in the URL, so on page 2 of a brand's
+  product grid it would return no collections. The 250-collection block is
+  therefore only used on page 1; later pages use the plain loop, which reads
+  the first 50 collections.
+
+  Accepts:
+  - item: {String} 'tally', 'category', 'card' or 'row' (see bs-brand-item)
+  - config: {Object} the section's settings (metafield namespace and keys, card options)
+
+  Usage:
+  {% render 'bs-brand-each', item: 'row', config: section.settings %}
+{% endcomment %}
+{%- if current_page == 1 -%}
+  {%- paginate collections by 250 -%}
+    {%- for bs_brand in collections -%}
+      {%- render 'bs-brand-item', brand: bs_brand, item: item, config: config, index: forloop.index -%}
+    {%- endfor -%}
+  {%- endpaginate -%}
+{%- else -%}
+  {%- for bs_brand in collections -%}
+    {%- render 'bs-brand-item', brand: bs_brand, item: item, config: config, index: forloop.index -%}
+  {%- endfor -%}
+{%- endif -%}

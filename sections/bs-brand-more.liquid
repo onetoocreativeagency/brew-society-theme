@@ -20,14 +20,7 @@
     {%- if section.settings.heading != blank -%}
       <h2 class="bs-brand-more__heading hxxl">{{ section.settings.heading | escape }}</h2>
     {%- endif -%}
-    {%- render 'bs-brand-list',
-      namespace: section.settings.namespace,
-      category_key: section.settings.category_key,
-      origin_key: section.settings.origin_key,
-      relationship_key: section.settings.relationship_key,
-      logo_key: section.settings.logo_key,
-      range_size_key: section.settings.range_size_key
-    -%}
+    {%- render 'bs-brand-list', config: section.settings -%}
   </div>
 </div>
 

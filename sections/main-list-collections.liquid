@@ -23,23 +23,14 @@
   built from the brands' own category values, so nothing is named here.
 {%- endcomment -%}
 {%- liquid
-  assign bs_namespace = section.settings.namespace
-  assign bs_category_key = section.settings.category_key
-  assign bs_total = 0
-  assign bs_category_values = ''
-  paginate collections by 250
-    for bs_brand in collections
-      unless bs_brand.template_suffix == 'brand'
-        continue
-      endunless
-      assign bs_total = bs_total | plus: 1
-      assign bs_category = bs_brand.metafields[bs_namespace][bs_category_key].value
-      if bs_category != blank
-        assign bs_category_values = bs_category_values | append: bs_category | append: '|||'
-      endif
-    endfor
-  endpaginate
-  assign bs_category_values = bs_category_values | split: '|||'
+  capture bs_tally
+    render 'bs-brand-each', item: 'tally', config: section.settings
+  endcapture
+  assign bs_total = bs_tally | strip | size
+  capture bs_category_values
+    render 'bs-brand-each', item: 'category', config: section.settings
+  endcapture
+  assign bs_category_values = bs_category_values | strip | split: '|||'
   assign bs_categories = bs_category_values | uniq | sort_natural
   assign bs_title = section.settings.title | default: collections.title
 -%}
@@ -132,47 +123,11 @@
     <p class="visually-hidden" role="status" data-brands-status></p>
 
     <ul class="bs-brand-grid list-unstyled" role="list">
-      {%- assign bs_index = 0 -%}
-      {%- paginate collections by 250 -%}
-        {%- for bs_brand in collections -%}
-          {%- liquid
-            unless bs_brand.template_suffix == 'brand'
-              continue
-            endunless
-            assign bs_index = bs_index | plus: 1
-            assign bs_lazy = false
-            if bs_index > 4
-              assign bs_lazy = true
-            endif
-          -%}
-          <li data-brand data-category="{{ bs_brand.metafields[bs_namespace][bs_category_key].value | handleize }}">
-            {%- render 'bs-brand-card',
-              brand: bs_brand,
-              image_source: section.settings.card_image,
-              panel_scheme: section.settings.card_color_scheme,
-              lazy_load: bs_lazy,
-              namespace: bs_namespace,
-              category_key: bs_category_key,
-              origin_key: section.settings.origin_key,
-              exclusive_key: section.settings.exclusive_key,
-              new_key: section.settings.new_key,
-              logo_key: section.settings.logo_key,
-              range_size_key: section.settings.range_size_key
-            -%}
-          </li>
-        {%- endfor -%}
-      {%- endpaginate -%}
+      {%- render 'bs-brand-each', item: 'card', config: section.settings -%}
     </ul>
 
     <div class="bs-brands__list">
-      {%- render 'bs-brand-list',
-        namespace: bs_namespace,
-        category_key: bs_category_key,
-        origin_key: section.settings.origin_key,
-        relationship_key: section.settings.relationship_key,
-        logo_key: section.settings.logo_key,
-        range_size_key: section.settings.range_size_key
-      -%}
+      {%- render 'bs-brand-list', config: section.settings -%}
     </div>
   </div>
 </bs-brand-catalogue>
