@@ -23,14 +23,25 @@
   built from the brands' own category values, so nothing is named here.
 {%- endcomment -%}
 {%- liquid
+  comment
+    Each render can leave stray whitespace in a capture, so the tally
+    counts only its x marks and every category is read from between its markers.
+  endcomment
   capture bs_tally
     render 'bs-brand-each', item: 'tally', config: section.settings
   endcapture
-  assign bs_total = bs_tally | strip | size
-  capture bs_category_values
+  assign bs_total = bs_tally | remove: 'x' | size | minus: bs_tally.size | abs
+  capture bs_category_output
     render 'bs-brand-each', item: 'category', config: section.settings
   endcapture
-  assign bs_category_values = bs_category_values | strip | split: '|||'
+  assign bs_category_pieces = bs_category_output | split: '[['
+  assign bs_category_values = ''
+  for bs_piece in bs_category_pieces
+    if bs_piece contains ']]'
+      assign bs_category_values = bs_piece | split: ']]' | first | append: '|||' | prepend: bs_category_values
+    endif
+  endfor
+  assign bs_category_values = bs_category_values | split: '|||'
   assign bs_categories = bs_category_values | uniq | sort_natural
   assign bs_title = section.settings.title | default: collections.title
 -%}

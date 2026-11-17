@@ -176,7 +176,7 @@
   left: var(--bs-space-8);
   display: grid;
   place-items: center;
-  width: 8rem;
+  width: 7rem;
   aspect-ratio: 127 / 61;
   color: rgb(var(--color-button));
   transform: rotate(-12deg);
@@ -193,7 +193,7 @@
 .bs-brand-sticker__text {
   position: relative;
   max-width: 78%;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: var(--bs-weight-bold);
   line-height: var(--bs-leading-heading);
   letter-spacing: 0;

@@ -4,7 +4,7 @@
 
   Accepts:
   - brand: {Object} a collection
-  - item: {String} 'tally' (an x, for counting), 'category' (the category value and a separator),
+  - item: {String} 'tally' (an x, for counting), 'category' (the category value between [[ and ]]),
     'card' (a grid card) or 'row' (a list view row)
   - config: {Object} the section's settings (metafield namespace and keys, card options)
   - index: {Number} position in the loop, used to lazy-load later card images
@@ -24,7 +24,7 @@
     x
   {%- when 'category' -%}
     {%- if bs_category != blank -%}
-      {{- bs_category | append: '|||' -}}
+      {{- bs_category | prepend: '[[' | append: ']]' -}}
     {%- endif -%}
   {%- when 'card' -%}
     {%- liquid
