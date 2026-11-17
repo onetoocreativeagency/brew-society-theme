@@ -9,6 +9,24 @@
  */
 {
   "sections": {
+    "bs_hero_trail_7JLm4F": {
+      "type": "bs-hero-trail",
+      "name": "Hero with image trail",
+      "settings": {
+        "heading": "Earth’s best food + drink brands, door to door",
+        "text": "Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
+        "primary_label": "Order Wholesale",
+        "secondary_label": "Shop for Home",
+        "secondary_link": "shopify://collections/all",
+        "collection": "sodas",
+        "image_scale": 100,
+        "blend_images": true,
+        "enable_trail": true,
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
     "image_banner": {
       "type": "image-banner",
       "blocks": {
@@ -89,24 +107,6 @@
         "metafield_namespace": "brand",
         "logo_key": "logo",
         "exclusive_key": "exclusive",
-        "color_scheme": "",
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
-    },
-    "bs_hero_trail_7JLm4F": {
-      "type": "bs-hero-trail",
-      "name": "Hero with image trail",
-      "settings": {
-        "heading": "Earth’s best food + drink brands, door to door",
-        "text": "Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
-        "primary_label": "Order Wholesale",
-        "secondary_label": "Shop for Home",
-        "secondary_link": "shopify://collections/all",
-        "collection": "",
-        "image_scale": 100,
-        "blend_images": true,
-        "enable_trail": true,
         "color_scheme": "",
         "padding_top": 0,
         "padding_bottom": 0
