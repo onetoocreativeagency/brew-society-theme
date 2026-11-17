@@ -145,7 +145,7 @@
 }
 
 .bs-steps__text {
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 .bs-steps__button {

@@ -37,6 +37,9 @@
   --bs-color-blue: #2C36FF;
   --bs-color-blue-tint: #DBDDFF;
   --bs-color-grey: #B4B4B4;
+  /* Grey for text under 24px: the design grey fails contrast there (1.8:1 on stone).
+     This passes 4.5:1 on stone, off-white and the pale card tints. Large display grey keeps --bs-color-grey. */
+  --bs-color-grey-text: #666666;
   --bs-color-black: #0A0100;
   --bs-color-white: #FCF8F7;
   --bs-color-stone: #F0EFEF;

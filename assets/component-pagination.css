@@ -18,7 +18,7 @@
 }
 
 .pagination__item {
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   font-size: var(--bs-text-large);
   display: inline-flex;
   justify-content: center;

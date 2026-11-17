@@ -84,5 +84,5 @@
 
 .bs-feature-cards__text {
   max-width: 41.2rem;
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }

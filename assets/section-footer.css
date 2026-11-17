@@ -98,7 +98,7 @@
   align-items: flex-start;
   gap: var(--bs-space-16);
   width: 100%;
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   font-size: 1.3rem;
   font-weight: var(--bs-weight-medium);
   line-height: var(--bs-leading-body);
@@ -149,7 +149,7 @@
 
 .footer__cta-eyebrow {
   margin: 0 0 var(--bs-space-40);
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   font-size: var(--bs-text-paragraph);
   line-height: var(--bs-leading-heading);
 }
@@ -239,7 +239,7 @@
 .footer__signup-note {
   margin: var(--bs-space-8) 0 0;
   padding: 0 calc(var(--bs-space-8) + var(--bs-space-4));
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   font-size: var(--bs-text-small);
   line-height: var(--bs-leading-body);
 }

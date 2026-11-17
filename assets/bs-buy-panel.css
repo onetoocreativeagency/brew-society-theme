@@ -239,7 +239,7 @@
 
 .bs-buy .product__info-container > .bs-buy__price {
   margin-top: calc(var(--bs-space-8) * -1);
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 @media screen and (min-width: 750px) {
