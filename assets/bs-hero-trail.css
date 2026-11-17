@@ -1,0 +1,159 @@
+/*
+  Homepage hero with an image trail (Figma: Home 4166:3362, mobile 4203:4836).
+
+  Layering inside the section, bottom to top: headline, images, buttons.
+  The stage must not become a stacking context of its own, or the multiply
+  blend would have nothing to blend with and white photo backgrounds would
+  come back as boxes.
+*/
+.bs-hero-trail {
+  display: block;
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+/* Reserves the image area above the headline. Sizes are Figma's, per width. */
+.bs-hero-trail__stage {
+  position: relative;
+  aspect-ratio: 393 / 370;
+  pointer-events: none;
+  --bs-hero-trail-size: calc(34vw * var(--bs-hero-trail-scale, 1));
+  --bs-hero-trail-ratio: 1.4;
+}
+
+.bs-hero-trail__item {
+  position: absolute;
+  top: var(--my, 50%);
+  left: var(--mx, 50%);
+  z-index: 1;
+  width: var(--bs-hero-trail-size);
+  max-width: none;
+  height: calc(var(--bs-hero-trail-size) * var(--bs-hero-trail-ratio));
+  object-fit: contain;
+  transform: translate(-50%, -50%) rotate(var(--mr, 0deg));
+  transition: opacity 0.4s ease calc(var(--i, 0) * 20ms);
+  pointer-events: none;
+  user-select: none;
+}
+
+.bs-hero-trail--blend .bs-hero-trail__item {
+  mix-blend-mode: multiply;
+}
+
+/* Mobile rests three images. The rest stay unloaded unless the trail runs. */
+.bs-hero-trail__item:nth-child(n + 4) {
+  display: none;
+}
+
+.bs-hero-trail.is-enhanced .bs-hero-trail__item:nth-child(n + 4) {
+  display: block;
+  opacity: 0;
+}
+
+.bs-hero-trail.is-trailing .bs-hero-trail__item {
+  opacity: 0;
+}
+
+.bs-hero-trail__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bs-space-32);
+  text-align: center;
+}
+
+.bs-hero-trail__heading {
+  margin: 0;
+  max-width: 100%;
+  font-size: clamp(var(--bs-text-3x-large), 9.26vw, var(--bs-text-7x-large));
+  font-weight: var(--bs-weight-medium);
+  line-height: var(--bs-leading-display);
+  letter-spacing: var(--bs-tracking-display);
+  overflow-wrap: break-word;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-hero-trail__text {
+  margin: 0;
+  font-size: var(--bs-text-paragraph);
+  line-height: 1.25;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-hero-trail__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-16);
+  position: relative;
+  z-index: 100000; /* above every trail image, whose z-index counts up from 1 */
+  width: 100%;
+}
+
+.button.bs-hero-trail__button {
+  min-height: 13.1rem;
+  padding: var(--bs-space-16) min(1.167em, 4.525vw);
+  border-radius: 999px;
+  font-size: var(--bs-text-2x-large);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-button);
+}
+
+.button.bs-hero-trail__button::before,
+.button.bs-hero-trail__button::after {
+  border-radius: 999px;
+}
+
+.button.bs-hero-trail__button--secondary {
+  --color-button-text: var(--color-secondary-button-text);
+  --alpha-button-background: 0;
+  background-color: var(--bs-color-blue-tint);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-hero-trail__stage {
+    aspect-ratio: 1728 / 461;
+    --bs-hero-trail-size: calc(min(10vw, 22rem) * var(--bs-hero-trail-scale, 1));
+    --bs-hero-trail-ratio: 1.25;
+  }
+
+  .bs-hero-trail__item {
+    top: var(--y, 50%);
+    left: var(--x, 50%);
+    transform: translate(-50%, -50%) rotate(var(--r, 0deg));
+  }
+
+  .bs-hero-trail__item:nth-child(n + 4) {
+    display: block;
+  }
+
+  /* Images past the sixteenth have no resting place. */
+  .bs-hero-trail__item:nth-child(n + 17),
+  .bs-hero-trail.is-enhanced .bs-hero-trail__item:nth-child(n + 17) {
+    opacity: 0;
+  }
+
+  .bs-hero-trail.is-enhanced:not(.is-trailing) .bs-hero-trail__item:nth-child(-n + 16) {
+    opacity: 1;
+  }
+
+  .bs-hero-trail__text {
+    display: none;
+  }
+
+  .bs-hero-trail__buttons {
+    flex-flow: row wrap;
+    justify-content: center;
+  }
+
+  .button.bs-hero-trail__button {
+    min-height: 2.2575em;
+    font-size: clamp(var(--bs-text-2x-large), 3.88vw, var(--bs-text-4x-large));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-hero-trail__item {
+    transition: none;
+  }
+}

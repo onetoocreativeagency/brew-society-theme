@@ -1,0 +1,314 @@
+{{ 'bs-hero-trail.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  comment
+    Resting positions, read from Figma (Home 4166:3362 and mobile 4203:4836):
+    centre x, centre y (percent of the image area) and rotation, left to right
+    along the arc. Fewer than sixteen images are spread evenly along it; images
+    past the sixteenth have no resting place and only appear in the trail.
+  endcomment
+  assign slots = '18.43,30.2,-13.21|22.3,36.49,-60|26.67,51.32,15|30.6,64.9,-8.93|35.53,66.92,-52.07|40.72,75.75,-30|45.86,89.13,-15|49.08,92.95,14.36|54.07,80.33,-22.96|57.44,64.71,15|61.35,51.89,-15|65.27,40.09,-9.53|69.35,24.77,6.04|75.35,17.22,12.08|80.28,13.97,15.42|83.68,15.12,18.15' | split: '|'
+  assign mobile_slots = '25.55,61.73,12.08|62.11,24.32,0|84.61,63.11,18.15' | split: '|'
+
+  assign use_blocks = false
+  assign image_count = 0
+  for block in section.blocks
+    if block.settings.image != blank
+      assign use_blocks = true
+      assign image_count = image_count | plus: 1
+    endif
+  endfor
+  unless use_blocks
+    for product in section.settings.collection.products limit: 16
+      if product.featured_image != blank
+        assign image_count = image_count | plus: 1
+      endif
+    endfor
+  endunless
+
+  assign scale = section.settings.image_scale | divided_by: 100.0
+  assign sizes_desktop = scale | times: 10 | round
+  assign sizes_mobile = scale | times: 34 | round
+  assign sizes = '(min-width: 750px) ' | append: sizes_desktop | append: 'vw, ' | append: sizes_mobile | append: 'vw'
+  assign step = 1
+  if image_count < 16 and image_count > 0
+    assign step = 16.0 | divided_by: image_count
+  endif
+  assign index = 0
+-%}
+
+<bs-hero-trail
+  class="bs-hero-trail{% if section.settings.blend_images %} bs-hero-trail--blend{% endif %} color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding"
+  style="--bs-hero-trail-scale: {{ scale }};"
+  {% if section.settings.enable_trail and image_count > 0 %}
+    data-trail
+  {% endif %}
+>
+  {%- if image_count > 0 -%}
+    <div class="bs-hero-trail__stage" aria-hidden="true">
+      {%- if use_blocks -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image == blank -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- liquid
+            assign image = block.settings.image
+            assign slot_index = index | times: step | floor
+            assign slot = slots[slot_index] | split: ','
+            assign mobile_slot = mobile_slots[index] | split: ','
+            assign loading = 'lazy'
+            if index < 3
+              assign loading = 'eager'
+            endif
+          -%}
+          {%- capture item_style -%}
+            --i: {{ index }};
+            {%- if slot.size == 3 %} --x: {{ slot[0] }}%; --y: {{ slot[1] }}%; --r: {{ slot[2] }}deg;{% endif -%}
+            {%- if mobile_slot.size == 3 %} --mx: {{ mobile_slot[0] }}%; --my: {{ mobile_slot[1] }}%; --mr: {{ mobile_slot[2] }}deg;{% endif -%}
+          {%- endcapture -%}
+          {{
+            image
+            | image_url: width: 440
+            | image_tag:
+              widths: '110, 165, 220, 330, 440',
+              sizes: sizes,
+              alt: '',
+              class: 'bs-hero-trail__item',
+              loading: loading,
+              style: item_style
+          }}
+          {%- assign index = index | plus: 1 -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for product in section.settings.collection.products limit: 16 -%}
+          {%- if product.featured_image == blank -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- liquid
+            assign image = product.featured_image
+            assign slot_index = index | times: step | floor
+            assign slot = slots[slot_index] | split: ','
+            assign mobile_slot = mobile_slots[index] | split: ','
+            assign loading = 'lazy'
+            if index < 3
+              assign loading = 'eager'
+            endif
+          -%}
+          {%- capture item_style -%}
+            --i: {{ index }};
+            {%- if slot.size == 3 %} --x: {{ slot[0] }}%; --y: {{ slot[1] }}%; --r: {{ slot[2] }}deg;{% endif -%}
+            {%- if mobile_slot.size == 3 %} --mx: {{ mobile_slot[0] }}%; --my: {{ mobile_slot[1] }}%; --mr: {{ mobile_slot[2] }}deg;{% endif -%}
+          {%- endcapture -%}
+          {{
+            image
+            | image_url: width: 440
+            | image_tag:
+              widths: '110, 165, 220, 330, 440',
+              sizes: sizes,
+              alt: '',
+              class: 'bs-hero-trail__item',
+              loading: loading,
+              style: item_style
+          }}
+          {%- assign index = index | plus: 1 -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="bs-hero-trail__content page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="bs-hero-trail__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.text != blank -%}
+      <p class="bs-hero-trail__text">{{ section.settings.text | escape }}</p>
+    {%- endif -%}
+
+    {%- liquid
+      assign show_primary = false
+      if settings.wholesale_portal_url != blank and section.settings.primary_label != blank
+        assign show_primary = true
+      endif
+      assign show_secondary = false
+      if section.settings.secondary_link != blank and section.settings.secondary_label != blank
+        assign show_secondary = true
+      endif
+    -%}
+    {%- if show_primary or show_secondary -%}
+      <div class="bs-hero-trail__buttons">
+        {%- if show_primary -%}
+          <a
+            href="{{ settings.wholesale_portal_url }}"
+            class="bs-hero-trail__button button"
+            target="_blank"
+            rel="noopener"
+          >
+            {{- section.settings.primary_label | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if show_secondary -%}
+          <a
+            href="{{ section.settings.secondary_link }}"
+            class="bs-hero-trail__button bs-hero-trail__button--secondary button"
+          >
+            {{- section.settings.secondary_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</bs-hero-trail>
+
+{%- if section.settings.enable_trail and image_count > 0 -%}
+  <script src="{{ 'bs-hero-trail.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Hero with image trail",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Headline",
+      "default": "Earth’s best food + drink brands, door to door"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Supporting line",
+      "info": "Optional. Shown on mobile only, as designed.",
+      "default": "Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW."
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Wholesale button label",
+      "info": "Opens the wholesale portal set in Theme settings > Wholesale. Hidden when that link is blank.",
+      "default": "Order Wholesale"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Second button label",
+      "default": "Shop for Home"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Second button link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add Image blocks to choose the pictures (up to 20). With no Image blocks, the section uses product images from the collection below."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection to take product images from"
+    },
+    {
+      "type": "range",
+      "id": "image_scale",
+      "min": 50,
+      "max": 150,
+      "step": 10,
+      "unit": "%",
+      "label": "Image size",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "blend_images",
+      "label": "Blend white image backgrounds into the page",
+      "info": "Leave on for product photos on a white background. Turn off for cut-out images with a transparent background.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_trail",
+      "label": "Images follow the cursor",
+      "info": "On devices with a mouse. Touch screens and visitors who prefer reduced motion see the images at rest.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero with image trail"
+    }
+  ]
+}
+{% endschema %}
