@@ -102,6 +102,7 @@
    Row above the grid: category links on the left, Filter & Sort on the fourth column. */
 .bs-collection-bar {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--bs-space-16) var(--bs-grid-gap);
   align-items: start;
   margin-bottom: var(--bs-space-24);
@@ -161,7 +162,12 @@
     grid-column: 1 / span 3;
   }
 
+  /* Dawn's horizontal filter bar keeps the full row; only the drawer control sits on column four. */
   .bs-collection-bar > .facets-wrapper {
+    grid-column: 1 / -1;
+  }
+
+  .bs-collection-bar > .facets-wrapper:has(.facets-container-drawer) {
     grid-column: 4;
   }
 }
