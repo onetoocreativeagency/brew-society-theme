@@ -276,10 +276,6 @@
   width: 2.2rem;
 }
 
-quick-add-modal .product:not(.featured-product) .product__view-details {
-  display: block;
-}
-
 .quick-add-modal__content--bulk .product__view-details .icon {
   margin-left: 1.2rem;
 }
@@ -309,18 +305,6 @@ quick-add-modal .product__column-sticky {
 }
 
 @media screen and (min-width: 750px) {
-  quick-add-modal .product:not(.product--no-media) .product__media-wrapper {
-    max-width: 45%;
-    width: calc(45% - var(--grid-desktop-horizontal-spacing) / 2);
-  }
-
-  quick-add-modal .product:not(.product--no-media) .product__info-wrapper {
-    padding-top: 2rem;
-    padding-left: 4rem;
-    max-width: 54%;
-    width: calc(54% - var(--grid-desktop-horizontal-spacing) / 2);
-  }
-
   quick-add-modal .product--columns .product__media-item:not(.product__media-item--single):not(:only-child) {
     max-width: 100%;
     width: 100%;
@@ -403,4 +387,80 @@ quick-add-bulk .quantity__input {
 
 .quantity__input-disabled {
   pointer-events: none;
+}
+
+/* Brew Society buy panel (Figma "Shop - Buy Overlay" 4166:4667).
+   A full-height panel on the right over a 50% white veil. Its content is the product
+   page's <product-info>, laid out by assets/bs-buy-panel.css. */
+.bs-buy-panel.quick-add-modal {
+  z-index: 101;
+  background: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(14.65px);
+  backdrop-filter: blur(14.65px);
+  /* Stays visible until it has faded out. On opening it is visible at once so focus can move in. */
+  transition: opacity var(--duration-default) ease, visibility 0s linear var(--duration-default);
+}
+
+.bs-buy-panel.quick-add-modal[open] {
+  transition: opacity var(--duration-default) ease;
+}
+
+.bs-buy-panel .quick-add-modal__content {
+  box-sizing: border-box;
+  container-type: inline-size;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-24);
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: var(--bs-space-16) var(--bs-space-16) var(--bs-space-128);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateX(100%);
+  transition: transform var(--duration-default) ease;
+}
+
+.bs-buy-panel[open] .quick-add-modal__content {
+  transform: translateX(0);
+}
+
+.bs-buy-panel .quick-add-modal__content:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy-panel .quick-add-modal__content {
+    width: 59.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-buy-panel.quick-add-modal,
+  .bs-buy-panel .quick-add-modal__content {
+    transition: none;
+  }
+}
+
+.bs-buy-panel .bs-pill--close {
+  flex: none;
+}
+
+.bs-buy-panel .quick-add-modal__content-info {
+  display: block;
+  height: auto;
+  padding: 0;
+  overflow: visible;
+}
+
+.bs-buy-panel .quick-add-modal__content-info > * {
+  max-height: none;
 }

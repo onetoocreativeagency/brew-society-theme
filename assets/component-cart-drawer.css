@@ -412,3 +412,353 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
     margin-left: 0;
   }
 }
+
+/* Brew Society cart drawer (Figma "Shop - Cart Drawer" 4166:4817).
+   The same panel as the buy panel: a 50% white veil, a Close pill, then one scrolling column
+   with the items, the total and Checkout. Dawn's table markup is kept for cart.js. */
+.drawer {
+  background-color: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(14.65px);
+  backdrop-filter: blur(14.65px);
+}
+
+.drawer__inner,
+cart-drawer.is-empty .drawer__inner {
+  box-sizing: border-box;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--bs-space-24);
+  width: 100vw;
+  max-width: none;
+  padding: var(--bs-space-16) var(--bs-space-16) var(--bs-space-128);
+  border: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media screen and (min-width: 750px) {
+  .drawer__inner,
+  cart-drawer.is-empty .drawer__inner {
+    width: 59.7rem;
+  }
+}
+
+.cart-drawer .drawer__close.bs-pill {
+  position: relative;
+  top: auto;
+  right: auto;
+  display: inline-flex;
+  flex: none;
+}
+
+.drawer__header {
+  flex: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--bs-space-24);
+  padding: 0;
+}
+
+.drawer__heading,
+.cart-drawer .cart__empty-text,
+.cart-drawer .cart-item__details,
+.cart-drawer .cart-item__quantity,
+.cart-drawer .totals > *,
+.cart-drawer__view-cart {
+  font-family: var(--font-body-family);
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: var(--bs-tracking-display);
+  line-height: var(--bs-leading-heading);
+}
+
+@media screen and (min-width: 750px) {
+  .drawer__heading,
+  .cart-drawer .cart__empty-text,
+  .cart-drawer .cart-item__details,
+  .cart-drawer .cart-item__quantity,
+  .cart-drawer .totals > *,
+  .cart-drawer__view-cart {
+    font-size: var(--bs-text-large);
+  }
+}
+
+.drawer__heading {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+}
+
+/* Empty cart. */
+cart-drawer.is-empty cart-drawer-items {
+  display: none;
+}
+
+.drawer__inner-empty {
+  height: auto;
+  padding: 0;
+  overflow: visible;
+}
+
+.cart-drawer .cart-drawer__warnings {
+  flex: none;
+  text-align: left;
+}
+
+.cart-drawer__empty-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-24);
+}
+
+.cart-drawer__empty-content > * {
+  margin: 0;
+}
+
+.cart-drawer__empty-content .cart__login-title {
+  font-size: var(--bs-text-large);
+}
+
+/* Items: the image panel on the left, name, price, variant and quantity beside it. */
+cart-drawer-items {
+  flex: none;
+  overflow: visible;
+}
+
+.cart-drawer .cart-items thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.cart-drawer .cart-item,
+.cart-drawer .cart-item:last-child {
+  position: relative;
+  grid-template: minmax(3.2rem, 1fr) auto auto minmax(3.2rem, 1fr) / repeat(2, minmax(0, 1fr));
+  gap: 0 var(--bs-grid-gap);
+  margin: 0;
+}
+
+.cart-drawer .cart-item + .cart-item {
+  margin-top: var(--bs-grid-gap);
+}
+
+.cart-drawer .cart-items .cart-item > td {
+  padding: 0;
+}
+
+.cart-drawer .cart-item__media {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1 / -1;
+  align-self: start;
+  width: 100%;
+  aspect-ratio: 274.5 / 418;
+}
+
+.cart-drawer .cart-item__image,
+.cart-drawer .cart-item__nested-line .cart-item__image {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  float: none;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  padding: 8%;
+  object-fit: contain;
+  /* Product photos shot on white take on the panel colour, as on the card. */
+  mix-blend-mode: multiply;
+}
+
+.cart-drawer .cart-item__details {
+  grid-column: 2;
+  grid-row: 2;
+  color: var(--bs-color-grey);
+}
+
+.cart-drawer .cart-item__details > * {
+  margin: 0;
+}
+
+.cart-drawer .cart-item__details > * + * {
+  margin-top: var(--bs-space-16);
+}
+
+.cart-drawer .cart-item__details .cart-item__title {
+  font-size: inherit;
+}
+
+/* Option values on one line: "250g, Whole Bean". */
+.cart-drawer .cart-item__details dl > .product-option,
+.cart-drawer .cart-item__details dd {
+  display: inline;
+}
+
+.cart-drawer .cart-item__details .discounts:empty {
+  display: none;
+}
+
+.cart-drawer .cart-item__name {
+  display: block;
+  color: rgb(var(--color-foreground));
+  font: inherit;
+  letter-spacing: inherit;
+  text-decoration: none;
+}
+
+.cart-drawer .cart-item__name:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+.cart-drawer .cart-item__details .product-option {
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.cart-drawer .cart-item__details dt {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* The line total is not shown; its cell stays for the loading spinner. */
+.cart-drawer .cart-item__totals {
+  grid-column: 2;
+  grid-row: 1;
+  display: block;
+  height: 0;
+}
+
+.cart-drawer .cart-item__price-wrapper {
+  display: none;
+}
+
+.cart-drawer .cart-item .loading__spinner {
+  top: 0;
+  right: auto;
+  left: 0;
+  padding-top: 0;
+}
+
+.cart-drawer .cart-items .cart-item__quantity {
+  grid-column: 2;
+  grid-row: 3;
+  margin-top: var(--bs-space-16);
+  color: var(--bs-color-grey);
+}
+
+/* Remove sits at the foot of the row, so nothing between it and the row is positioned. */
+.cart-drawer .cart-item quantity-popover,
+.cart-drawer .cart-item__quantity-wrapper {
+  position: static;
+  display: block;
+}
+
+.cart-drawer .cart-quantity {
+  align-items: center;
+  gap: var(--bs-space-4);
+  width: auto;
+  min-height: 0;
+  margin-left: -0.6rem;
+  color: inherit;
+}
+
+.cart-drawer .cart-quantity::before,
+.cart-drawer .cart-quantity::after {
+  content: none;
+}
+
+.cart-drawer .cart-quantity .quantity__button {
+  width: 2.4rem;
+  height: 2.4rem;
+  margin: 0;
+  color: inherit;
+}
+
+.cart-drawer .cart-quantity .quantity__input {
+  flex: none;
+  width: 2.8rem;
+  height: 2.4rem;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  opacity: 1;
+}
+
+.cart-drawer .cart-item cart-remove-button {
+  position: absolute;
+  bottom: 0;
+  left: calc(50% + var(--bs-grid-gap) / 2);
+  margin: 0;
+}
+
+.cart-drawer .cart-remove-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.cart-drawer .cart-remove-button:hover,
+.cart-drawer__view-cart:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+/* Total, Checkout and View Cart. */
+.drawer__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-24);
+  padding: var(--bs-space-32) 0 0;
+  border-top: 0.1rem solid var(--bs-color-black);
+}
+
+.cart-drawer__footer > * + * {
+  margin-top: 0;
+}
+
+.cart-drawer .totals {
+  align-items: center;
+  margin: 0;
+}
+
+.cart-drawer .totals > * {
+  margin: 0;
+  color: rgb(var(--color-foreground));
+}
+
+.cart-drawer .tax-note {
+  display: block;
+  margin: var(--bs-space-8) 0 0;
+  color: var(--bs-color-grey);
+  font-size: var(--bs-text-small);
+}
+
+.cart-drawer .cart__ctas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bs-space-16);
+}
+
+.cart-drawer__view-cart {
+  color: var(--bs-color-grey);
+  text-decoration: none;
+}

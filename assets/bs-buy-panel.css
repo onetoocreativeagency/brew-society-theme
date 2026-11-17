@@ -1,0 +1,488 @@
+/* Brew Society buy panel: the product information shared by the product page and the side
+   panel (Figma 4166:4667, wholesale-only 4219:5115, page 4244:2036, mobile 4245:2128).
+   Loaded by sections/main-product.liquid after Dawn's section-main-product.css, which it
+   overrides. Rules under `quick-add-modal` apply to the side panel only. */
+
+/* Layout: one column on mobile, gallery and information side by side from 750px. */
+.product.bs-buy.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--bs-space-32) var(--bs-grid-gap);
+  margin: 0;
+}
+
+.product.bs-buy.grid > .grid__item {
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .product.bs-buy.grid:not(.product--no-media) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .product.bs-buy.grid > .product__info-wrapper {
+    padding: 0 clamp(1.6rem, calc(11.45vw - 7rem), 12.8rem);
+  }
+}
+
+.bs-buy .product__info-container {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-24);
+}
+
+.bs-buy .product__info-container > * {
+  margin: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy .product__info-container {
+    gap: var(--bs-space-32);
+  }
+}
+
+/* Gallery: one off-white panel showing the active image, thumbnails when there are several. */
+.bs-buy media-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-8);
+}
+
+.bs-buy .product__media-list.product__media-list {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+.bs-buy .product__media-list.product__media-list::after {
+  content: none;
+}
+
+.product.bs-buy .product__media-wrapper slider-component.slider-mobile-gutter {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.bs-buy .product__media-list .product__media-item.product__media-item {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.bs-buy .product__media-list .product__media-item:not(.is-active) {
+  display: none;
+}
+
+.bs-buy .product-media-container {
+  width: 100%;
+  max-width: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.bs-buy .product-media-container::after {
+  content: none;
+}
+
+.bs-buy .product-media-container .media {
+  aspect-ratio: 369 / 460;
+  padding-top: 0;
+  background-color: transparent;
+  /* Product photos shot on white take on the panel colour, as on the card. */
+  mix-blend-mode: multiply;
+}
+
+.bs-buy .product-media-container .media > img {
+  box-sizing: border-box;
+  padding: 8%;
+  object-fit: contain;
+}
+
+.bs-buy .thumbnail-slider.thumbnail-slider {
+  display: block;
+  margin: 0;
+}
+
+.bs-buy .thumbnail-slider .slider-button {
+  display: none;
+}
+
+.bs-buy .thumbnail-slider .thumbnail-list.thumbnail-list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--bs-space-8);
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scroll-padding-left: 0;
+}
+
+.bs-buy .thumbnail-list .thumbnail-list__item.thumbnail-list__item {
+  flex: none;
+  width: 8.6rem;
+  padding: 0;
+}
+
+.bs-buy .thumbnail {
+  border: 0;
+  border-radius: 0;
+}
+
+.bs-buy .thumbnail img {
+  box-sizing: border-box;
+  padding: 10%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.bs-buy .thumbnail[aria-current] {
+  box-shadow: inset 0 0 0 0.1rem rgb(var(--color-foreground));
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy media-gallery {
+    flex-direction: row-reverse;
+  }
+
+  .bs-buy media-gallery > slider-component:first-of-type {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .bs-buy .product-media-container .media {
+    aspect-ratio: 408 / 611;
+  }
+
+  .bs-buy .thumbnail-slider.thumbnail-slider {
+    flex: none;
+    width: clamp(6.4rem, 7.4vw, 12.8rem);
+  }
+
+  .bs-buy .thumbnail-slider .thumbnail-list.thumbnail-list {
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .bs-buy .thumbnail-list .thumbnail-list__item.thumbnail-list__item {
+    width: 100%;
+  }
+}
+
+/* Brand and category tags (product page only). */
+.bs-buy__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bs-space-8) var(--bs-space-32);
+}
+
+.bs-buy__tags > div {
+  display: flex;
+  align-items: center;
+  gap: var(--bs-space-16);
+}
+
+.bs-buy__tags dt {
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+}
+
+.bs-buy__tags dd {
+  margin: 0;
+  padding: var(--bs-space-4) var(--bs-space-8);
+  border-radius: 1.2rem;
+  background-color: var(--bs-color-white);
+  font-size: var(--bs-text-small);
+  line-height: var(--bs-leading-body);
+  text-transform: uppercase;
+}
+
+.bs-buy__tags a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bs-buy__tags a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+/* Name and price. */
+.bs-buy .product__title > h1,
+.bs-buy .product__title > a > h2 {
+  margin: 0;
+  letter-spacing: var(--bs-tracking-display);
+  line-height: var(--bs-leading-heading);
+  overflow-wrap: break-word;
+}
+
+.bs-buy .product__title > h1 {
+  font-size: var(--bs-text-3x-large);
+  font-size: clamp(var(--bs-text-2x-large), 14cqi, var(--bs-text-4x-large));
+}
+
+.bs-buy .product__title > a > h2,
+.bs-buy__price {
+  font-size: var(--bs-text-large);
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: var(--bs-tracking-display);
+  line-height: var(--bs-leading-heading);
+}
+
+.bs-buy .product__info-container > .bs-buy__price {
+  margin-top: calc(var(--bs-space-8) * -1);
+  color: var(--bs-color-grey);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy .product__info-container > .bs-buy__price {
+    margin-top: calc(var(--bs-space-16) * -1);
+  }
+}
+
+/* Information: the product description as an accordion. */
+.bs-buy__info > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 5.4rem;
+  padding: var(--bs-space-8);
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+  list-style: none;
+  cursor: pointer;
+}
+
+.bs-buy__info > summary::-webkit-details-marker {
+  display: none;
+}
+
+.bs-buy__info > summary::after {
+  content: '+';
+}
+
+.bs-buy__info[open] > summary::after {
+  content: '\2013';
+}
+
+.bs-buy__info-body {
+  padding: var(--bs-space-16) var(--bs-space-16) var(--bs-space-24);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+  overflow-wrap: break-word;
+}
+
+.bs-buy__info-body > :first-child {
+  margin-top: 0;
+}
+
+.bs-buy__info-body > :last-child {
+  margin-bottom: 0;
+}
+
+.bs-buy__info-body img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Options: one row of pills per option, the selected one filled. */
+.bs-buy variant-selects {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-24);
+}
+
+.bs-buy .product-form__input {
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.bs-buy .product-form__input .form__label {
+  display: block;
+  margin: 0 0 var(--bs-space-8);
+  padding: 0;
+  color: inherit;
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-heading);
+}
+
+.bs-buy .product-form__input--pill {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bs-space-4);
+}
+
+.bs-buy .product-form__input--pill > .form__label {
+  width: 100%;
+  margin-bottom: var(--bs-space-4);
+}
+
+.bs-buy .product-form__input--pill input[type='radio'] + label {
+  box-sizing: border-box;
+  min-width: 6.4rem;
+  margin: 0;
+  padding: 0.9rem;
+  border: 0.1rem solid rgb(var(--color-foreground));
+  border-radius: 1.6rem;
+  background-color: transparent;
+  color: rgb(var(--color-foreground));
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-regular);
+  letter-spacing: 0;
+  line-height: var(--bs-leading-body);
+}
+
+.bs-buy .product-form__input--pill input[type='radio'] + label::before {
+  content: none;
+}
+
+.bs-buy .product-form__input--pill input[type='radio']:checked + label {
+  border-color: rgb(var(--color-button));
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
+.bs-buy .product-form__input--pill input[type='radio'].disabled + label {
+  border-color: var(--bs-color-grey);
+  color: var(--bs-color-grey);
+  text-decoration: line-through;
+}
+
+.bs-buy .product-form__input--pill input[type='radio'].disabled:checked + label {
+  background-color: var(--bs-color-grey);
+  color: var(--bs-color-white);
+}
+
+.bs-buy .product-form__input--pill input[type='radio']:focus-visible + label {
+  outline: 0.2rem solid rgb(var(--color-foreground));
+  outline-offset: 0.2rem;
+  box-shadow: none;
+}
+
+/* Quantity: round minus and plus buttons either side of the number. */
+.bs-buy .product-form__quantity .quantity {
+  align-items: center;
+  gap: var(--bs-space-16);
+  width: auto;
+  min-height: 0;
+}
+
+.bs-buy .product-form__quantity .quantity::before,
+.bs-buy .product-form__quantity .quantity::after {
+  content: none;
+}
+
+.bs-buy .product-form__quantity .quantity__button {
+  width: 4.8rem;
+  height: 4.8rem;
+  margin: 0;
+  border: 0.1rem solid rgb(var(--color-foreground));
+  border-radius: 2.4rem;
+}
+
+.bs-buy .product-form__quantity .quantity__button .svg-wrapper {
+  width: 1.6rem;
+}
+
+.bs-buy .product-form__quantity .quantity__input {
+  flex: none;
+  width: 3.2rem;
+  padding: 0;
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-regular);
+  opacity: 1;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy .product-form__quantity .quantity__button {
+    width: 5.4rem;
+    height: 5.4rem;
+  }
+}
+
+/* Add to Cart and Buy Wholesale. */
+.bs-buy__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-8);
+}
+
+.bs-buy .product-form,
+.bs-buy .product-form__buttons {
+  max-width: none;
+  margin: 0;
+}
+
+.bs-buy .product-form__submit {
+  margin-bottom: 0;
+}
+
+.bs-buy .product-form__error-message-wrapper:not([hidden]) {
+  margin-bottom: var(--bs-space-8);
+}
+
+/* Side panel: the image and the name share the first row, everything else runs full width. */
+quick-add-modal .product.bs-buy.grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  gap: 0 var(--bs-grid-gap);
+}
+
+quick-add-modal .product.bs-buy.grid > .product__info-wrapper,
+quick-add-modal .bs-buy .product__info-container {
+  display: contents;
+}
+
+quick-add-modal .product.bs-buy.grid > .product__media-wrapper {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+quick-add-modal .bs-buy .product-media-container .media {
+  aspect-ratio: 274.5 / 418;
+}
+
+quick-add-modal .bs-buy .product__info-container > * {
+  grid-column: 1 / -1;
+  margin-top: var(--bs-space-24);
+}
+
+quick-add-modal .bs-buy .product__info-container > .product__title {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  margin-top: 0;
+  padding-bottom: var(--bs-space-8);
+}
+
+quick-add-modal .bs-buy .product__info-container > .bs-buy__price {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  margin-top: 0;
+  padding-top: var(--bs-space-8);
+}
+
+quick-add-modal .bs-buy .product__title > a {
+  color: inherit;
+}
+
+@media screen and (min-width: 750px) {
+  quick-add-modal .bs-buy .product__info-container > .bs-buy__price {
+    margin-top: 0;
+  }
+}
