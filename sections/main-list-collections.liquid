@@ -1,139 +1,322 @@
-{{ 'component-card.css' | asset_url | stylesheet_tag }}
-{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+{{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+{{ 'bs-brands.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'bs-brands.js' | asset_url }}" defer="defer"></script>
 
-<div class="page-width">
-  <h1 class="title title--primary inline-richtext{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-    {{ section.settings.title }}
-  </h1>
-  {%- liquid
-    case section.settings.sort
-      when 'products_high', 'products_low'
-        assign collections = collections | sort: 'all_products_count'
-      when 'date', 'date_reversed'
-        assign collections = collections | sort: 'published_at'
-    endcase
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
 
-    if section.settings.sort == 'products_high' or section.settings.sort == 'date_reversed' or section.settings.sort == 'alphabetical_reversed'
-      assign collections = collections | reverse
-    endif
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
 
-    assign moduloResult = 28 | modulo: section.settings.columns_desktop
-    assign paginate_by = 30
-    if moduloResult == 0
-      assign paginate_by = 28
-    endif
-  -%}
-  {%- paginate collections by paginate_by -%}
-    <ul
-      class="collection-list grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
-      role="list"
-    >
-      {%- for collection in collections -%}
-        <li
-          class="collection-list__item grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-            style="--animation-order: {{ forloop.index }};"
-          {% endif %}
+{%- comment -%}
+  Brands catalogue (Figma Brands - All 4166:4283, List View 4166:4532).
+  Lists every collection that uses the "brand" template. The category links are
+  built from the brands' own category values, so nothing is named here.
+{%- endcomment -%}
+{%- liquid
+  assign bs_namespace = section.settings.namespace
+  assign bs_category_key = section.settings.category_key
+  assign bs_total = 0
+  assign bs_category_values = ''
+  paginate collections by 250
+    for bs_brand in collections
+      unless bs_brand.template_suffix == 'brand'
+        continue
+      endunless
+      assign bs_total = bs_total | plus: 1
+      assign bs_category = bs_brand.metafields[bs_namespace][bs_category_key].value
+      if bs_category != blank
+        assign bs_category_values = bs_category_values | append: bs_category | append: '|||'
+      endif
+    endfor
+  endpaginate
+  assign bs_category_values = bs_category_values | split: '|||'
+  assign bs_categories = bs_category_values | uniq | sort_natural
+  assign bs_title = section.settings.title | default: collections.title
+-%}
+
+<bs-brand-catalogue
+  class="bs-brands color-{{ section.settings.color_scheme }} gradient"
+  data-default-view="{{ section.settings.default_view }}"
+  data-count-one="{{ 'sections.brands.count.one' | t: count: '[count]' | escape }}"
+  data-count-other="{{ 'sections.brands.count.other' | t: count: '[count]' | escape }}"
+>
+  {%- comment -%} Sets the view before the first paint, so a linked list view never flashes the grid. {%- endcomment -%}
+  <script>
+    (function () {
+      var el = document.currentScript.parentElement;
+      var view = new URLSearchParams(window.location.search).get('view');
+      el.dataset.view = view === 'list' || view === 'grid' ? view : el.dataset.defaultView;
+    })();
+  </script>
+  <div class="page-width section-{{ section.id }}-padding">
+    <h1 class="collection-hero__title hxxl">
+      <span data-brands-title>{{ bs_title | escape }}</span>
+      {%- comment -%} No whitespace before the number: the count sits tight against the title. {%- endcomment -%}
+      <span class="collection-hero__count"><span aria-hidden="true" data-brands-count>{{ bs_total }}</span>
+        <span class="visually-hidden">
+          , <span data-brands-count-text>{{ 'sections.brands.count' | t: count: bs_total }}</span>
+        </span>
+      </span>
+    </h1>
+
+    <div class="bs-collection-bar bs-brands__bar">
+      {%- if bs_categories.size > 0 -%}
+        <nav class="bs-category-nav" aria-label="{{ 'sections.collection_template.categories' | t }}">
+          <ul class="bs-category-nav__list list-unstyled" role="list">
+            <li>
+              <a
+                href="{{ routes.collections_url }}"
+                class="bs-category-nav__link bs-category-nav__link--current"
+                aria-current="true"
+                data-brands-filter=""
+                data-brands-label="{{ bs_title | escape }}"
+                data-brands-total="{{ bs_total }}"
+              >
+                {{- bs_title | escape -}}
+              </a>
+            </li>
+            {%- for bs_category in bs_categories -%}
+              {%- liquid
+                assign bs_category_count = 0
+                for bs_value in bs_category_values
+                  if bs_value == bs_category
+                    assign bs_category_count = bs_category_count | plus: 1
+                  endif
+                endfor
+              -%}
+              <li>
+                <a
+                  href="{{ routes.collections_url }}?category={{ bs_category | handleize }}"
+                  class="bs-category-nav__link"
+                  data-brands-filter="{{ bs_category | handleize }}"
+                  data-brands-label="{{ bs_category | escape }}"
+                  data-brands-total="{{ bs_category_count }}"
+                >
+                  {{- bs_category | escape -}}
+                  <span class="bs-menu-count" aria-hidden="true">{{ bs_category_count }}</span>
+                  <span class="visually-hidden">, {{ 'sections.brands.count' | t: count: bs_category_count }}</span>
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </nav>
+      {%- endif -%}
+      <nav class="bs-brands__views" aria-label="{{ 'sections.brands.view' | t }}">
+        <a
+          href="{{ routes.collections_url }}?view=grid"
+          class="bs-brands__view bs-brands__view--grid"
+          data-brands-view="grid"
         >
-          {% render 'card-collection',
-            card_collection: collection,
-            media_aspect_ratio: section.settings.image_ratio,
-            columns: 3
-          %}
-        </li>
-      {%- endfor -%}
+          {{- 'sections.brands.grid_view' | t -}}
+        </a>
+        <a
+          href="{{ routes.collections_url }}?view=list"
+          class="bs-brands__view bs-brands__view--list"
+          data-brands-view="list"
+        >
+          {{- 'sections.brands.list_view' | t -}}
+        </a>
+      </nav>
+    </div>
+
+    <p class="visually-hidden" role="status" data-brands-status></p>
+
+    <ul class="bs-brand-grid list-unstyled" role="list">
+      {%- assign bs_index = 0 -%}
+      {%- paginate collections by 250 -%}
+        {%- for bs_brand in collections -%}
+          {%- liquid
+            unless bs_brand.template_suffix == 'brand'
+              continue
+            endunless
+            assign bs_index = bs_index | plus: 1
+            assign bs_lazy = false
+            if bs_index > 4
+              assign bs_lazy = true
+            endif
+          -%}
+          <li data-brand data-category="{{ bs_brand.metafields[bs_namespace][bs_category_key].value | handleize }}">
+            {%- render 'bs-brand-card',
+              brand: bs_brand,
+              image_source: section.settings.card_image,
+              panel_scheme: section.settings.card_color_scheme,
+              lazy_load: bs_lazy,
+              namespace: bs_namespace,
+              category_key: bs_category_key,
+              origin_key: section.settings.origin_key,
+              exclusive_key: section.settings.exclusive_key,
+              new_key: section.settings.new_key,
+              logo_key: section.settings.logo_key,
+              range_size_key: section.settings.range_size_key
+            -%}
+          </li>
+        {%- endfor -%}
+      {%- endpaginate -%}
     </ul>
-    {% render 'pagination', paginate: paginate %}
-  {%- endpaginate -%}
-</div>
+
+    <div class="bs-brands__list">
+      {%- render 'bs-brand-list',
+        namespace: bs_namespace,
+        category_key: bs_category_key,
+        origin_key: section.settings.origin_key,
+        relationship_key: section.settings.relationship_key,
+        logo_key: section.settings.logo_key,
+        range_size_key: section.settings.range_size_key
+      -%}
+    </div>
+  </div>
+</bs-brand-catalogue>
+
 {% schema %}
 {
-  "name": "t:sections.main-list-collections.name",
+  "name": "Brands catalogue",
   "class": "section",
   "settings": [
     {
-      "type": "inline_richtext",
+      "type": "paragraph",
+      "content": "Lists every collection that uses the brand template. Category links come from the brands' category values."
+    },
+    {
+      "type": "text",
       "id": "title",
-      "label": "t:sections.main-list-collections.settings.title.label",
-      "default": "t:sections.main-list-collections.settings.title.default"
+      "label": "Heading",
+      "info": "Shown before the number of brands, and as the link that clears the category filter.",
+      "default": "All"
     },
     {
       "type": "select",
-      "id": "sort",
+      "id": "default_view",
+      "label": "Opens in",
       "options": [
         {
-          "value": "alphabetical",
-          "label": "t:sections.main-list-collections.settings.sort.options__1.label"
+          "value": "grid",
+          "label": "Grid view"
         },
         {
-          "value": "alphabetical_reversed",
-          "label": "t:sections.main-list-collections.settings.sort.options__2.label"
-        },
-        {
-          "value": "date_reversed",
-          "label": "t:sections.main-list-collections.settings.sort.options__3.label"
-        },
-        {
-          "value": "date",
-          "label": "t:sections.main-list-collections.settings.sort.options__4.label"
-        },
-        {
-          "value": "products_high",
-          "label": "t:sections.main-list-collections.settings.sort.options__5.label"
-        },
-        {
-          "value": "products_low",
-          "label": "t:sections.main-list-collections.settings.sort.options__6.label"
+          "value": "list",
+          "label": "List view"
         }
       ],
-      "default": "alphabetical",
-      "label": "t:sections.main-list-collections.settings.sort.label"
+      "default": "grid"
     },
     {
       "type": "select",
-      "id": "image_ratio",
+      "id": "card_image",
+      "label": "Card image",
+      "info": "Product shot is the collection image. Either one falls back to the other when it is missing.",
       "options": [
         {
-          "value": "adapt",
-          "label": "t:sections.main-list-collections.settings.image_ratio.options__1.label"
+          "value": "product",
+          "label": "Product shot"
         },
         {
-          "value": "portrait",
-          "label": "t:sections.main-list-collections.settings.image_ratio.options__2.label"
-        },
-        {
-          "value": "square",
-          "label": "t:sections.main-list-collections.settings.image_ratio.options__3.label"
+          "value": "logo",
+          "label": "Brand logo"
         }
       ],
-      "default": "adapt",
-      "label": "t:sections.main-list-collections.settings.image_ratio.label"
+      "default": "product"
+    },
+    {
+      "type": "color_scheme",
+      "id": "card_color_scheme",
+      "label": "Card panel colours",
+      "default": "scheme-2"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Brand data"
+    },
+    {
+      "type": "paragraph",
+      "content": "Brand details are collection metafields. Change these only if the metafield definitions are renamed."
+    },
+    {
+      "type": "text",
+      "id": "namespace",
+      "label": "Metafield namespace",
+      "default": "brand"
+    },
+    {
+      "type": "text",
+      "id": "category_key",
+      "label": "Category metafield key",
+      "default": "category"
+    },
+    {
+      "type": "text",
+      "id": "origin_key",
+      "label": "Origin metafield key",
+      "default": "origin"
+    },
+    {
+      "type": "text",
+      "id": "relationship_key",
+      "label": "Relationship metafield key",
+      "default": "relationship"
+    },
+    {
+      "type": "text",
+      "id": "exclusive_key",
+      "label": "Exclusive metafield key",
+      "default": "exclusive"
+    },
+    {
+      "type": "text",
+      "id": "new_key",
+      "label": "New metafield key",
+      "default": "new"
+    },
+    {
+      "type": "text",
+      "id": "logo_key",
+      "label": "Logo metafield key",
+      "default": "logo"
+    },
+    {
+      "type": "text",
+      "id": "range_size_key",
+      "label": "Range size metafield key",
+      "default": "range_size"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
     },
     {
       "type": "range",
-      "id": "columns_desktop",
-      "min": 1,
-      "max": 6,
-      "step": 1,
-      "default": 3,
-      "label": "t:sections.main-list-collections.settings.columns_desktop.label"
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 256
     },
     {
-      "type": "select",
-      "id": "columns_mobile",
-      "options": [
-        {
-          "value": "1",
-          "label": "t:sections.main-list-collections.settings.columns_mobile.options__1.label"
-        },
-        {
-          "value": "2",
-          "label": "t:sections.main-list-collections.settings.columns_mobile.options__2.label"
-        }
-      ],
-      "default": "2",
-      "label": "t:sections.main-list-collections.settings.columns_mobile.label"
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 96
     }
   ]
 }

@@ -1,0 +1,303 @@
+{{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
+{{ 'bs-brands.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- comment -%}
+  Brand page header (Figma Brand - Brand Item 4166:4170): breadcrumb, the brand
+  name, About (the collection description) and the brand's details from its
+  collection metafields. Every row is left out when its value is blank.
+{%- endcomment -%}
+{%- liquid
+  assign bs_meta = collection.metafields[section.settings.namespace]
+  assign bs_category = bs_meta[section.settings.category_key].value
+  assign bs_origin = bs_meta[section.settings.origin_key].value
+  assign bs_relationships = bs_meta[section.settings.relationship_key].value
+  assign bs_range = bs_meta[section.settings.range_size_key].value | default: collection.all_products_count
+  assign bs_website = bs_meta[section.settings.website_key].value
+  assign bs_instagram = bs_meta[section.settings.instagram_key].value | remove: '@'
+  if bs_instagram contains '/'
+    assign bs_instagram = bs_instagram | split: 'instagram.com/' | last | split: '/' | first | split: '?' | first
+  endif
+  assign bs_info_pack = bs_meta[section.settings.info_pack_key].value
+  assign bs_wholesale_url = bs_meta[section.settings.pepper_url_key].value | default: settings.wholesale_portal_url
+
+  comment
+    The name is sized from its longest word, so long names never overflow.
+  endcomment
+  assign bs_longest_word = 4
+  assign bs_words = collection.title | split: ' '
+  for bs_word in bs_words
+    if bs_word.size > bs_longest_word
+      assign bs_longest_word = bs_word.size
+    endif
+  endfor
+-%}
+
+<div class="bs-brand-hero color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <nav class="bs-brand-hero__breadcrumb" aria-label="{{ 'sections.brands.breadcrumb' | t }}">
+      <ol class="list-unstyled" role="list">
+        {%- if section.settings.catalogue_label != blank -%}
+          <li>
+            <a href="{{ routes.collections_url }}">{{ section.settings.catalogue_label | escape }}</a>
+          </li>
+        {%- endif -%}
+        {%- if bs_category != blank -%}
+          <li>
+            <a href="{{ routes.collections_url }}?category={{ bs_category | handleize }}">
+              {{- bs_category | escape -}}
+            </a>
+          </li>
+        {%- endif -%}
+        <li aria-current="page">
+          {{ collection.title | escape }}
+          {%- if collection.all_products_count > 0 -%}
+            <span class="bs-brand-hero__count" aria-hidden="true">{{ collection.all_products_count }}</span>
+            <span class="visually-hidden">
+              , {{ 'products.facets.product_count_simple' | t: count: collection.all_products_count -}}
+            </span>
+          {%- endif -%}
+        </li>
+      </ol>
+    </nav>
+
+    <div class="bs-brand-hero__grid section-{{ section.id }}-padding">
+      <div class="bs-brand-hero__heading">
+        <h1 class="bs-brand-hero__title collection-hero__title hxxl" style="--bs-longest-word: {{ bs_longest_word }};">
+          {{- collection.title | escape -}}
+        </h1>
+      </div>
+
+      <div class="bs-brand-hero__details">
+        {%- if collection.description != blank -%}
+          <div class="bs-brand-hero__about">
+            <h2 class="bs-brand-hero__about-label">{{ 'sections.brands.about' | t }}</h2>
+            <div class="bs-brand-hero__description rte">{{ collection.description }}</div>
+          </div>
+        {%- endif -%}
+
+        {%- capture bs_facts -%}
+          {%- if bs_category != blank -%}
+            <div class="bs-brand-hero__fact">
+              <dt>{{ 'sections.brands.category' | t }}</dt>
+              <dd>
+                <a
+                  href="{{ routes.collections_url }}?category={{ bs_category | handleize }}"
+                  class="bs-brand-hero__pill"
+                >
+                  {{- bs_category | escape -}}
+                </a>
+              </dd>
+            </div>
+          {%- endif -%}
+          {%- if bs_origin != blank -%}
+            <div class="bs-brand-hero__fact">
+              <dt>{{ 'sections.brands.origin' | t }}</dt>
+              <dd>
+                <span class="bs-brand-hero__pill">{{ bs_origin | escape }}</span>
+              </dd>
+            </div>
+          {%- endif -%}
+          {%- if bs_range > 0 -%}
+            <div class="bs-brand-hero__fact">
+              <dt>{{ 'sections.brands.products' | t }}</dt>
+              <dd>
+                <span class="bs-brand-hero__pill">{{ bs_range }}</span>
+              </dd>
+            </div>
+          {%- endif -%}
+          {%- if bs_relationships.size > 0 -%}
+            <div class="bs-brand-hero__fact">
+              <dt>{{ 'sections.brands.relationship' | t }}</dt>
+              <dd>
+                <span class="bs-brand-hero__pill">
+                  {%- for bs_relationship in bs_relationships -%}
+                    {{- bs_relationship | escape -}}
+                    {%- unless forloop.last %}, {% endunless -%}
+                  {%- endfor -%}
+                </span>
+              </dd>
+            </div>
+          {%- endif -%}
+          {%- if bs_website != blank -%}
+            <div class="bs-brand-hero__fact">
+              <dt>{{ 'sections.brands.website' | t }}</dt>
+              <dd>
+                <a href="{{ bs_website }}" class="bs-brand-hero__pill" target="_blank" rel="noopener">
+                  {{- bs_website | remove: 'https://' | remove: 'http://' | remove: 'www.' | split: '/' | first | escape -}}
+                </a>
+              </dd>
+            </div>
+          {%- endif -%}
+          {%- if bs_instagram != blank -%}
+            <div class="bs-brand-hero__fact">
+              <dt>{{ 'sections.brands.instagram' | t }}</dt>
+              <dd>
+                <a
+                  href="https://www.instagram.com/{{ bs_instagram | url_encode }}"
+                  class="bs-brand-hero__pill"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  @{{- bs_instagram | escape -}}
+                </a>
+              </dd>
+            </div>
+          {%- endif -%}
+          {%- if bs_info_pack.url != blank -%}
+            <div class="bs-brand-hero__fact">
+              <dt>{{ 'sections.brands.info_pack' | t }}</dt>
+              <dd>
+                <a href="{{ bs_info_pack.url }}" class="bs-brand-hero__pill" target="_blank" rel="noopener">
+                  {{- 'sections.brands.download' | t -}}
+                </a>
+              </dd>
+            </div>
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- if bs_facts != blank -%}
+          <dl class="bs-brand-hero__facts">
+            {{ bs_facts }}
+          </dl>
+        {%- endif -%}
+
+        {%- if bs_wholesale_url != blank and section.settings.wholesale_label != blank -%}
+          <a href="{{ bs_wholesale_url }}" class="bs-brand-hero__wholesale button" target="_blank" rel="noopener">
+            {{- section.settings.wholesale_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brand header",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The name is the collection title and About is the collection description. The details come from the brand's collection metafields. A row is hidden when its value is blank."
+    },
+    {
+      "type": "text",
+      "id": "catalogue_label",
+      "label": "Breadcrumb link to all brands",
+      "default": "Brands"
+    },
+    {
+      "type": "text",
+      "id": "wholesale_label",
+      "label": "Wholesale button label",
+      "info": "Links to the brand's own wholesale link, or to the wholesale portal in Theme settings. Hidden when both are blank.",
+      "default": "Buy Wholesale"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Brand data"
+    },
+    {
+      "type": "paragraph",
+      "content": "Brand details are collection metafields. Change these only if the metafield definitions are renamed."
+    },
+    {
+      "type": "text",
+      "id": "namespace",
+      "label": "Metafield namespace",
+      "default": "brand"
+    },
+    {
+      "type": "text",
+      "id": "category_key",
+      "label": "Category metafield key",
+      "default": "category"
+    },
+    {
+      "type": "text",
+      "id": "origin_key",
+      "label": "Origin metafield key",
+      "default": "origin"
+    },
+    {
+      "type": "text",
+      "id": "range_size_key",
+      "label": "Range size metafield key",
+      "default": "range_size"
+    },
+    {
+      "type": "text",
+      "id": "relationship_key",
+      "label": "Relationship metafield key",
+      "default": "relationship"
+    },
+    {
+      "type": "text",
+      "id": "website_key",
+      "label": "Website metafield key",
+      "default": "website"
+    },
+    {
+      "type": "text",
+      "id": "instagram_key",
+      "label": "Instagram metafield key",
+      "default": "instagram"
+    },
+    {
+      "type": "text",
+      "id": "info_pack_key",
+      "label": "Info pack metafield key",
+      "default": "info_pack"
+    },
+    {
+      "type": "text",
+      "id": "pepper_url_key",
+      "label": "Wholesale link metafield key",
+      "default": "pepper_url"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 208
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 80
+    }
+  ]
+}
+{% endschema %}

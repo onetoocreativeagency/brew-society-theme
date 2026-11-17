@@ -343,6 +343,30 @@
     "collection_list": {
       "view_all": "View all"
     },
+    "brands": {
+      "about": "About",
+      "breadcrumb": "Breadcrumb",
+      "category": "Category",
+      "count": {
+        "one": "{{ count }} brand",
+        "other": "{{ count }} brands"
+      },
+      "download": "Download",
+      "exclusive": "Exclusive to Brew Society",
+      "grid_view": "Grid View",
+      "info_pack": "Info Pack",
+      "instagram": "Instagram",
+      "list_view": "List View",
+      "name": "Name",
+      "new": "New",
+      "origin": "Origin",
+      "products": "Products",
+      "relationship": "Relationship",
+      "table_caption": "All brands",
+      "type": "Type",
+      "view": "View",
+      "website": "Website"
+    },
     "collection_template": {
       "categories": "Categories",
       "empty": "No products found",

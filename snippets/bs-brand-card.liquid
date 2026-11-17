@@ -1,0 +1,76 @@
+{% comment %}
+  Renders one brand card of the Brands catalogue (Figma Brands - All 4166:4283):
+  a panel with the brand's product shot, a New label or the Exclusive sticker,
+  the category, the range size and the origin, then the brand name.
+
+  Accepts:
+  - brand: {Object} a brand collection
+  - image_source: {String} 'product' (collection image, then logo) or 'logo' (logo, then collection image)
+  - panel_scheme: {String} colour scheme of the image panel
+  - lazy_load: {Boolean} lazy-load the image
+  - namespace, category_key, origin_key, exclusive_key, new_key, logo_key, range_size_key: {String} metafield namespace and keys
+
+  Usage:
+  {% render 'bs-brand-card', brand: collection, image_source: 'product', panel_scheme: 'scheme-2', namespace: 'brand', category_key: 'category', origin_key: 'origin', exclusive_key: 'exclusive', new_key: 'new', logo_key: 'logo', range_size_key: 'range_size' %}
+{% endcomment %}
+{%- liquid
+  assign bs_meta = brand.metafields[namespace]
+  assign bs_category = bs_meta[category_key].value
+  assign bs_origin = bs_meta[origin_key].value
+  assign bs_logo = bs_meta[logo_key].value
+  assign bs_range = bs_meta[range_size_key].value | default: brand.all_products_count
+
+  assign bs_image = brand.image
+  assign bs_image_is_logo = false
+  if bs_logo != blank
+    if image_source == 'logo' or bs_image == blank
+      assign bs_image = bs_logo
+      assign bs_image_is_logo = true
+    endif
+  endif
+-%}
+<a href="{{ brand.url }}" class="bs-brand-card">
+  <div class="bs-brand-card__panel color-{{ panel_scheme }} gradient">
+    {%- if bs_image != blank -%}
+      <div class="bs-brand-card__media{% if bs_image_is_logo %} bs-brand-card__media--logo{% endif %}">
+        {%- if lazy_load -%}
+          {%- assign bs_loading = 'lazy' -%}
+        {%- else -%}
+          {%- assign bs_loading = 'eager' -%}
+        {%- endif -%}
+        {{-
+          bs_image
+          | image_url: width: 1200
+          | image_tag:
+            loading: bs_loading,
+            widths: '200, 400, 600, 800, 1200',
+            sizes: '(min-width: 990px) 25vw, 50vw',
+            alt: '',
+            class: 'bs-brand-card__image'
+        -}}
+      </div>
+    {%- endif -%}
+    <div class="bs-brand-card__row">
+      {%- if bs_meta[exclusive_key].value == true -%}
+        <span class="bs-brand-sticker">
+          {{- 'bs-sticker.svg' | inline_asset_content -}}
+          <span class="bs-brand-sticker__text">{{ 'sections.brands.exclusive' | t }}</span>
+        </span>
+      {%- elsif bs_meta[new_key].value == true -%}
+        <span class="bs-brand-card__new">{{ 'sections.brands.new' | t }}</span>
+      {%- endif -%}
+      {%- if bs_category != blank -%}
+        <span class="bs-brand-card__end">{{ bs_category | escape }}</span>
+      {%- endif -%}
+    </div>
+    <div class="bs-brand-card__row">
+      {%- if bs_range > 0 -%}
+        <span>{{ 'products.facets.product_count_simple' | t: count: bs_range }}</span>
+      {%- endif -%}
+      {%- if bs_origin != blank -%}
+        <span class="bs-brand-card__end">{{ bs_origin | escape }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+  <h2 class="bs-brand-card__name">{{ brand.title | escape }}</h2>
+</a>

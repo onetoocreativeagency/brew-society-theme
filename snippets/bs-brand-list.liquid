@@ -1,0 +1,67 @@
+{% comment %}
+  Renders the list view of every brand collection (Figma Brands - All [List View] 4166:4532):
+  a table of name, category, range size, origin and relationship. A hovered or
+  focused row is highlighted and shows that brand's product shot.
+  Used by the Brands catalogue and under the brand page.
+
+  Accepts:
+  - namespace, category_key, origin_key, relationship_key, logo_key, range_size_key: {String} metafield namespace and keys
+
+  Usage:
+  {% render 'bs-brand-list', namespace: 'brand', category_key: 'category', origin_key: 'origin', relationship_key: 'relationship', logo_key: 'logo', range_size_key: 'range_size' %}
+{% endcomment %}
+{%- comment -%} The rows are laid out with CSS grid, so the table roles are stated explicitly. {%- endcomment -%}
+<table class="bs-brand-list" role="table">
+  <caption class="visually-hidden">
+    {{ 'sections.brands.table_caption' | t }}
+  </caption>
+  <thead role="rowgroup">
+    <tr class="bs-brand-list__row bs-brand-list__row--head" role="row">
+      <th class="bs-brand-list__name" scope="col" role="columnheader">{{ 'sections.brands.name' | t }}</th>
+      <th class="bs-brand-list__category" scope="col" role="columnheader">{{ 'sections.brands.category' | t }}</th>
+      <th class="bs-brand-list__products" scope="col" role="columnheader">{{ 'sections.brands.products' | t }}</th>
+      <th class="bs-brand-list__origin" scope="col" role="columnheader">{{ 'sections.brands.origin' | t }}</th>
+      <th class="bs-brand-list__type" scope="col" role="columnheader">{{ 'sections.brands.type' | t }}</th>
+    </tr>
+  </thead>
+  <tbody role="rowgroup">
+    {%- paginate collections by 250 -%}
+      {%- for bs_brand in collections -%}
+        {%- liquid
+          unless bs_brand.template_suffix == 'brand'
+            continue
+          endunless
+          assign bs_meta = bs_brand.metafields[namespace]
+          assign bs_category = bs_meta[category_key].value
+          assign bs_range = bs_meta[range_size_key].value | default: bs_brand.all_products_count
+          assign bs_image = bs_brand.image | default: bs_meta[logo_key].value
+        -%}
+        <tr class="bs-brand-list__row" role="row" data-brand data-category="{{ bs_category | handleize }}">
+          <td class="bs-brand-list__name" role="cell">
+            <a href="{{ bs_brand.url }}" class="bs-brand-list__link">{{ bs_brand.title | escape }}</a>
+            {%- if bs_image != blank -%}
+              {{-
+                bs_image
+                | image_url: width: 600
+                | image_tag: loading: 'lazy', widths: '300, 600', sizes: '233px', alt: '', class: 'bs-brand-list__image'
+              -}}
+            {%- endif -%}
+          </td>
+          <td class="bs-brand-list__category" role="cell">{{ bs_category | escape }}</td>
+          <td class="bs-brand-list__products" role="cell">
+            {%- if bs_range > 0 -%}
+              {{ bs_range }}
+            {%- endif -%}
+          </td>
+          <td class="bs-brand-list__origin" role="cell">{{ bs_meta[origin_key].value | escape }}</td>
+          <td class="bs-brand-list__type" role="cell">
+            {%- for bs_relationship in bs_meta[relationship_key].value -%}
+              {{- bs_relationship | escape -}}
+              {%- unless forloop.last %}, {% endunless -%}
+            {%- endfor -%}
+          </td>
+        </tr>
+      {%- endfor -%}
+    {%- endpaginate -%}
+  </tbody>
+</table>
