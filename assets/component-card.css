@@ -593,3 +593,88 @@
     clip-path: polygon(var(--shape--blob-5));
   }
 }
+
+/* Brew Society product card (Figma Card 4127:3140, mobile 4246:2220).
+   An off-white 408:611 panel with the image contained, a label in its top-left corner,
+   then one row with the title on the left and the price on the right. */
+.product-card-wrapper .card__media .media {
+  background-color: transparent;
+}
+
+.product-card-wrapper .card__media .media img {
+  object-fit: contain;
+}
+
+/* Product photos shot on white take on the panel colour. */
+.product-card-wrapper .card__inner .card__media {
+  mix-blend-mode: multiply;
+}
+
+.product-card-wrapper .card--media .card__inner .card__content {
+  position: static;
+  padding: 0;
+}
+
+.product-card-wrapper .card__inner .card__badge {
+  position: absolute;
+  top: calc(var(--bs-space-8) + var(--bs-space-4));
+  left: calc(var(--bs-space-8) + var(--bs-space-4));
+  margin: 0;
+}
+
+.bs-card-label,
+.product-card-wrapper .card__heading,
+.product-card-wrapper .card-information > .bs-card-price {
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: var(--bs-tracking-display);
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-card-label {
+  display: block;
+  line-height: var(--bs-leading-display);
+  color: rgb(var(--color-foreground));
+}
+
+.product-card-wrapper .card > .card__content > .card__information {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--bs-space-16);
+  padding: var(--bs-space-16) 0 0;
+}
+
+.product-card-wrapper .card__heading {
+  line-height: var(--bs-leading-heading);
+}
+
+.product-card-wrapper .card-information {
+  flex: none;
+  width: auto;
+  max-width: 60%;
+  text-align: right;
+}
+
+.product-card-wrapper .card .card__content .card__information .card-information > .bs-card-price {
+  margin-top: 0;
+}
+
+.product-card-wrapper .card-information > .bs-card-price {
+  line-height: var(--bs-leading-heading);
+  color: var(--bs-color-grey);
+  white-space: nowrap;
+}
+
+@media screen and (min-width: 750px) {
+  .product-card-wrapper .card__inner .card__badge {
+    top: var(--bs-space-16);
+    left: var(--bs-space-16);
+  }
+
+  .bs-card-label,
+  .product-card-wrapper .card__heading,
+  .product-card-wrapper .card-information > .bs-card-price {
+    font-size: var(--bs-text-large);
+  }
+}

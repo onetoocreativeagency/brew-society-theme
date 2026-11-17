@@ -3,9 +3,13 @@
     "banner": {
       "type": "main-collection-banner",
       "settings": {
-        "show_collection_description": true,
+        "all_title": "All",
+        "show_product_count": true,
+        "show_collection_description": false,
         "show_collection_image": false,
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "padding_top": 256,
+        "padding_bottom": 0
       }
     },
     "product-grid": {
@@ -21,11 +25,11 @@
         "show_rating": false,
         "quick_add": "none",
         "enable_filtering": true,
-        "filter_type": "horizontal",
+        "filter_type": "drawer",
         "enable_sorting": true,
         "columns_mobile": "2",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "padding_top": 28,
+        "padding_bottom": 100
       }
     }
   },

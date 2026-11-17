@@ -104,20 +104,57 @@
       <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
         {{ 'component-facets.css' | asset_url | stylesheet_tag }}
         <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
-        {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
-          <aside
-            aria-labelledby="verticalTitle"
-            class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
-            id="main-collection-filters"
-            data-id="{{ section.id }}"
-          >
-            {% render 'facets',
-              results: collection,
-              enable_filtering: section.settings.enable_filtering,
-              enable_sorting: section.settings.enable_sorting,
-              filter_type: section.settings.filter_type
-            %}
-          </aside>
+        {%- liquid
+          assign bs_category_links = linklists[section.settings.category_menu].links
+          assign bs_show_facets = false
+          if section.settings.enable_filtering or section.settings.enable_sorting
+            assign bs_show_facets = true
+          endif
+        -%}
+        {%- capture bs_facets -%}
+          {%- if bs_show_facets -%}
+            <aside
+              aria-labelledby="verticalTitle"
+              class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}"
+              id="main-collection-filters"
+              data-id="{{ section.id }}"
+            >
+              {% render 'facets',
+                results: collection,
+                enable_filtering: section.settings.enable_filtering,
+                enable_sorting: section.settings.enable_sorting,
+                filter_type: section.settings.filter_type
+              %}
+            </aside>
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- if section.settings.filter_type == 'vertical' -%}
+          {{ bs_facets }}
+        {%- elsif bs_category_links.size > 0 or bs_show_facets -%}
+          {% comment %} Category links on the left, Filter & Sort on the fourth column. {% endcomment %}
+          <div class="bs-collection-bar page-width">
+            {%- if bs_category_links.size > 0 -%}
+              <nav class="bs-category-nav" aria-label="{{ 'sections.collection_template.categories' | t }}">
+                <ul class="bs-category-nav__list list-unstyled" role="list">
+                  {%- for link in bs_category_links -%}
+                    <li>
+                      <a
+                        href="{{ link.url }}"
+                        class="bs-category-nav__link{% if link.current %} bs-category-nav__link--current{% endif %}"
+                        {% if link.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{- link.title | escape -}}
+                        {%- render 'bs-menu-count', link: link -%}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </nav>
+            {%- endif -%}
+            {{ bs_facets }}
+          </div>
         {%- endif -%}
 
         <div
@@ -170,7 +207,6 @@
                   >
                     {% render 'card-product',
                       card_product: product,
-                      media_aspect_ratio: section.settings.image_ratio,
                       image_shape: section.settings.image_shape,
                       show_secondary_image: section.settings.show_secondary_image,
                       show_vendor: section.settings.show_vendor,
@@ -205,6 +241,12 @@
   "name": "t:sections.main-collection-product-grid.name",
   "class": "section",
   "settings": [
+    {
+      "type": "link_list",
+      "id": "category_menu",
+      "label": "t:sections.main-collection-product-grid.settings.category_menu.label",
+      "info": "t:sections.main-collection-product-grid.settings.category_menu.info"
+    },
     {
       "type": "range",
       "id": "products_per_page",
@@ -377,7 +419,7 @@
           "label": "t:sections.main-collection-product-grid.settings.filter_type.options__3.label"
         }
       ],
-      "default": "horizontal",
+      "default": "drawer",
       "label": "t:sections.main-collection-product-grid.settings.filter_type.label"
     },
     {

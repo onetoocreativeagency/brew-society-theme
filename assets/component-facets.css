@@ -1227,7 +1227,6 @@ input.mobile-facets__checkbox {
   }
 
   .facets-container-drawer .mobile-facets__wrapper {
-    margin-right: 2rem;
     flex-grow: 1;
   }
 
@@ -1253,5 +1252,92 @@ input.mobile-facets__checkbox {
 
   .facets-vertical .active-facets__button-remove {
     padding: 0 1rem 1rem;
+  }
+}
+
+/* Brew Society: the Filter & Sort control and its drawer (Figma Shop - All 4166:4279).
+   The control is a blue dot and a label; filters and sorting both live in the drawer. */
+.facets-container-drawer {
+  display: block;
+  padding-top: 0;
+}
+
+.facets-container-drawer .mobile-facets__open {
+  width: auto;
+  padding: 0;
+  gap: var(--bs-space-8);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+  color: rgb(var(--color-foreground));
+}
+
+.facets-container-drawer .mobile-facets__open::before {
+  content: '';
+  flex: none;
+  width: var(--bs-space-8);
+  height: var(--bs-space-8);
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.facets-container-drawer .mobile-facets__open .svg-wrapper {
+  display: none;
+}
+
+.facets-container-drawer .mobile-facets__open > * + * {
+  margin-left: 0;
+}
+
+.facets-container-drawer .mobile-facets__open-label {
+  font-size: inherit;
+  letter-spacing: 0;
+}
+
+.facets-container-drawer .active-facets {
+  margin: var(--bs-space-8) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--bs-space-8);
+}
+
+.facets-container-drawer .active-facets__button,
+.facets-container-drawer .active-facets__button-remove,
+.facets-container-drawer .active-facets__button-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+.facets-container-drawer span.active-facets__button-inner,
+.facets-container-drawer .active-facets__button-wrapper * {
+  font-size: var(--bs-text-small);
+  letter-spacing: 0;
+}
+
+.facets-container-drawer span.active-facets__button-inner {
+  padding: var(--bs-space-4) calc(var(--bs-space-8) + var(--bs-space-4));
+}
+
+.mobile-facets__heading {
+  font-size: var(--bs-text-large);
+}
+
+.mobile-facets__count {
+  color: var(--bs-color-grey);
+  font-size: var(--bs-text-paragraph);
+}
+
+.mobile-facets__footer .button {
+  min-height: var(--bs-space-48);
+}
+
+.mobile-facets__sort .select .select__select {
+  font-size: var(--bs-text-paragraph);
+  letter-spacing: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .facets-container-drawer .mobile-facets__open {
+    font-size: var(--bs-text-large);
   }
 }
