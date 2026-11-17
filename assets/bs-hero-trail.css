@@ -41,7 +41,7 @@
   mix-blend-mode: multiply;
 }
 
-/* Mobile rests three images. The rest stay unloaded unless the trail runs. */
+/* Mobile rests three images. The rest stay unloaded unless an effect runs. */
 .bs-hero-trail__item:nth-child(n + 4) {
   display: none;
 }
@@ -51,7 +51,7 @@
   opacity: 0;
 }
 
-.bs-hero-trail.is-trailing .bs-hero-trail__item {
+.bs-hero-trail.is-active .bs-hero-trail__item {
   opacity: 0;
 }
 
@@ -133,7 +133,7 @@
     opacity: 0;
   }
 
-  .bs-hero-trail.is-enhanced:not(.is-trailing) .bs-hero-trail__item:nth-child(-n + 16) {
+  .bs-hero-trail.is-enhanced:not(.is-active) .bs-hero-trail__item:nth-child(-n + 16) {
     opacity: 1;
   }
 
