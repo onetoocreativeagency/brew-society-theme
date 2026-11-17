@@ -22,7 +22,7 @@
         "image_scale": 100,
         "blend_images": true,
         "enable_trail": true,
-        "color_scheme": "",
+        "color_scheme": "scheme-2",
         "padding_top": 0,
         "padding_bottom": 0
       }
@@ -64,7 +64,8 @@
         "stack_images_on_mobile": false,
         "mobile_content_alignment": "center",
         "show_text_below": false
-      }
+      },
+      "disabled": true
     },
     "featured_collection": {
       "type": "featured-collection",
@@ -92,7 +93,8 @@
         "swipe_on_mobile": false,
         "padding_top": 44,
         "padding_bottom": 36
-      }
+      },
+      "disabled": true
     },
     "bs_brand_ring_gGaJKC": {
       "type": "bs-brand-ring",
@@ -107,16 +109,147 @@
         "metafield_namespace": "brand",
         "logo_key": "logo",
         "exclusive_key": "exclusive",
-        "color_scheme": "",
+        "color_scheme": "scheme-2",
         "padding_top": 0,
         "padding_bottom": 0
+      }
+    },
+    "statement_intro": {
+      "type": "bs-statement",
+      "settings": {
+        "text": "<strong>Brew Society is Melbourne’s premium</strong> distributor for exclusive food and drink brands in Victoria and NSW.",
+        "break_after_bold": false,
+        "as_heading": true,
+        "alignment": "center",
+        "max_width": "wide",
+        "color_scheme": "scheme-6",
+        "padding_top": 256,
+        "padding_bottom": 64
+      }
+    },
+    "feature_cards": {
+      "type": "bs-feature-cards",
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "title": "Importer",
+            "image_fit": "contain",
+            "text": ""
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "title": "Developer",
+            "image_fit": "contain",
+            "text": ""
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "title": "Distributor",
+            "image_fit": "cover",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-6",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "statement_growing": {
+      "type": "bs-statement",
+      "settings": {
+        "text": "<strong>Growing brands</strong> in your hands",
+        "break_after_bold": true,
+        "as_heading": true,
+        "alignment": "center",
+        "max_width": "narrow",
+        "color_scheme": "scheme-6",
+        "padding_top": 256,
+        "padding_bottom": 64
+      }
+    },
+    "statement_categories": {
+      "type": "bs-statement",
+      "settings": {
+        "text": "<a href=\"/collections/all\"><strong>All</strong></a>, Alt. Milks, Confectionery, Snacks, Drinks, <a href=\"/collections/tea\">Tea</a>, Coffee, Bakery, Water, Packaging",
+        "break_after_bold": false,
+        "as_heading": false,
+        "alignment": "center",
+        "max_width": "narrow",
+        "color_scheme": "scheme-6",
+        "padding_top": 64,
+        "padding_bottom": 128
+      }
+    },
+    "wholesale_steps": {
+      "type": "bs-steps",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Browse Brands + Pricing",
+            "text": "Tell us about your business and we'll send wholesale pricing within 24 hours.",
+            "button_label": "View Catalogue",
+            "button_link": "shopify://collections",
+            "use_wholesale_link": false
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "Set up your account",
+            "text": "You'll need an ABN. Minimum order is $300.",
+            "button_label": "Create Account",
+            "use_wholesale_link": true
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "Order Online, Any Time, Delivered",
+            "text": "Browse the range and order on Pepper. We deliver across Victoria + NSW.",
+            "button_label": "Order Wholesale",
+            "use_wholesale_link": true
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ],
+      "settings": {
+        "label_left": "Wholesale Process",
+        "label_right": "Three Steps",
+        "heading": "<strong>Wholesale ordering,</strong> made simple",
+        "closing": "Chat first? And get pricing → <a href=\"/pages/contact\">Contact Us</a>",
+        "color_scheme": "scheme-3",
+        "card_color_scheme": "scheme-2",
+        "padding_top": 8,
+        "padding_bottom": 8
       }
     }
   },
   "order": [
     "bs_hero_trail_7JLm4F",
+    "statement_intro",
+    "feature_cards",
+    "statement_growing",
+    "bs_brand_ring_gGaJKC",
+    "statement_categories",
+    "wholesale_steps",
     "image_banner",
-    "featured_collection",
-    "bs_brand_ring_gGaJKC"
+    "featured_collection"
   ]
 }

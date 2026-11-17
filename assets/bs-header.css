@@ -31,3 +31,9 @@
   letter-spacing: var(--bs-tracking-button);
   white-space: nowrap;
 }
+
+/* At the top of the page the header has no band of its own, so the hero's images can
+   sit behind it as in Figma. Once it is stuck while scrolling it gets its background back. */
+.section-header:not(.shopify-section-header-sticky) .header-wrapper {
+  background: transparent;
+}
