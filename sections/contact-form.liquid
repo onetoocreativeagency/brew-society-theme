@@ -1,5 +1,5 @@
 {{ 'bs-choice.css' | asset_url | stylesheet_tag }}
-{{ 'bs-pill.css' | asset_url | stylesheet_tag }}
+{{ 'bs-pill-xl.css' | asset_url | stylesheet_tag }}
 {{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
@@ -30,12 +30,12 @@
     {%- if section.settings.email != blank or section.settings.phone != blank -%}
       <div class="contact__direct">
         {%- if section.settings.email != blank and section.settings.email_label != blank -%}
-          <a class="button bs-pill" href="mailto:{{ section.settings.email | strip | escape }}">
+          <a class="button bs-pill-xl" href="mailto:{{ section.settings.email | strip | escape }}">
             {{- section.settings.email_label | escape -}}
           </a>
         {%- endif -%}
         {%- if section.settings.phone != blank and section.settings.phone_label != blank -%}
-          <a class="button bs-pill bs-pill--tint" href="tel:{{ contact_phone_href | escape }}">
+          <a class="button bs-pill-xl bs-pill-xl--tint" href="tel:{{ contact_phone_href | escape }}">
             {{- section.settings.phone_label | escape -}}
           </a>
         {%- endif -%}
@@ -198,7 +198,7 @@
         </label>
       </div>
 
-      <button type="submit" class="contact__submit button bs-pill">
+      <button type="submit" class="contact__submit button bs-pill-xl">
         {{ 'templates.contact.form.send' | t }}
       </button>
     {%- endform -%}

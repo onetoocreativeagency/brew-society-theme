@@ -31,7 +31,7 @@
   width: 100%;
 }
 
-.bs-404__buttons .bs-pill {
+.bs-404__buttons .bs-pill-xl {
   flex: 1 1 100%;
   width: auto;
 }
@@ -47,7 +47,7 @@
     position: relative;
   }
 
-  .bs-404__buttons .bs-pill:not(:first-child) {
+  .bs-404__buttons .bs-pill-xl:not(:first-child) {
     flex-basis: 0;
   }
 }

@@ -1,6 +1,6 @@
 /* Brew Society oversized pill button (Contact, 404): 51px label on mobile, 67px on desktop. */
 
-.button.bs-pill {
+.button.bs-pill-xl {
   --buttons-radius: 999px;
   --buttons-radius-outset: 999px;
   width: 100%;
@@ -14,17 +14,17 @@
 }
 
 /* Secondary pill: a tint of the scheme's button colour with the label in that colour. */
-.button.bs-pill--tint {
+.button.bs-pill-xl--tint {
   --color-button-text: var(--color-button);
   --alpha-button-background: 0.15;
 }
 
-.button.bs-pill--tint::after {
+.button.bs-pill-xl--tint::after {
   box-shadow: none;
 }
 
 @media screen and (min-width: 990px) {
-  .button.bs-pill {
+  .button.bs-pill-xl {
     min-height: 15.2rem;
     font-size: var(--bs-text-4x-large);
   }
