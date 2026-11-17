@@ -377,8 +377,8 @@
       "name": "Layout",
       "settings": {
         "home_color_scheme": {
-          "label": "Home page background",
-          "info": "The page and header colours on the home page. Other pages use the first colour scheme."
+          "label": "Home and content page background",
+          "info": "The page and header colours on the home page, content pages, policies and the 404 page. Shop pages use the first colour scheme."
         },
         "page_width": {
           "label": "Page width"

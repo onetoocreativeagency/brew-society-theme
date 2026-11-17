@@ -1,0 +1,46 @@
+/* Brew Society cart page. No page of its own in Figma, so it borrows the cart drawer
+   (4166:4817): off-white image panels, a spread total line and the Checkout pill. */
+cart-items .title-wrapper-with-link {
+  align-items: flex-end;
+  margin-bottom: var(--bs-space-48);
+}
+
+cart-items .cart-item__image-container {
+  background-color: var(--bs-color-white);
+}
+
+cart-items .cart-item__image {
+  border: 0;
+  /* Product photos shot on white take on the panel colour, as on the card. */
+  mix-blend-mode: multiply;
+}
+
+.cart__footer .cart__blocks {
+  container-type: inline-size;
+}
+
+.cart__footer .totals {
+  justify-content: space-between;
+}
+
+.cart__footer .totals > * {
+  font-family: var(--font-body-family);
+  font-size: var(--bs-text-large);
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: var(--bs-tracking-display);
+  line-height: var(--bs-leading-heading);
+}
+
+.cart__footer .cart__ctas .button.bs-pill {
+  max-width: none;
+}
+
+@media screen and (min-width: 750px) {
+  .cart__footer .cart__blocks {
+    width: 59.7rem;
+  }
+}
+
+.cart__footer .cart__dynamic-checkout-buttons {
+  max-width: none;
+}

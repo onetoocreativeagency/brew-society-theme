@@ -2,6 +2,7 @@
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 {{ 'component-search.css' | asset_url | stylesheet_tag }}
+{{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
 
 {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
   {{ 'component-facets.css' | asset_url | stylesheet_tag }}
@@ -20,7 +21,7 @@
   }
 
   .template-search__search {
-    margin: 0 auto 3.5rem;
+    margin: 0 0 3.5rem;
     max-width: 74.1rem;
   }
 
@@ -66,11 +67,15 @@
 {% paginate search.results by 24 %}
   <div class="template-search{% unless search.performed and search.results_count > 0 %} template-search--empty{% endunless %} section-{{ section.id }}-padding">
     <div class="template-search__header page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-      <h1 class="h2 center">
+      <h1 class="collection-hero__title hxxl">
+        {{- 'general.search.search' | t -}}
         {%- if search.performed -%}
-          {{- 'templates.search.title' | t -}}
-        {%- else -%}
-          {{- 'general.search.search' | t -}}
+          {%- comment -%} No whitespace before the number: the count sits tight against the title, as on the shop. {%- endcomment -%}
+          <span class="collection-hero__count"><span aria-hidden="true">{{ search.results_count }}</span>
+            <span class="visually-hidden">
+              , {{ 'templates.search.results_with_count' | t: count: search.results_count }}
+            </span>
+          </span>
         {%- endif -%}
       </h1>
       <div class="template-search__search">
@@ -507,7 +512,7 @@
       "type": "range",
       "id": "padding_top",
       "min": 0,
-      "max": 100,
+      "max": 256,
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
