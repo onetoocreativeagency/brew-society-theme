@@ -88,4 +88,11 @@ One package (about one PR) per session, on its own `claude/…` branch:
 
 ## Store access
 
-TBC. No store is connected yet. Until one is, verify with Theme Check, the validate script, and a throwaway static HTML harness (not committed) that loads the theme CSS with representative markup and is screenshotted with the pre-installed Playwright at 1728 and 393 wide. When one is, record here: the myshopify domain, the preview theme id (`?preview_theme_id=…`), and whether the sandbox can reach it, so sessions can verify rendered pages themselves.
+- Store: `brew-society.myshopify.com`, primary domain `shop.brewsociety.com.au`. It is the client's **live** store, still running their old Debut theme. Read public storefront pages only; no form submissions, no cart or checkout actions, no crawling.
+- `main` is connected through Shopify's GitHub integration to an unpublished draft theme, id `189593354398`. Only `main` deploys, usually within a minute of a push.
+- **Preview**: append `?preview_theme_id=189593354398` to any storefront URL on `shop.brewsociety.com.au`. No storefront password. The first request answers 302 and sets a preview cookie, so keep cookies and follow redirects. With curl add `--http1.1 -L -c jar -b jar` (HTTP/2 early hints make curl hang). Confirm you are on the draft theme by checking `Shopify.theme` in the page source.
+- **Screenshots**: the pre-installed Playwright needs the proxy: `chromium.launch({ proxy: { server: process.env.HTTPS_PROXY } })`. Load the preview URL first, then navigate in the same context.
+- **Verify unmerged work on real pages** by loading the preview and injecting your CSS with `page.addStyleTag`. For markup changes, fall back to a throwaway static HTML harness (not committed).
+- The environment must allow `shop.brewsociety.com.au`, `brew-society.myshopify.com` and `cdn.shopify.com`. If the proxy refuses them, the session is on an environment without those hosts.
+- The store's `main-menu` and `footer` menus belong to the old site (brand links, "Back to BrewSociety"). The new navigation needs its own menus, selected in the draft theme's header and footer settings, so the live site's menus are left alone.
+- The theme editor commits to `main` as "Update from Shopify". Fetch and rebase before every push.

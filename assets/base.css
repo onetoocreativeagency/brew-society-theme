@@ -2425,10 +2425,11 @@ input[type='checkbox'] {
   line-height: 0;
 }
 
+/* The logo keeps its natural width: a long menu must wrap, not squeeze the logo to nothing. */
 .header__heading,
 .header > .header__heading-link {
   margin-right: auto;
-  min-width: 0;
+  flex-shrink: 0;
 }
 
 .header__heading-link {
@@ -2452,6 +2453,7 @@ input[type='checkbox'] {
   display: flex;
   align-items: center;
   column-gap: inherit;
+  flex-shrink: 0;
 }
 
 .header__icons .shopify-app-block {
@@ -2721,6 +2723,7 @@ details[open] > .header__submenu {
 /* Header menu */
 .header__inline-menu {
   display: none;
+  min-width: 0;
 }
 
 @media screen and (min-width: 990px) {
@@ -2729,8 +2732,10 @@ details[open] > .header__submenu {
   }
 }
 
+/* A menu too long for one row wraps onto a second, right-aligned, instead of running under the logo and off the page. */
 .header__inline-menu > .list-menu--inline {
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   column-gap: var(--bs-space-16);
 }
 
