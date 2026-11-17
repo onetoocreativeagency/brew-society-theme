@@ -1,0 +1,24 @@
+{% comment %}
+  One announcement bar notice: text with an optional link.
+
+  Accepts:
+  - block: {Object} Announcement block
+
+  Usage:
+  {% render 'bs-announcement-notice', block: block %}
+{% endcomment %}
+
+{%- if block.settings.text != blank -%}
+  {%- if block.settings.link != blank -%}
+    <a href="{{ block.settings.link }}" class="announcement-bar__link link link--text focus-inset animate-arrow">
+  {%- endif -%}
+  <p class="announcement-bar__message">
+    <span>{{ block.settings.text | escape }}</span>
+    {%- if block.settings.link != blank -%}
+      {{- 'icon-arrow.svg' | inline_asset_content -}}
+    {%- endif -%}
+  </p>
+  {%- if block.settings.link != blank -%}
+    </a>
+  {%- endif -%}
+{%- endif -%}

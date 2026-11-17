@@ -1,0 +1,110 @@
+/* Announcement bar (Figma 4166:3933): 42px bar, one notice at a time, arrows at the two edges. */
+.announcement-bar {
+  color: rgb(var(--color-foreground));
+  width: 100%;
+  min-width: 0;
+  grid-area: announcements;
+}
+
+/* Dawn utilities option: a single notice sits beside the social icons. */
+@media screen and (min-width: 990px) {
+  .announcement-bar.announcement-bar--one-announcement,
+  .announcement-bar--one-announcement .announcement-bar__link {
+    width: fit-content;
+    margin: auto;
+  }
+}
+
+.announcement-bar__link {
+  display: block;
+  text-decoration: none;
+}
+
+.announcement-bar__link:hover {
+  text-decoration: underline;
+}
+
+.announcement-bar__link .icon-arrow {
+  display: inline-block;
+  pointer-events: none;
+  margin-left: 0.8rem;
+  vertical-align: middle;
+  margin-bottom: 0.2rem;
+}
+
+.announcement-bar__message {
+  margin: 0;
+  padding: 1.2rem 0;
+  text-align: center;
+  font-size: var(--bs-text-small);
+  line-height: var(--bs-leading-body);
+  letter-spacing: 0.024em;
+  text-transform: uppercase;
+}
+
+/* Carousel. Before Splide mounts (and without JavaScript) the first notice fills the track
+   and the arrows keep their space, so the bar does not change size. */
+.announcement-bar.splide {
+  display: flex;
+  align-items: stretch;
+  visibility: visible;
+}
+
+.announcement-bar .splide__arrows {
+  display: contents;
+}
+
+.announcement-bar .splide__track {
+  order: 1;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.announcement-bar .splide__slide {
+  width: 100%;
+  padding: 0 var(--bs-space-16);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 12px icon at the gutter edge; the button extends into the gutter for a larger target. */
+.announcement-bar .splide__arrow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  margin: 0 calc(var(--bs-space-24) * -1);
+  padding: 0 var(--bs-space-24);
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.announcement-bar.is-initialized .splide__arrow {
+  visibility: visible;
+}
+
+.announcement-bar .splide__arrow--prev {
+  order: 0;
+}
+
+.announcement-bar .splide__arrow--next {
+  order: 2;
+}
+
+.announcement-bar .splide__arrow .icon {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.announcement-bar .splide__arrow--prev .icon {
+  transform: rotate(180deg);
+}
+
+.announcement-bar .splide__arrow:focus-visible {
+  outline-offset: -0.3rem;
+}
