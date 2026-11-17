@@ -1,0 +1,14 @@
+{%- doc -%}
+  Outputs the id of the colour scheme shared by the page background and the header on the
+  home page, content pages, policies and the 404 page (theme setting "home_color_scheme").
+  Outputs nothing on every other page, which keeps the first colour scheme.
+
+  @example
+  {%- capture bs_page_scheme -%}{%- render 'bs-page-scheme' -%}{%- endcapture -%}
+{%- enddoc -%}
+{%- liquid
+  case request.page_type
+    when 'index', 'page', 'policy', '404'
+      echo settings.home_color_scheme
+  endcase
+-%}
