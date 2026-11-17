@@ -20,10 +20,18 @@
             "text": "Free Delivery on All Orders",
             "link": ""
           }
+        },
+        "announcement-bar-1": {
+          "type": "announcement",
+          "settings": {
+            "text": "Placeholder notice: replace this text",
+            "link": ""
+          }
         }
       },
       "block_order": [
-        "announcement-bar-0"
+        "announcement-bar-0",
+        "announcement-bar-1"
       ]
     },
     "header": {
