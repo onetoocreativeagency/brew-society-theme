@@ -93,9 +93,28 @@
         "padding_top": 0,
         "padding_bottom": 0
       }
+    },
+    "bs_hero_trail_7JLm4F": {
+      "type": "bs-hero-trail",
+      "name": "Hero with image trail",
+      "settings": {
+        "heading": "Earth’s best food + drink brands, door to door",
+        "text": "Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
+        "primary_label": "Order Wholesale",
+        "secondary_label": "Shop for Home",
+        "secondary_link": "shopify://collections/all",
+        "collection": "",
+        "image_scale": 100,
+        "blend_images": true,
+        "enable_trail": true,
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
     }
   },
   "order": [
+    "bs_hero_trail_7JLm4F",
     "image_banner",
     "featured_collection",
     "bs_brand_ring_gGaJKC"
