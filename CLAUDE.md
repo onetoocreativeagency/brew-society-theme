@@ -84,6 +84,12 @@ A product's brand is the collection it belongs to that has the `brand` template 
 
 Keep every namespace.key configurable in section settings where a section reads one, with these as defaults.
 
+**Store data rules (from Marcel):**
+
+- **Never change product data.** No edits to products, variants, prices, inventory, tags, product types, vendors or product metafield values, by API or in the admin. The two `custom.*` product definitions exist but no product has a value set; filling them is the client's call. The theme works with the catalogue as it is: singles and cartons are separate products, and only the Frederick's Coffee lines have variants.
+- **Never delete anything in the store.** Create and update only.
+- Category names stay as they are for now ("Alt. Milks", not "Plant milk"). Naming gets refined near the end of the build, so keep category labels data-driven and never hard-code them in Liquid or CSS.
+
 ## Merchant editability (client requirement)
 
 - **Every section and block has a schema** with clear, human labels. Repeatable content (cards, logos, FAQs, steps) is modelled as blocks.
