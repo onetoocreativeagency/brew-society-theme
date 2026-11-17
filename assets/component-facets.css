@@ -1323,7 +1323,7 @@ input.mobile-facets__checkbox {
 }
 
 .mobile-facets__count {
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   font-size: var(--bs-text-paragraph);
 }
 

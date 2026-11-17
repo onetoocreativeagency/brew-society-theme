@@ -662,7 +662,7 @@
 
 .product-card-wrapper .card-information > .bs-card-price {
   line-height: var(--bs-leading-heading);
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   white-space: nowrap;
 }
 

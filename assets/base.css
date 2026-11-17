@@ -147,10 +147,16 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   }
 }
 
-/* Grey count after a menu link (snippets/bs-menu-count.liquid). */
+/* Grey count after a menu link (snippets/bs-menu-count.liquid). Text grey at header size;
+   the display grey where the menu is set large (footer, mobile menu). */
 .bs-menu-count {
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   margin-left: 0.4rem;
+}
+
+.footer .bs-menu-count,
+.menu-drawer .bs-menu-count {
+  color: var(--bs-color-grey);
 }
 
 .isolate {
