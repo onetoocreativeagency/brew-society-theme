@@ -49,7 +49,40 @@ Every brand and every product type is a Shopify **collection**. Two collection t
 - **Cart**: drawer (theme setting `cart_type` is `drawer`).
 - **Wholesale** is not sold on Shopify. Every wholesale CTA links out to the Pepper ordering portal (ABN required). No customer-account or B2B work. The portal link is the theme setting `settings.wholesale_portal_url` (Theme settings → Wholesale). Every Order Wholesale button reads it; never hard-code the URL or add a second setting for it. Hide the button when it is blank.
 
-Collection metafields (namespace `brand`, definitions TBC with the client's spreadsheet): `logo` (file), `category` (list of text), `exclusive` (boolean), `status` (Imported exclusive / Local exclusive / Distributed), `channels` (list), `summary` (multi-line text), `website` (URL), `pepper_url` (URL). Plus a collection `type` metafield distinguishing brand from product-type collections. Make every namespace.key configurable in Theme settings rather than hard-coded.
+Store data was set up through the Admin API on 2026-11-17 (`docs/store-setup.py`, additive and idempotent; `docs/store-inventory.md` has what the store holds). The definitions below exist in the store; read them by these exact keys.
+
+**Collection metafields** (namespace `brand`), all optional, so every one needs a blank-safe fallback:
+
+| Key | Type | Used for |
+|---|---|---|
+| `brand.category` | single line text, one of: Alt. Milks, Confectionery, Drink, Snack, Tea, Coffee, Bakery, Syrup, Water, Packaging | Category on brand cards, list view and brand page; grouping and chips on the Brands page |
+| `brand.origin` | single line text (country) | Origin on cards, list view and brand page; picks the flag |
+| `brand.relationship` | list of text: Owner, Importer, Distributor | "Relationship" on the brand page, "Type" in the list view |
+| `brand.exclusive` | boolean | Exclusive sticker |
+| `brand.new` | boolean | New label on the brand card |
+| `brand.logo` | file (image) | Logo view of the Brands page |
+| `brand.range_size` | integer | "28 Products". Fall back to `collection.products_count` when blank |
+| `brand.website` | URL | Website on the brand page |
+| `brand.instagram` | single line text (handle) | Instagram on the brand page |
+| `brand.info_pack` | file | "Info Pack: Download" on the brand page |
+| `brand.pepper_url` | URL | Buy Wholesale on the brand. Fall back to `settings.wholesale_portal_url` |
+
+The brand's hero product shot is the collection's own image, and its About text is the collection description. A brand collection is any collection whose template suffix is `brand` (seven today; the rest arrive once the client confirms `docs/brand-sheet.csv`). There is no separate `type` metafield.
+
+**Product metafields** (namespace `custom`):
+
+| Key | Type | Used for |
+|---|---|---|
+| `custom.wholesale_only` | boolean | "Wholesale Only" label on the card; the buy panel shows "Wholesale Pricing in Portal" and Buy Wholesale only, no price or Add to Cart |
+| `custom.badge` | single line text | Card label such as New. "Sold Out" is computed, not stored |
+
+A product's brand is the collection it belongs to that has the `brand` template suffix. The vendor field is not usable (almost every product's vendor is "Brew Society.").
+
+**Menus**: `brew-society-main` (Brands, Shop, About, FAQ, Contact) and `brew-society-legal` (Legal, Shipping, Refunds). The store's `main-menu` and `footer` menus belong to the live site; do not select or edit them.
+
+**Pages**: `/pages/about`, `/pages/contact` (contact template) and `/pages/wholesale` exist but are hidden until their copy is agreed. `/pages/faqs` is live and can be used to preview page templates.
+
+Keep every namespace.key configurable in section settings where a section reads one, with these as defaults.
 
 ## Merchant editability (client requirement)
 
