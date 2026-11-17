@@ -1,0 +1,605 @@
+/* Brands catalogue and brand page (Figma Brands - All 4166:4283, List View 4166:4532, Brand Item 4166:4170). */
+
+/* Catalogue: heading, category links and view switch */
+.bs-brands__bar {
+  margin-top: var(--bs-space-24);
+}
+
+.bs-brands__views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bs-space-4) calc(var(--bs-space-16) + var(--bs-space-4));
+}
+
+/* The switch needs the script; without it both views are shown one after the other. */
+.bs-brands:not([data-view]) .bs-brands__views,
+.bs-brands[data-view='grid'] .bs-brands__list,
+.bs-brands[data-view='list'] .bs-brand-grid,
+.bs-brands [data-brand][hidden] {
+  display: none;
+}
+
+.bs-brands:not([data-view]) .bs-brands__list {
+  margin-top: var(--bs-space-64);
+}
+
+.bs-brands__view {
+  display: flex;
+  align-items: center;
+  gap: var(--bs-space-8);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+  color: var(--bs-color-grey);
+  text-decoration: none;
+  transition: color var(--duration-short) ease;
+}
+
+.bs-brands__view:hover,
+.bs-brands__view[aria-current] {
+  color: rgb(var(--color-foreground));
+}
+
+/* Two squares side by side for the grid, two dots stacked for the list. */
+.bs-brands__view::before {
+  content: '';
+  flex: none;
+  width: var(--bs-space-8);
+  height: var(--bs-space-8);
+  background-color: currentColor;
+}
+
+.bs-brands__view--grid::before {
+  margin-right: calc(var(--bs-space-8) + 2px);
+  box-shadow: calc(var(--bs-space-8) + 2px) 0 0 currentColor;
+}
+
+.bs-brands__view--list::before {
+  margin-block: 5px;
+  border-radius: 50%;
+  box-shadow: 0 calc(var(--bs-space-8) + 2px) 0 currentColor;
+  transform: translateY(-5px);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-brands__bar {
+    margin-top: var(--bs-space-40);
+  }
+
+  .bs-brands__view {
+    font-size: var(--bs-text-large);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .bs-brands__views {
+    grid-column: 4;
+  }
+}
+
+/* Grid of brand cards: 2 columns, 4 on desktop */
+.bs-brand-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--bs-space-32) var(--bs-grid-gap);
+  margin: 0;
+  padding: 0;
+}
+
+.bs-brand-card {
+  display: block;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+}
+
+.bs-brand-card__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 408 / 611;
+  overflow: hidden;
+}
+
+.bs-brand-card__media {
+  position: absolute;
+  inset: 14% 8% 10%;
+  /* Product photos shot on white take on the panel colour. */
+  mix-blend-mode: multiply;
+}
+
+.bs-brand-card__media--logo {
+  inset: 25% 12%;
+}
+
+.bs-brand-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform var(--duration-long) ease;
+}
+
+@media (hover: hover) {
+  .bs-brand-card:hover .bs-brand-card__image {
+    transform: scale(1.03);
+  }
+}
+
+.bs-brand-card__row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--bs-space-8);
+  padding: calc(var(--bs-space-8) + var(--bs-space-4));
+  font-size: var(--bs-text-small);
+  font-weight: var(--bs-weight-demibold);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-display);
+  color: var(--bs-color-grey);
+}
+
+.bs-brand-card__row > * {
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-brand-card__row > :first-letter {
+  text-transform: uppercase;
+}
+
+.bs-brand-card__row span:first-child:not(.bs-brand-card__end, .bs-brand-sticker) {
+  text-transform: capitalize;
+}
+
+.bs-brand-card__end {
+  margin-left: auto;
+  text-align: right;
+}
+
+.bs-brand-card__new {
+  color: rgb(var(--color-foreground));
+}
+
+.bs-brand-card__name {
+  margin: var(--bs-space-16) 0 0;
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-demibold);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-display);
+  text-box: trim-both cap alphabetic;
+}
+
+/* "Exclusive to Brew Society" ticket (Figma 4206:5611). */
+.bs-brand-sticker {
+  position: absolute;
+  top: var(--bs-space-4);
+  left: var(--bs-space-8);
+  display: grid;
+  place-items: center;
+  width: 8rem;
+  aspect-ratio: 127 / 61;
+  color: rgb(var(--color-button));
+  transform: rotate(-12deg);
+  text-box: none;
+}
+
+.bs-brand-sticker svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bs-brand-sticker__text {
+  position: relative;
+  max-width: 78%;
+  font-size: 0.8rem;
+  font-weight: var(--bs-weight-bold);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgb(var(--color-button-text));
+  transform: rotate(5deg);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-brand-grid {
+    row-gap: var(--bs-space-64);
+  }
+
+  .bs-brand-card__row {
+    padding: var(--bs-space-16);
+    font-size: var(--bs-text-paragraph);
+  }
+
+  .bs-brand-card__name {
+    font-size: var(--bs-text-large);
+  }
+
+  .bs-brand-sticker {
+    left: var(--bs-space-16);
+    width: 12.7rem;
+  }
+
+  .bs-brand-sticker__text {
+    font-size: var(--bs-text-small);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .bs-brand-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .bs-brand-card__row {
+    font-size: var(--bs-text-large);
+  }
+
+  .bs-brand-card__name {
+    font-size: var(--bs-text-x-large);
+    line-height: var(--bs-leading-display);
+  }
+}
+
+/* List view: a table laid out on the 12-column grid */
+.bs-brand-list,
+.bs-brand-list thead,
+.bs-brand-list tbody {
+  display: block;
+  width: 100%;
+}
+
+.bs-brand-list {
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-display);
+  box-shadow: none;
+}
+
+.bs-brand-list__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--bs-space-8);
+  padding: calc(var(--bs-space-8) + var(--bs-space-4)) 0;
+  color: var(--bs-color-grey);
+}
+
+.bs-brand-list__row--head {
+  border-bottom: 1px solid rgb(var(--color-foreground));
+  color: rgb(var(--color-foreground));
+}
+
+.bs-brand-list th,
+.bs-brand-list td {
+  grid-row: 1;
+  padding: 0;
+  border: 0;
+  font-weight: inherit;
+  text-align: left;
+}
+
+/* Phones show name, category and origin. */
+.bs-brand-list__name {
+  grid-column: 1 / span 5;
+  transition: padding var(--duration-short) ease;
+}
+
+.bs-brand-list__category {
+  grid-column: 6 / span 4;
+}
+
+.bs-brand-list__origin {
+  grid-column: 10 / span 3;
+}
+
+.bs-brand-list__products,
+.bs-brand-list__type {
+  display: none;
+}
+
+.bs-brand-list__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The whole row is the link. */
+.bs-brand-list__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.bs-brand-list__image {
+  display: none;
+}
+
+.bs-brand-list tbody .bs-brand-list__row:hover,
+.bs-brand-list tbody .bs-brand-list__row:focus-within {
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
+.bs-brand-list tbody .bs-brand-list__row:hover .bs-brand-list__name,
+.bs-brand-list tbody .bs-brand-list__row:focus-within .bs-brand-list__name {
+  padding-left: var(--bs-space-8);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-brand-list {
+    font-size: var(--bs-text-large);
+  }
+
+  .bs-brand-list__products,
+  .bs-brand-list__type {
+    display: block;
+  }
+
+  .bs-brand-list__name {
+    grid-column: 1 / span 3;
+  }
+
+  .bs-brand-list__category {
+    grid-column: 4 / span 3;
+  }
+
+  .bs-brand-list__products {
+    grid-column: 7 / span 2;
+  }
+
+  .bs-brand-list__origin {
+    grid-column: 9 / span 2;
+  }
+
+  .bs-brand-list__type {
+    grid-column: 11 / span 2;
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .bs-brand-list__origin {
+    grid-column: 11;
+  }
+
+  .bs-brand-list__type {
+    grid-column: 12;
+  }
+}
+
+/* The highlighted row shows the brand's product shot. */
+@media screen and (min-width: 990px) and (hover: hover) {
+  .bs-brand-list tbody .bs-brand-list__row:hover,
+  .bs-brand-list tbody .bs-brand-list__row:focus-within {
+    z-index: 1;
+  }
+
+  .bs-brand-list__row:hover .bs-brand-list__image,
+  .bs-brand-list__row:focus-within .bs-brand-list__image {
+    position: absolute;
+    top: 50%;
+    left: 42%;
+    display: block;
+    width: 23.3rem;
+    height: auto;
+    max-height: 43rem;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+}
+
+/* Brand page header */
+.bs-brand-hero__breadcrumb {
+  padding-top: var(--bs-space-16);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+  color: var(--bs-color-grey);
+}
+
+.bs-brand-hero__breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.bs-brand-hero__breadcrumb li {
+  display: flex;
+  align-items: center;
+  gap: var(--bs-space-4);
+}
+
+.bs-brand-hero__breadcrumb li:not(:last-child)::after {
+  content: ',';
+  margin: 0 0.25em 0 calc(var(--bs-space-4) * -1);
+}
+
+.bs-brand-hero__breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-short) ease;
+}
+
+.bs-brand-hero__breadcrumb a:hover,
+.bs-brand-hero__breadcrumb [aria-current] {
+  color: rgb(var(--color-foreground));
+}
+
+.bs-brand-hero__count {
+  padding: var(--bs-space-8);
+  border-radius: calc(var(--bs-space-8) + var(--bs-space-4));
+  background-color: var(--bs-color-white);
+  font-size: var(--bs-text-small);
+  line-height: var(--bs-leading-display);
+  letter-spacing: var(--bs-tracking-display);
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-brand-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--bs-space-48) var(--bs-grid-gap);
+}
+
+/* The name is sized so its longest word always fits the column. */
+.bs-brand-hero__heading {
+  container-type: inline-size;
+}
+
+.bs-brand-hero__heading .bs-brand-hero__title {
+  --bs-brand-title-size: clamp(var(--bs-text-3x-large), 17vw, var(--bs-text-4x-large));
+  font-size: var(--bs-brand-title-size);
+  font-size: min(var(--bs-brand-title-size), calc(100cqi / var(--bs-longest-word) / 0.5));
+  overflow-wrap: break-word;
+}
+
+.bs-brand-hero__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-32);
+  max-width: 54.6rem;
+}
+
+.bs-brand-hero__about-label {
+  display: flex;
+  align-items: center;
+  gap: var(--bs-space-16);
+  margin: 0 0 var(--bs-space-24);
+  font-size: var(--bs-text-large);
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.bs-brand-hero__about-label::before {
+  content: '';
+  width: var(--bs-space-16);
+  height: var(--bs-space-16);
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.bs-brand-hero__description {
+  font-size: var(--bs-text-large);
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+.bs-brand-hero__description > :first-child {
+  margin-top: 0;
+}
+
+.bs-brand-hero__description > :last-child {
+  margin-bottom: 0;
+}
+
+.bs-brand-hero__facts {
+  display: grid;
+  gap: var(--bs-space-8);
+  margin: 0;
+}
+
+.bs-brand-hero__fact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--bs-space-16);
+  align-items: center;
+}
+
+.bs-brand-hero__fact dt {
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+}
+
+.bs-brand-hero__fact dd {
+  margin: 0;
+  min-width: 0;
+}
+
+.bs-brand-hero__pill {
+  display: inline-block;
+  max-width: 100%;
+  padding: var(--bs-space-4) var(--bs-space-8);
+  border-radius: calc(var(--bs-space-8) + var(--bs-space-4));
+  background-color: var(--bs-color-white);
+  color: rgb(var(--color-foreground));
+  font-size: var(--bs-text-small);
+  line-height: var(--bs-leading-body);
+  text-transform: uppercase;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+
+a.bs-brand-hero__pill {
+  transition: background-color var(--duration-short) ease, color var(--duration-short) ease;
+}
+
+a.bs-brand-hero__pill:hover {
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
+.bs-brand-hero__wholesale.button {
+  --buttons-radius: 999px;
+  --buttons-radius-outset: 999px;
+  width: 100%;
+  min-height: 14rem;
+  padding: 0 var(--bs-space-8);
+  font-size: clamp(var(--bs-text-2x-large), 11vw, var(--bs-text-3x-large));
+  font-weight: var(--bs-weight-medium);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-button);
+  text-align: center;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-brand-hero__breadcrumb {
+    font-size: var(--bs-text-large);
+  }
+
+  .bs-brand-hero__heading .bs-brand-hero__title {
+    --bs-brand-title-size: clamp(var(--bs-text-5x-large), 12.3vw, var(--bs-text-8x-large));
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .bs-brand-hero__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .bs-brand-hero__heading {
+    grid-column: 1 / span 8;
+  }
+
+  .bs-brand-hero__details {
+    grid-column: 9 / span 4;
+    /* Figma sets the column 6px in from the grid line. */
+    max-width: none;
+  }
+
+  .bs-brand-hero__wholesale.button {
+    min-height: 15.2rem;
+    font-size: clamp(var(--bs-text-2x-large), 3.9vw, var(--bs-text-4x-large));
+  }
+}
+
+/* "Moooore": every brand, under the brand page */
+.bs-brand-more__heading {
+  margin: 0 0 var(--bs-space-48);
+  line-height: 0.85;
+  letter-spacing: -0.025em;
+  text-align: center;
+  text-box: trim-both cap alphabetic;
+  overflow-wrap: break-word;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-brand-more__heading {
+    margin-bottom: var(--bs-space-64);
+  }
+}

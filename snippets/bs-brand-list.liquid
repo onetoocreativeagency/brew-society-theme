@@ -1,0 +1,30 @@
+{% comment %}
+  Renders the list view of every brand collection (Figma Brands - All [List View] 4166:4532):
+  a table of name, category, range size, origin and relationship. A hovered or
+  focused row is highlighted and shows that brand's product shot.
+  Used by the Brands catalogue and under the brand page.
+
+  Accepts:
+  - config: {Object} the section's settings (metafield namespace and keys)
+
+  Usage:
+  {% render 'bs-brand-list', config: section.settings %}
+{% endcomment %}
+{%- comment -%} The rows are laid out with CSS grid, so the table roles are stated explicitly. {%- endcomment -%}
+<table class="bs-brand-list" role="table">
+  <caption class="visually-hidden">
+    {{ 'sections.brands.table_caption' | t }}
+  </caption>
+  <thead role="rowgroup">
+    <tr class="bs-brand-list__row bs-brand-list__row--head" role="row">
+      <th class="bs-brand-list__name" scope="col" role="columnheader">{{ 'sections.brands.name' | t }}</th>
+      <th class="bs-brand-list__category" scope="col" role="columnheader">{{ 'sections.brands.category' | t }}</th>
+      <th class="bs-brand-list__products" scope="col" role="columnheader">{{ 'sections.brands.products' | t }}</th>
+      <th class="bs-brand-list__origin" scope="col" role="columnheader">{{ 'sections.brands.origin' | t }}</th>
+      <th class="bs-brand-list__type" scope="col" role="columnheader">{{ 'sections.brands.type' | t }}</th>
+    </tr>
+  </thead>
+  <tbody role="rowgroup">
+    {%- render 'bs-brand-each', item: 'row', config: config -%}
+  </tbody>
+</table>

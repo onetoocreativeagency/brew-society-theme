@@ -1,0 +1,123 @@
+{{ 'bs-brands.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- comment -%} Every brand as a list, under the brand page (Figma 4166:4170, "Moooore"). {%- endcomment -%}
+<div class="bs-brand-more color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="bs-brand-more__heading hxxl">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- render 'bs-brand-list', config: section.settings -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "All brands list",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Lists every collection that uses the brand template."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Moooore"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Brand data"
+    },
+    {
+      "type": "paragraph",
+      "content": "Brand details are collection metafields. Change these only if the metafield definitions are renamed."
+    },
+    {
+      "type": "text",
+      "id": "namespace",
+      "label": "Metafield namespace",
+      "default": "brand"
+    },
+    {
+      "type": "text",
+      "id": "category_key",
+      "label": "Category metafield key",
+      "default": "category"
+    },
+    {
+      "type": "text",
+      "id": "origin_key",
+      "label": "Origin metafield key",
+      "default": "origin"
+    },
+    {
+      "type": "text",
+      "id": "relationship_key",
+      "label": "Relationship metafield key",
+      "default": "relationship"
+    },
+    {
+      "type": "text",
+      "id": "logo_key",
+      "label": "Logo metafield key",
+      "default": "logo"
+    },
+    {
+      "type": "text",
+      "id": "range_size_key",
+      "label": "Range size metafield key",
+      "default": "range_size"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 256
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "All brands list"
+    }
+  ]
+}
+{% endschema %}

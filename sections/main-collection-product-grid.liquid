@@ -36,6 +36,8 @@
   }
 {%- endstyle -%}
 
+{%- comment -%} Brand pages leave the grid out when the brand has nothing on the shop. {%- endcomment -%}
+{%- unless section.settings.hide_when_empty and collection.all_products_count == 0 -%}
 <collection-component
   view-event-payload="{{ collection | standard_event_data: 'view' | escape }}"
   data-collection-id="{{ collection.id }}"
@@ -235,6 +237,7 @@
     {%- endif -%}
   </div>
 </collection-component>
+{%- endunless -%}
 
 {% schema %}
 {
@@ -246,6 +249,12 @@
       "id": "category_menu",
       "label": "t:sections.main-collection-product-grid.settings.category_menu.label",
       "info": "t:sections.main-collection-product-grid.settings.category_menu.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_when_empty",
+      "default": false,
+      "label": "Hide this section when the collection has no products"
     },
     {
       "type": "range",
