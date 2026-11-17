@@ -1,0 +1,18 @@
+/* Brew Society page heading: the giant centred title on About, FAQ, Contact and generic pages. */
+
+.bs-page-heading__title {
+  margin: 0;
+  /* Only shows when a long title wraps: one line is trimmed to its capitals. */
+  line-height: 0.9;
+  text-align: center;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  text-box: trim-both cap alphabetic;
+}
+
+/* Same mobile scale as the shop title: 67px, shrinking on narrow phones so long words fit. */
+@media screen and (max-width: 749px) {
+  .bs-page-heading__title {
+    font-size: clamp(var(--bs-text-3x-large), 17vw, var(--bs-text-4x-large));
+  }
+}

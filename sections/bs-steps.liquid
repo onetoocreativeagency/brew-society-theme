@@ -14,19 +14,28 @@
   }
 {%- endstyle -%}
 
-<div class="bs-steps-wrapper section-{{ section.id }}-padding">
-  <div class="bs-steps color-{{ section.settings.color_scheme }} gradient">
-    <div class="bs-steps__header">
-      {%- if section.settings.label_left != blank or section.settings.label_right != blank -%}
-        <div class="bs-steps__labels">
-          <p>{{ section.settings.label_left | escape }}</p>
-          <p>{{ section.settings.label_right | escape }}</p>
-        </div>
-      {%- endif -%}
-      {%- if section.settings.heading != blank -%}
-        <h2 class="bs-steps__heading">{{ section.settings.heading }}</h2>
-      {%- endif -%}
-    </div>
+{%- liquid
+  assign has_labels = false
+  if section.settings.label_left != blank or section.settings.label_right != blank
+    assign has_labels = true
+  endif
+-%}
+
+<div class="bs-steps-wrapper{% if section.settings.style == 'plain' %} bs-steps-wrapper--plain color-{{ section.settings.color_scheme }} gradient{% endif %} section-{{ section.id }}-padding">
+  <div class="bs-steps{% if section.settings.style == 'plain' %} bs-steps--plain{% else %} color-{{ section.settings.color_scheme }} gradient{% endif %}">
+    {%- if has_labels or section.settings.heading != blank -%}
+      <div class="bs-steps__header">
+        {%- if has_labels -%}
+          <div class="bs-steps__labels">
+            <p>{{ section.settings.label_left | escape }}</p>
+            <p>{{ section.settings.label_right | escape }}</p>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="bs-steps__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
 
     <div class="bs-steps__body">
       {%- if section.blocks.size > 0 -%}
@@ -141,6 +150,17 @@
       "id": "closing",
       "label": "Line under the steps",
       "default": "Chat first? And get pricing → <a href=\"/pages/contact\">Contact Us</a>"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "panel", "label": "Coloured panel" },
+        { "value": "plain", "label": "Plain cards on the page" }
+      ],
+      "default": "panel",
+      "info": "Plain shows only the numbered cards, with grey numbers, straight on the page background."
     },
     {
       "type": "color_scheme",

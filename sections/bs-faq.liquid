@@ -1,0 +1,290 @@
+{{ 'bs-choice.css' | asset_url | stylesheet_tag }}
+{{ 'bs-faq.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  comment
+    A "group" block starts a tab; the "question" blocks after it belong to it. Questions placed
+    before the first group always show. A question without an answer, and a group without
+    answered questions, only show in the theme editor.
+  endcomment
+
+  assign show_drafts = request.design_mode
+  assign visible_groups = 0
+  assign ungrouped = 0
+  assign in_group = false
+  assign group_flags = ''
+
+  for block in section.blocks
+    if block.type == 'group'
+      assign in_group = true
+      assign answered = 0
+      for item in section.blocks offset: forloop.index
+        if item.type == 'group'
+          break
+        endif
+        if item.settings.answer != blank or show_drafts
+          assign answered = answered | plus: 1
+        endif
+      endfor
+      if answered > 0 or show_drafts
+        assign visible_groups = visible_groups | plus: 1
+        assign group_flags = group_flags | append: '1,'
+      else
+        assign group_flags = group_flags | append: '0,'
+      endif
+    elsif in_group == false
+      if block.settings.answer != blank or show_drafts
+        assign ungrouped = ungrouped | plus: 1
+      endif
+    endif
+  endfor
+
+  assign group_flags = group_flags | split: ','
+  assign use_tabs = false
+  if visible_groups > 1
+    assign use_tabs = true
+  endif
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  {%- if use_tabs -%}
+    @supports selector(:has(*)) {
+      {%- for flag in group_flags -%}
+        {%- if flag == '1' %}
+          #Faq-{{ section.id }}:has(#FaqTab-{{ section.id }}-{{ forloop.index }}:checked) #FaqPanel-{{ section.id }}-{{ forloop.index }} {
+            display: block;
+          }
+        {%- endif -%}
+      {%- endfor -%}
+    }
+  {%- endif -%}
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div id="Faq-{{ section.id }}" class="bs-faq{% if use_tabs %} bs-faq--tabs{% endif %}">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="bs-faq__heading h2">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+
+      {%- if use_tabs -%}
+        <fieldset class="bs-faq__tabs bs-choice">
+          <legend class="visually-hidden">{{ 'sections.faq.groups' | t }}</legend>
+          {%- assign first_tab = true -%}
+          {%- assign group_index = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'group' -%}
+              {%- continue -%}
+            {%- endif -%}
+            {%- assign group_index = group_index | plus: 1 -%}
+            {%- assign flag_index = group_index | minus: 1 -%}
+            {%- if group_flags[flag_index] != '1' -%}
+              {%- continue -%}
+            {%- endif -%}
+            <span class="bs-choice__option" {{ block.shopify_attributes }}>
+              <input
+                class="bs-choice__input"
+                type="radio"
+                name="FaqTab-{{ section.id }}"
+                id="FaqTab-{{ section.id }}-{{ group_index }}"
+                {% if first_tab %}
+                  checked
+                {% endif %}
+              >
+              <label class="bs-choice__label" for="FaqTab-{{ section.id }}-{{ group_index }}">
+                {{- block.settings.title | escape -}}
+              </label>
+            </span>
+            {%- assign first_tab = false -%}
+          {%- endfor -%}
+        </fieldset>
+      {%- endif -%}
+
+      <div class="bs-faq__panels">
+        {%- if ungrouped > 0 -%}
+          <div class="bs-faq__list">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'group' -%}
+                {%- break -%}
+              {%- endif -%}
+              {%- render 'bs-faq-item', block: block, show_drafts: show_drafts -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- assign group_index = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'group' -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- assign group_index = group_index | plus: 1 -%}
+          {%- assign flag_index = group_index | minus: 1 -%}
+          {%- if group_flags[flag_index] != '1' -%}
+            {%- continue -%}
+          {%- endif -%}
+          <div
+            class="bs-faq__panel"
+            id="FaqPanel-{{ section.id }}-{{ group_index }}"
+            {% unless use_tabs %}
+              {{ block.shopify_attributes }}
+            {% endunless %}
+          >
+            {%- if use_tabs and block.settings.title != blank -%}
+              <h2 class="bs-faq__group-title">{{ block.settings.title | escape }}</h2>
+            {%- endif -%}
+            <div class="bs-faq__list">
+              {%- for item in section.blocks offset: forloop.index -%}
+                {%- if item.type == 'group' -%}
+                  {%- break -%}
+                {%- endif -%}
+                {%- render 'bs-faq-item', block: item, show_drafts: show_drafts -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- if request.design_mode and use_tabs -%}
+  <script>
+    // Theme editor only: open the tab that holds the block the merchant selected.
+    if (!window.bsFaqEditorBound) {
+      window.bsFaqEditorBound = true;
+      document.addEventListener('shopify:block:select', (event) => {
+        const panel = event.target.closest('.bs-faq__panel');
+        const tab = panel && document.getElementById(panel.id.replace('FaqPanel-', 'FaqTab-'));
+        if (tab) tab.checked = true;
+      });
+    }
+  </script>
+{%- endif -%}
+
+{%- comment -%} FAQ structured data: answered questions only. {%- endcomment -%}
+{%- capture faq_entities -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'question' and block.settings.question != blank and block.settings.answer != blank -%}
+      {"@type":"Question","name":{{ block.settings.question | json }},"acceptedAnswer":{"@type":"Answer","text":{{ block.settings.answer | json }}}}|||
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign faq_entities = faq_entities | strip | split: '|||' -%}
+{%- if faq_entities.size > 0 -%}
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{ faq_entities | join: ',' }}]}
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Add a Group to start a new tab, then put its Questions under it. Questions without an answer stay hidden on the live site."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Optional. Leave empty when the page already has a big heading."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "default": "scheme-6"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Group",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Group name",
+          "info": "Shown on the tab.",
+          "default": "General"
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "group"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

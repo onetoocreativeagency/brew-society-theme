@@ -1,23 +1,128 @@
-<style type="text/css">
-  .template-404 .title + * {
-    margin-top: 1rem;
+{{ 'bs-pill-xl.css' | asset_url | stylesheet_tag }}
+{{ 'bs-404.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
 
   @media screen and (min-width: 750px) {
-    .template-404 .title + * {
-      margin-top: 2rem;
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
-</style>
+{%- endstyle -%}
 
-<div class="template-404 page-width page-margin center">
-  <p>
-    {{ 'templates.404.subtext' | t }}
-  </p>
-  <h1 class="title">
-    {{ 'templates.404.title' | t }}
-  </h1>
-  <a href="{{ routes.all_products_collection_url }}" class="button">
-    {{ 'general.continue_shopping' | t }}
-  </a>
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="bs-404 page-width section-{{ section.id }}-padding">
+    <h1 class="bs-404__title hxxl">
+      {{- 'templates.404.subtext' | t -}}
+      <span class="visually-hidden">: {{ 'templates.404.title' | t }}</span>
+    </h1>
+
+    {%- if section.settings.image != blank -%}
+      <div class="bs-404__media">
+        {{
+          section.settings.image
+          | image_url: width: 2160
+          | image_tag: widths: '375, 750, 1080, 1500, 2160', sizes: '(min-width: 750px) 62vw, 100vw', alt: ''
+        }}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="bs-404__buttons">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.label != blank and block.settings.link != blank -%}
+            <a
+              class="button bs-pill-xl{% if block.settings.style == 'tint' %} bs-pill-xl--tint{% endif %}"
+              href="{{ block.settings.link }}"
+              {{ block.shopify_attributes }}
+            >
+              {{- block.settings.label | escape -}}
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
 </div>
+
+{% schema %}
+{
+  "name": "Page not found",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Shown between the 404 and the buttons. Optional."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Back to Home"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "default": "/"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            { "value": "solid", "label": "Solid" },
+            { "value": "tint", "label": "Tint" }
+          ],
+          "default": "solid"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

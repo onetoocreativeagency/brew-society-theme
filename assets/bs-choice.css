@@ -1,0 +1,67 @@
+/* Brew Society choice pills: a row of radio buttons drawn as tabs (FAQ groups, contact enquiry type). */
+
+.bs-choice {
+  display: flex;
+  gap: var(--bs-space-8);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.bs-choice__option {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* The real radio covers its pill, so it keeps native keyboard and touch behaviour. */
+.bs-choice__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.bs-choice__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 4.8rem;
+  padding: var(--bs-space-8);
+  border: 0.1rem solid transparent;
+  border-radius: var(--bs-space-16);
+  background: rgb(var(--color-background));
+  color: var(--bs-color-grey);
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-medium);
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
+  transition: color var(--duration-short) ease, border-color var(--duration-short) ease;
+}
+
+.bs-choice__input:hover + .bs-choice__label {
+  color: rgb(var(--color-foreground));
+}
+
+.bs-choice__input:checked + .bs-choice__label {
+  border-color: rgb(var(--color-button));
+  color: rgb(var(--color-button));
+}
+
+.bs-choice__input:focus-visible + .bs-choice__label {
+  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  outline-offset: 0.3rem;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-choice__label {
+    padding-left: var(--bs-space-24);
+    padding-right: var(--bs-space-24);
+  }
+}

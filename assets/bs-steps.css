@@ -231,3 +231,41 @@ a.bs-steps__button:hover {
     font-size: min(var(--bs-text-4x-large), 13cqi);
   }
 }
+
+/* Plain style (About, Figma 4166:3893): no panel, grey numbers, cards straight on the page. */
+.bs-steps-wrapper--plain {
+  padding-left: var(--bs-gutter);
+  padding-right: var(--bs-gutter);
+}
+
+.bs-steps--plain {
+  border-radius: 0;
+}
+
+.bs-steps--plain .bs-steps__header {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.bs-steps--plain .bs-steps__body {
+  padding: 0;
+}
+
+.bs-steps--plain .bs-steps__item {
+  --bs-steps-tint: var(--bs-color-grey);
+  background: rgba(var(--color-foreground), 0.06);
+}
+
+.bs-steps--plain .bs-steps__item:nth-child(1) {
+  border-radius: var(--bs-space-8);
+}
+
+.bs-steps--plain .bs-steps__item:nth-child(2) {
+  border-radius: var(--bs-space-24);
+}
+
+@media screen and (min-width: 990px) {
+  .bs-steps--plain .bs-steps__number {
+    font-size: min(var(--bs-text-8x-large), 46.5cqi);
+  }
+}

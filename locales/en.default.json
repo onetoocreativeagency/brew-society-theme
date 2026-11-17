@@ -264,10 +264,12 @@
       "form": {
         "title": "Contact form",
         "name": "Name",
-        "email": "Email",
-        "phone": "Phone number",
-        "comment": "Comment",
-        "send": "Send",
+        "business": "Business Name",
+        "email": "Email Address",
+        "phone": "Phone",
+        "type": "Type",
+        "comment": "Message",
+        "send": "Submit",
         "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
         "error_heading": "Please adjust the following:"
       }
@@ -278,6 +280,10 @@
     }
   },
   "sections": {
+    "faq": {
+      "groups": "Show questions about",
+      "no_answer": "No answer yet. This question stays hidden on the live site until it has one."
+    },
     "announcements": {
       "previous_announcement": "Previous announcement",
       "next_announcement": "Next announcement",

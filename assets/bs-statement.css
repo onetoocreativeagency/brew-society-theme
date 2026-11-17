@@ -53,3 +53,17 @@
 .bs-statement__text a:focus-visible {
   color: rgb(var(--color-foreground));
 }
+
+/* Paragraph setting (About, Figma 4166:3917): first line indented by one em, looser lines. */
+.bs-statement--paragraph .bs-statement__text {
+  line-height: 1.25;
+  letter-spacing: -0.05em;
+  text-indent: 1em;
+  text-wrap: pretty;
+}
+
+@media screen and (max-width: 749px) {
+  .bs-statement--paragraph .bs-statement__text {
+    font-size: var(--bs-text-2x-large);
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "sections": {
+    "heading": {
+      "type": "bs-page-heading",
+      "settings": {
+        "title": "Who Society?",
+        "color_scheme": "scheme-2",
+        "padding_top": 128,
+        "padding_bottom": 128
+      }
+    },
+    "team": {
+      "type": "bs-team-photo",
+      "blocks": {
+        "person_1": {
+          "type": "person",
+          "settings": {
+            "name": "Harry, Director",
+            "show_by_default": true
+          }
+        }
+      },
+      "block_order": [
+        "person_1"
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "intro": {
+      "type": "bs-statement",
+      "settings": {
+        "text": "<strong>BrewSociety imports and distributes food and drink brands to independent retailers, cafes and offices across Victoria and NSW. We’re based in Melbourne, VIC and we’ve been doing this since 2019.</strong>",
+        "break_after_bold": false,
+        "paragraph": true,
+        "as_heading": false,
+        "alignment": "left",
+        "max_width": "full",
+        "color_scheme": "scheme-2",
+        "padding_top": 128,
+        "padding_bottom": 128
+      }
+    },
+    "facts": {
+      "type": "bs-facts",
+      "blocks": {
+        "brands": {
+          "type": "fact",
+          "settings": {
+            "label": "Brands",
+            "value": ""
+          }
+        },
+        "countries": {
+          "type": "fact",
+          "settings": {
+            "label": "Countries",
+            "value": ""
+          }
+        },
+        "team": {
+          "type": "fact",
+          "settings": {
+            "label": "Team",
+            "value": ""
+          }
+        },
+        "vans": {
+          "type": "fact",
+          "settings": {
+            "label": "Vans",
+            "value": ""
+          }
+        },
+        "exclusive": {
+          "type": "fact",
+          "settings": {
+            "label": "Exclusive",
+            "value": ""
+          }
+        }
+      },
+      "block_order": [
+        "brands",
+        "countries",
+        "team",
+        "vans",
+        "exclusive"
+      ],
+      "settings": {
+        "label": "About",
+        "text": "<p>We started as a cafe supplier. Today most of what we do is bring brands into Australia that nobody else has, and get them onto the shelves of the grocers, pantries and delis that care about what they stock.</p><p>We still supply cafes and restaurants every week, and we still carry the staples that keep a cafe running. The difference now is the range around them.</p>",
+        "position": "right",
+        "color_scheme": "scheme-2",
+        "padding_top": 16,
+        "padding_bottom": 32
+      }
+    },
+    "closing": {
+      "type": "bs-statement",
+      "settings": {
+        "text": "Finding, developing and distributing <strong>brands the world wants</strong>",
+        "break_after_bold": true,
+        "paragraph": false,
+        "as_heading": true,
+        "alignment": "center",
+        "max_width": "narrow",
+        "color_scheme": "scheme-6",
+        "padding_top": 256,
+        "padding_bottom": 64
+      }
+    },
+    "parts": {
+      "type": "bs-steps",
+      "blocks": {
+        "import": {
+          "type": "step",
+          "settings": {
+            "title": "Import",
+            "text": "We find brands local and overseas, bring them in, and handle the customs and compliance so a retailer here can order them like any local line.",
+            "button_label": "",
+            "use_wholesale_link": false
+          }
+        },
+        "develop": {
+          "type": "step",
+          "settings": {
+            "title": "Develop",
+            "text": "Our own deliveries across Victoria and NSW.",
+            "button_label": "",
+            "use_wholesale_link": false
+          }
+        },
+        "distribute": {
+          "type": "step",
+          "settings": {
+            "title": "Distribute",
+            "text": "Brands we import get marketing here, a page on this site, and a sales team talking about them in store. We’re not a warehouse that waits for orders.",
+            "button_label": "",
+            "use_wholesale_link": false
+          }
+        }
+      },
+      "block_order": [
+        "import",
+        "develop",
+        "distribute"
+      ],
+      "settings": {
+        "style": "plain",
+        "label_left": "",
+        "label_right": "",
+        "heading": "",
+        "closing": "",
+        "color_scheme": "scheme-6",
+        "card_color_scheme": "scheme-6",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "ring": {
+      "type": "bs-brand-ring",
+      "settings": {
+        "button_label": "Brands & Counting",
+        "button_link": "shopify://collections",
+        "include_collections": true,
+        "blend_logos": true,
+        "rotate": true,
+        "rotate_seconds": 120,
+        "metafield_namespace": "brand",
+        "logo_key": "logo",
+        "exclusive_key": "exclusive",
+        "color_scheme": "scheme-2",
+        "padding_top": 128,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "heading",
+    "team",
+    "intro",
+    "facts",
+    "closing",
+    "parts",
+    "ring"
+  ]
+}
