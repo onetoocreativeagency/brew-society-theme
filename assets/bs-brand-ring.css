@@ -15,6 +15,7 @@
 
 /* Mobile: the square is 910 wide on a 393 screen and bleeds off both sides. */
 .bs-brand-ring__stage {
+  display: block;
   position: relative;
   width: var(--bs-ring-size);
   margin-left: calc(50% - var(--bs-ring-size) / 2);
@@ -109,21 +110,40 @@
   text-align: center;
 }
 
-/* Optional slow orbit. Each item circles the centre while its logo counter-turns to stay upright. */
+/*
+  Rotation. Each item orbits the centre and its logo counter-turns by the same
+  amount, so logos stay upright. The outer ring runs the other way. Only the
+  rotate property is animated, so the browser can run it off the main thread.
+*/
+.bs-brand-ring__item,
+.bs-brand-ring__link,
+.bs-brand-ring__logo {
+  /*
+    Stated outright on purpose. Dawn sets box-sizing: inherit on everything, and
+    Chrome then recalculates styles on every frame of the rotation for elements
+    that inherit from an animated parent. Measured: 60 recalcs a second without
+    this, none with it.
+  */
+  box-sizing: border-box;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .bs-brand-ring__stage--rotate .bs-brand-ring__item {
-    animation: bs-brand-ring-orbit 240s linear infinite;
-  }
-
+  .bs-brand-ring__stage--rotate .bs-brand-ring__item,
   .bs-brand-ring__stage--rotate .bs-brand-ring__link {
-    animation: bs-brand-ring-orbit 240s linear infinite reverse;
+    animation: bs-brand-ring-orbit var(--bs-ring-duration, 120s) linear infinite;
+    animation-play-state: var(--bs-ring-play, running);
   }
 
-  .bs-brand-ring__stage--rotate .bs-brand-ring__list:hover .bs-brand-ring__item,
-  .bs-brand-ring__stage--rotate .bs-brand-ring__list:hover .bs-brand-ring__link,
-  .bs-brand-ring__stage--rotate .bs-brand-ring__list:focus-within .bs-brand-ring__item,
-  .bs-brand-ring__stage--rotate .bs-brand-ring__list:focus-within .bs-brand-ring__link {
-    animation-play-state: paused;
+  .bs-brand-ring__stage--rotate .bs-brand-ring__item--inner .bs-brand-ring__link,
+  .bs-brand-ring__stage--rotate .bs-brand-ring__item--outer {
+    animation-direction: reverse;
+  }
+
+  /* Hold still while a logo is hovered or focused, and while off screen (class set by bs-brand-ring.js). */
+  .bs-brand-ring__list:hover,
+  .bs-brand-ring__list:focus-within,
+  .bs-brand-ring__stage--offscreen {
+    --bs-ring-play: paused;
   }
 }
 
