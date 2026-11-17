@@ -26,11 +26,12 @@
   capture bs_tally
     render 'bs-brand-each', item: 'tally', config: section.settings
   endcapture
-  assign bs_total = bs_tally | strip | size
+  # Shopify leaves a line break after each rendered collection, so line breaks are removed before counting.
+  assign bs_total = bs_tally | strip_newlines | strip | size
   capture bs_category_values
     render 'bs-brand-each', item: 'category', config: section.settings
   endcapture
-  assign bs_category_values = bs_category_values | strip | split: '|||'
+  assign bs_category_values = bs_category_values | strip_newlines | strip | split: '|||'
   assign bs_categories = bs_category_values | uniq | sort_natural
   assign bs_title = section.settings.title | default: collections.title
 -%}
