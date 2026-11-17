@@ -157,7 +157,7 @@
         "color_scheme": "scheme-6",
         "card_color_scheme": "scheme-6",
         "padding_top": 0,
-        "padding_bottom": 0
+        "padding_bottom": 32
       }
     },
     "ring": {
@@ -173,7 +173,7 @@
         "logo_key": "logo",
         "exclusive_key": "exclusive",
         "color_scheme": "scheme-2",
-        "padding_top": 128,
+        "padding_top": 96,
         "padding_bottom": 0
       }
     }
