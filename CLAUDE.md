@@ -67,7 +67,7 @@ Store data was set up through the Admin API on 2026-11-17 (`docs/store-setup.py`
 | `brand.info_pack` | file | "Info Pack: Download" on the brand page |
 | `brand.pepper_url` | URL | Buy Wholesale on the brand. Fall back to `settings.wholesale_portal_url` |
 
-The brand's hero product shot is the collection's own image, and its About text is the collection description. A brand collection is any collection whose template suffix is `brand` (seven today; the rest arrive once the client confirms `docs/brand-sheet.csv`). There is no separate `type` metafield.
+The brand's hero product shot is the collection's own image, and its About text is the collection description. A brand collection is any collection whose template suffix is `brand` (eight today, counting the test brand `biopak`; the rest arrive once the client confirms `docs/brand-sheet.csv`). There is no separate `type` metafield.
 
 **Product metafields** (namespace `custom`):
 
