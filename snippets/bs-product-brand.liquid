@@ -1,0 +1,18 @@
+{%- doc -%}
+  Outputs the handle of a product's brand: the first collection it belongs to whose template
+  suffix is `brand`. Outputs nothing when the product has no brand collection.
+
+  @param {product} product - The product to find the brand for.
+
+  @example
+  {%- capture brand_handle -%}{%- render 'bs-product-brand', product: product -%}{%- endcapture -%}
+  {%- assign brand = collections[brand_handle] -%}
+{%- enddoc -%}
+{%- liquid
+  for collection in product.collections
+    if collection.template_suffix == 'brand'
+      echo collection.handle
+      break
+    endif
+  endfor
+-%}

@@ -28,6 +28,23 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+
+  {%- comment -%}
+    Brew Society buy panel: card links marked data-buy-panel open the product in a side panel
+    (assets/quick-add.js clones this shell on first use). Without JavaScript they are plain links.
+  {%- endcomment -%}
+  {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+  <template class="bs-buy-panel-template">
+    <quick-add-modal id="QuickAdd-BuyPanel" class="quick-add-modal bs-buy-panel">
+      <div role="dialog" aria-modal="true" class="quick-add-modal__content" tabindex="-1">
+        <button id="ModalClose-BuyPanel" type="button" class="button bs-pill bs-pill--close">
+          {{- 'accessibility.close' | t -}}
+        </button>
+        <div id="QuickAddInfo-BuyPanel" class="quick-add-modal__content-info"></div>
+      </div>
+    </quick-add-modal>
+  </template>
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
@@ -127,6 +144,7 @@
                   href="{{ card_product.url }}"
                   id="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }}"
                   class="full-unstyled-link"
+                  data-buy-panel
                   aria-labelledby="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }}{% if bs_label != blank %} NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}{% endif %}"
                 >
                   {{ card_product.title | escape }}
@@ -154,6 +172,7 @@
                 href="{{ card_product.url }}"
                 id="CardLink-{{ section_id }}-{{ card_product.id }}"
                 class="full-unstyled-link"
+                data-buy-panel
                 aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }}{% if bs_label != blank %} Badge-{{ section_id }}-{{ card_product.id }}{% endif %}"
               >
                 {{ card_product.title | escape }}

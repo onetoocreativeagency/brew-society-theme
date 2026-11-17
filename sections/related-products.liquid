@@ -20,43 +20,56 @@
   }
 {%- endstyle -%}
 
-<div class="color-{{ section.settings.color_scheme }} gradient">
-  <product-recommendations
-    class="related-products page-width section-{{ section.id }}-padding isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-    data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.products_to_show }}"
-    data-section-id="{{ section.id }}"
-    data-product-id="{{ product.id }}"
-  >
-    {% if recommendations.performed and recommendations.products_count > 0 %}
+{%- liquid
+  comment
+    Brew Society: "More from <brand>". The brand is the product's collection with the `brand`
+    template suffix. The row is left out when the brand has no other products.
+  endcomment
+  capture bs_brand_handle
+    render 'bs-product-brand', product: product
+  endcapture
+  assign bs_brand = collections[bs_brand_handle]
+  assign bs_limit = section.settings.products_to_show | plus: 1
+  assign bs_shown = 0
+-%}
+{%- if bs_brand_handle != blank and bs_brand.products_count > 1 -%}
+  <div class="color-{{ section.settings.color_scheme }} gradient">
+    <div class="related-products page-width section-{{ section.id }}-padding isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <h2 class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
-        {{ section.settings.heading }}
+        {%- assign bs_brand_title = bs_brand.title | escape -%}
+        {{ section.settings.heading | replace: '[brand]', bs_brand_title }}
       </h2>
       <ul
         class="grid product-grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
         role="list"
       >
         {% assign skip_card_product_styles = false %}
-        {% for recommendation in recommendations.products %}
+        {% for related_product in bs_brand.products limit: bs_limit %}
+          {%- if related_product.id == product.id or bs_shown >= section.settings.products_to_show -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- assign bs_shown = bs_shown | plus: 1 -%}
           <li class="grid__item">
             {% render 'card-product',
-              card_product: recommendation,
+              card_product: related_product,
               image_shape: section.settings.image_shape,
               show_secondary_image: section.settings.show_secondary_image,
               show_vendor: section.settings.show_vendor,
               show_rating: section.settings.show_rating,
               skip_styles: skip_card_product_styles,
+              section_id: section.id,
               product_view_context: 'recommendation'
             %}
           </li>
           {%- assign skip_card_product_styles = true -%}
         {% endfor %}
       </ul>
-    {% endif %}
-  </product-recommendations>
-  {% if section.settings.image_shape == 'arch' %}
-    {{ 'mask-arch.svg' | inline_asset_content }}
-  {%- endif -%}
-</div>
+    </div>
+    {% if section.settings.image_shape == 'arch' %}
+      {{ 'mask-arch.svg' | inline_asset_content }}
+    {%- endif -%}
+  </div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -66,13 +79,14 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "t:sections.related-products.settings.paragraph__1.content"
+      "content": "Shows other products from the same brand. Hidden when the brand has no other products."
     },
     {
       "type": "inline_richtext",
       "id": "heading",
-      "default": "t:sections.related-products.settings.paragraph__1.default",
-      "label": "t:sections.related-products.settings.heading.label"
+      "default": "More from [brand]",
+      "label": "t:sections.related-products.settings.heading.label",
+      "info": "[brand] is replaced with the brand name."
     },
     {
       "type": "select",

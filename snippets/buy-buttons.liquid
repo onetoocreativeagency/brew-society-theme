@@ -6,13 +6,16 @@
   @param {string} product_form_id - The product form's unique ID.
   @param {string} section_id - The section ID used to namespace the form and submit button.
   @param {boolean} [show_pickup_availability] - Whether to render pickup availability. Defaults to `false`.
+  @param {boolean} [wholesale_only] - Whether the product is sold through the wholesale portal only. Hides the add-to-cart form. Defaults to `false`.
+  @param {string} [wholesale_url] - The wholesale ordering link. The Buy Wholesale button is hidden when blank.
   @param {object} [section] - The current section context, supplied implicitly when rendered from a section and used for IDs and pickup-availability colors.
 
   @example
   {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true %}
 {% enddoc %}
-<div {{ block.shopify_attributes }}>
-  {%- if product != blank -%}
+<div class="bs-buy__actions" {{ block.shopify_attributes }}>
+  {%- if wholesale_only -%}
+  {%- elsif product != blank -%}
     {%- liquid
       assign gift_card_recipient_feature_active = false
       if block.settings.show_gift_card_recipient and product.gift_card?
@@ -77,7 +80,7 @@
             id="ProductSubmitButton-{{ section_id }}"
             type="submit"
             name="add"
-            class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+            class="product-form__submit button button--full-width bs-pill {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
             {% if product.selected_or_first_available_variant.available == false
               or quantity_rule_soldout
               or product.selected_or_first_available_variant == null
@@ -117,7 +120,19 @@
     </div>
   {%- endif -%}
 
-  {%- if show_pickup_availability -%}
+  {%- if wholesale_url != blank -%}
+    <a
+      href="{{ wholesale_url }}"
+      class="button button--full-width bs-pill bs-pill--grey"
+      target="_blank"
+      rel="noopener"
+      aria-describedby="a11y-new-window-message"
+    >
+      {{- 'products.product.buy_wholesale' | t -}}
+    </a>
+  {%- endif -%}
+
+  {%- if show_pickup_availability and wholesale_only != true -%}
     {{ 'component-pickup-availability.css' | asset_url | stylesheet_tag }}
 
     {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
