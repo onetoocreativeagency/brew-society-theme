@@ -1,39 +1,180 @@
-.contact img {
-  max-width: 100%;
+/* Contact (Figma 4180:6369): Email and Call pills, then the enquiry form in the centre column. */
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bs-space-64);
+  font-weight: var(--bs-weight-medium);
 }
 
-.contact .form__message {
+.contact__direct {
+  display: grid;
+  gap: var(--bs-space-8);
+  width: 100%;
+  max-width: 75.6rem;
+}
+
+.contact__heading {
+  margin: 0;
+  text-align: center;
+}
+
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-8);
+  width: 100%;
+  max-width: 83.2rem;
+}
+
+.contact__fields {
+  display: grid;
+  gap: var(--bs-space-8);
+}
+
+@media screen and (min-width: 750px) {
+  .contact__direct,
+  .contact__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* One button on its own stays centred at its natural half width. */
+  .contact__direct > :only-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 50%;
+  }
+}
+
+/* Fields: soft filled boxes, the label sits inside and shrinks once there is a value. */
+.contact .field::before,
+.contact .field::after {
+  content: none;
+}
+
+.contact .field__input {
+  height: 6.4rem;
+  margin: 0;
+  padding: var(--bs-space-16) var(--bs-space-24);
+  border-radius: var(--bs-space-16);
+  background-color: rgba(var(--color-foreground), 0.06);
+  font-weight: inherit;
+  line-height: var(--bs-leading-body);
+  box-shadow: none;
+}
+
+.contact .field__input:focus,
+.contact .field__input:not(:placeholder-shown),
+.contact .field__input:-webkit-autofill {
+  margin: 0;
+  padding: 2.6rem var(--bs-space-24) 0.6rem;
+}
+
+.contact .field__input:focus-visible {
+  box-shadow: inset 0 0 0 0.1rem rgb(var(--color-button));
+}
+
+.contact .field__input[aria-invalid='true'] {
+  box-shadow: inset 0 0 0 0.1rem rgb(var(--color-foreground));
+}
+
+.contact .field__label {
+  top: 2rem;
+  left: var(--bs-space-24);
+  color: rgb(var(--color-foreground));
+  letter-spacing: 0;
+}
+
+.contact .field__input:focus ~ .field__label,
+.contact .field__input:not(:placeholder-shown) ~ .field__label,
+.contact .field__input:-webkit-autofill ~ .field__label {
+  top: 0.8rem;
+  left: var(--bs-space-24);
+  font-size: var(--bs-text-small);
+  letter-spacing: 0;
+  color: var(--bs-color-grey);
+}
+
+.contact .text-area {
+  height: auto;
+  min-height: 16.2rem;
+}
+
+.contact__field-error {
+  flex-basis: 100%;
+  padding: var(--bs-space-8) var(--bs-space-24) 0;
+  font-size: var(--bs-text-small);
+  line-height: var(--bs-leading-body);
+}
+
+/* Type: label on the left, choices on the right half, all in one filled row. */
+.contact__type {
+  display: grid;
+  gap: var(--bs-space-8);
+  padding: var(--bs-space-8);
+  border-radius: var(--bs-space-16);
+  background-color: rgba(var(--color-foreground), 0.06);
+}
+
+.contact__type-label {
+  display: flex;
+  align-items: center;
+  padding: var(--bs-space-8) var(--bs-space-16) 0;
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+}
+
+@media screen and (min-width: 750px) {
+  .contact__type {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--bs-space-16);
+  }
+
+  .contact__type-label {
+    padding-top: 0;
+  }
+
+  .contact__type .bs-choice {
+    padding-left: var(--bs-space-16);
+  }
+}
+
+/* Success and error messages: one filled row above the fields. */
+.contact__status {
+  display: flex;
   align-items: flex-start;
+  gap: var(--bs-space-16);
+  margin: 0;
+  padding: var(--bs-space-16) var(--bs-space-24);
+  border-radius: var(--bs-space-16);
+  background-color: rgba(var(--color-button), 0.15);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
 }
 
-.contact .icon-success {
+.contact__status--error {
+  background-color: rgba(var(--color-foreground), 0.06);
+  box-shadow: inset 0 0 0 0.1rem rgb(var(--color-foreground));
+}
+
+.contact__status svg {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
   margin-top: 0.2rem;
 }
 
-.contact .field {
-  margin-bottom: 1.5rem;
+.contact__status .form-status {
+  margin: 0;
 }
 
-@media screen and (min-width: 750px) {
-  .contact .field {
-    margin-bottom: 2rem;
-  }
+.contact__status-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.contact__button {
-  margin-top: 3rem;
-}
-
-@media screen and (min-width: 750px) {
-  .contact__button {
-    margin-top: 4rem;
-  }
-}
-
-@media screen and (min-width: 750px) {
-  .contact__fields {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 2rem;
-  }
+.contact__status-list .link {
+  font-size: inherit;
 }

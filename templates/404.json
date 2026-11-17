@@ -1,7 +1,43 @@
 {
   "sections": {
     "main": {
-      "type": "main-404"
+      "type": "main-404",
+      "blocks": {
+        "home": {
+          "type": "button",
+          "settings": {
+            "label": "Back to Home",
+            "link": "/",
+            "style": "solid"
+          }
+        },
+        "shop": {
+          "type": "button",
+          "settings": {
+            "label": "Shop",
+            "link": "shopify://collections/all",
+            "style": "tint"
+          }
+        },
+        "brands": {
+          "type": "button",
+          "settings": {
+            "label": "Brands",
+            "link": "shopify://collections",
+            "style": "tint"
+          }
+        }
+      },
+      "block_order": [
+        "home",
+        "shop",
+        "brands"
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "padding_top": 64,
+        "padding_bottom": 32
+      }
     }
   },
   "order": [

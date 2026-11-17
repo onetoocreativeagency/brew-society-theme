@@ -1,0 +1,126 @@
+/* Brew Society text with facts (About, Figma 4166:3881): dot label, short text, label and number rows. */
+
+.bs-facts {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--bs-grid-gap);
+  font-weight: var(--bs-weight-medium);
+}
+
+.bs-facts__inner {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-32);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-facts__inner {
+    grid-column: 1 / span 7;
+  }
+
+  .bs-facts--center .bs-facts__inner {
+    grid-column: 4 / span 6;
+  }
+
+  .bs-facts--right .bs-facts__inner {
+    grid-column: 6 / span 7;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .bs-facts__inner {
+    grid-column: 1 / span 4;
+  }
+
+  .bs-facts--center .bs-facts__inner {
+    grid-column: 5 / span 4;
+  }
+
+  .bs-facts--right .bs-facts__inner {
+    grid-column: 8 / span 4;
+  }
+}
+
+.bs-facts__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-24);
+}
+
+.bs-facts__label,
+.bs-facts__text {
+  margin: 0;
+  font-size: var(--bs-text-paragraph);
+  font-weight: inherit;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.bs-facts__label {
+  position: relative;
+  padding-left: var(--bs-space-32);
+  text-box: trim-both cap alphabetic;
+}
+
+/* Dot centred on the label: on the line box, or on the capitals where the text box is trimmed. */
+.bs-facts__label::before {
+  content: '';
+  position: absolute;
+  top: calc((1.25em - var(--bs-space-16)) / 2);
+  left: 0;
+  width: var(--bs-space-16);
+  height: var(--bs-space-16);
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@supports (text-box: trim-both cap alphabetic) {
+  .bs-facts__label::before {
+    top: calc((1cap - var(--bs-space-16)) / 2);
+  }
+}
+
+.bs-facts__text p {
+  margin: 0 0 1.25em;
+}
+
+.bs-facts__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-8);
+  margin: 0;
+}
+
+.bs-facts__item {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--bs-space-16);
+  align-items: center;
+}
+
+.bs-facts__name {
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+}
+
+.bs-facts__value {
+  margin: 0;
+}
+
+.bs-facts__value span {
+  display: inline-block;
+  padding: var(--bs-space-4) var(--bs-space-8);
+  border-radius: 1.2rem;
+  background: rgba(var(--color-foreground), 0.06);
+  font-size: var(--bs-text-small);
+  line-height: var(--bs-leading-body);
+  text-transform: uppercase;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-facts__label,
+  .bs-facts__text {
+    font-size: var(--bs-text-large);
+  }
+}

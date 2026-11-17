@@ -1,0 +1,28 @@
+{% comment %}
+  One FAQ question as a native accordion.
+
+  Accepts:
+  - block: {Object} a "question" block of the FAQ section
+  - show_drafts: {Boolean} also render questions that have no answer yet (theme editor)
+
+  Usage:
+  {% render 'bs-faq-item', block: block, show_drafts: request.design_mode %}
+{% endcomment %}
+
+{%- if block.settings.question != blank -%}
+  {%- if block.settings.answer != blank or show_drafts -%}
+    <details class="bs-faq__item" {{ block.shopify_attributes }}>
+      <summary class="bs-faq__question">
+        <span>{{ block.settings.question | escape }}</span>
+        <span class="bs-faq__icon" aria-hidden="true">+</span>
+      </summary>
+      <div class="bs-faq__answer rte">
+        {%- if block.settings.answer != blank -%}
+          {{ block.settings.answer }}
+        {%- else -%}
+          <p class="bs-faq__empty">{{ 'sections.faq.no_answer' | t }}</p>
+        {%- endif -%}
+      </div>
+    </details>
+  {%- endif -%}
+{%- endif -%}

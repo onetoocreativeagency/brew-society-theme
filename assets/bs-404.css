@@ -1,0 +1,53 @@
+/* Brew Society 404 (Figma 4166:3992): giant 404, product line-up, full-width pill home; other links share the row below. */
+
+.bs-404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bs-space-32);
+}
+
+.bs-404__title {
+  margin: 0;
+  text-align: center;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-404__media {
+  width: 100%;
+  max-width: 108rem;
+}
+
+.bs-404__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bs-404__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bs-space-8);
+  width: 100%;
+}
+
+.bs-404__buttons .bs-pill {
+  flex: 1 1 100%;
+  width: auto;
+}
+
+@media screen and (min-width: 750px) {
+  /* The line-up tucks under the 404 and over the top of the buttons, as in the design. */
+  .bs-404__media {
+    margin-top: calc(var(--bs-space-32) * -1);
+    margin-bottom: calc(var(--bs-space-64) * -1);
+  }
+
+  .bs-404__buttons {
+    position: relative;
+  }
+
+  .bs-404__buttons .bs-pill:not(:first-child) {
+    flex-basis: 0;
+  }
+}

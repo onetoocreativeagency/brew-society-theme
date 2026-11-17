@@ -1,0 +1,115 @@
+/* Brew Society FAQ: group tabs over a column of accordion questions. */
+
+.bs-faq {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-32);
+  max-width: 83.2rem;
+  margin: 0 auto;
+  font-weight: var(--bs-weight-medium);
+}
+
+.bs-faq__panels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-32);
+}
+
+.bs-faq__group-title {
+  margin: 0 0 var(--bs-space-16);
+  font-size: var(--bs-text-large);
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.bs-faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-8);
+}
+
+.bs-faq__item {
+  border-radius: var(--bs-space-16);
+  background: rgba(var(--color-foreground), 0.06);
+}
+
+.bs-faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bs-space-16);
+  min-height: 6.4rem;
+  padding: var(--bs-space-16) var(--bs-space-24);
+  border-radius: var(--bs-space-16);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+  list-style: none;
+  cursor: pointer;
+}
+
+.bs-faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.bs-faq__question:focus-visible {
+  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  outline-offset: 0.3rem;
+}
+
+/* The plus turns into a cross while the answer is open. */
+.bs-faq__icon {
+  box-sizing: border-box;
+  flex: none;
+  transition: transform var(--duration-short) ease;
+}
+
+.bs-faq__item[open] .bs-faq__icon {
+  transform: rotate(45deg);
+}
+
+.bs-faq__answer {
+  max-width: 64rem;
+  padding: 0 var(--bs-space-24) var(--bs-space-24);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+}
+
+.bs-faq__answer a {
+  color: rgb(var(--color-button));
+}
+
+.bs-faq__empty {
+  margin: 0;
+  color: var(--bs-color-grey);
+}
+
+/*
+  Tabs: each group's radio shows its own panel. Browsers without :has() skip this block
+  and show every group under its own heading instead.
+*/
+@supports selector(:has(*)) {
+  .bs-faq--tabs .bs-faq__panel {
+    display: none;
+  }
+
+  .bs-faq--tabs .bs-faq__group-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@supports not selector(:has(*)) {
+  .bs-faq__tabs {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-faq__icon {
+    transition: none;
+  }
+}

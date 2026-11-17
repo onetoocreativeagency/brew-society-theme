@@ -1,0 +1,131 @@
+{
+  "sections": {
+    "heading": {
+      "type": "bs-page-heading",
+      "settings": {
+        "title": "Questions?",
+        "color_scheme": "scheme-2",
+        "padding_top": 128,
+        "padding_bottom": 64
+      }
+    },
+    "faq": {
+      "type": "bs-faq",
+      "blocks": {
+        "group_general": {
+          "type": "group",
+          "settings": {
+            "title": "General"
+          }
+        },
+        "q_refund": {
+          "type": "question",
+          "settings": {
+            "question": "Why was my order refunded?",
+            "answer": "<p>If you ordered alternative milks or any bulky heavy items and you are NOT located within Metro Melbourne or the South Eastern Suburbs, your order will be refunded as we do not deliver these bulky goods to any other areas.</p>"
+          }
+        },
+        "q_track": {
+          "type": "question",
+          "settings": {
+            "question": "How do I track my item?",
+            "answer": "<p>Most online orders will be sent via Sendle or Auspost and you will be sent your tracking number via email. Please refer to this tracking number to see where your item is at.</p>"
+          }
+        },
+        "q_tracking_number": {
+          "type": "question",
+          "settings": {
+            "question": "I haven't received my tracking number?",
+            "answer": "<p>Please check your junk or spam folder for our email. Or alternatively, if you live in Metro Melbourne and ordered alternative milks, our delivery drivers may be dropping your order off during the week.</p>"
+          }
+        },
+        "q_change_of_mind": {
+          "type": "question",
+          "settings": {
+            "question": "Do you accept change of mind refunds?",
+            "answer": "<p>No we do not.</p>"
+          }
+        },
+        "q_damaged": {
+          "type": "question",
+          "settings": {
+            "question": "My item was damaged in transit, what do i do?",
+            "answer": "<p>Contact us at <a href=\"mailto:orders@brewsociety.com.au\">orders@brewsociety.com.au</a> and we will do our best to sort out your issue.</p>"
+          }
+        },
+        "q_pickup": {
+          "type": "question",
+          "settings": {
+            "question": "Can I pick up an order from your warehouse?",
+            "answer": "<p>No we do not offer pick up from our warehouse.</p>"
+          }
+        },
+        "q_businesses": {
+          "type": "question",
+          "settings": {
+            "question": "What types of businesses does BrewSociety supply?",
+            "answer": ""
+          }
+        },
+        "q_brands": {
+          "type": "question",
+          "settings": {
+            "question": "Which brands and products do you stock?",
+            "answer": ""
+          }
+        },
+        "q_milks": {
+          "type": "question",
+          "settings": {
+            "question": "Do you supply alternative milks and café essentials?",
+            "answer": ""
+          }
+        },
+        "q_area": {
+          "type": "question",
+          "settings": {
+            "question": "Does BrewSociety deliver to my area?",
+            "answer": ""
+          }
+        },
+        "group_pricing": {
+          "type": "group",
+          "settings": {
+            "title": "Pricing"
+          }
+        },
+        "group_accounts": {
+          "type": "group",
+          "settings": {
+            "title": "Accounts"
+          }
+        }
+      },
+      "block_order": [
+        "group_general",
+        "q_refund",
+        "q_track",
+        "q_tracking_number",
+        "q_change_of_mind",
+        "q_damaged",
+        "q_pickup",
+        "q_businesses",
+        "q_brands",
+        "q_milks",
+        "q_area",
+        "group_pricing",
+        "group_accounts"
+      ],
+      "settings": {
+        "heading": "",
+        "color_scheme": "scheme-6",
+        "padding_top": 0,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": [
+    "heading",
+    "faq"
+  ]
+}
