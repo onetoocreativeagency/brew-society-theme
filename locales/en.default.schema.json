@@ -376,6 +376,10 @@
     "layout": {
       "name": "Layout",
       "settings": {
+        "home_color_scheme": {
+          "label": "Home page background",
+          "info": "The page and header colours on the home page. Other pages use the first colour scheme."
+        },
         "page_width": {
           "label": "Page width"
         },
