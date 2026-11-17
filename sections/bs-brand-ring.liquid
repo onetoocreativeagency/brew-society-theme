@@ -1,0 +1,296 @@
+{% comment %}
+  Brand logo ring: brand logos placed evenly around one or two concentric
+  circles that slowly rotate, with a button in the centre.
+
+  Logos come from two sources, in this order:
+  1. Brand collections (template suffix "brand") that have a logo metafield
+     (brand.logo by default). Exclusive brands come first, so they fill the
+     inner ring. Each links to its collection.
+  2. "Logo" blocks, for brands that have no collection yet.
+  The two are not de-duplicated.
+
+  Ring split:
+  - up to 12 logos: one ring (the inner one)
+  - 13 or more: two rings, about a third inside (12 of 35, as in the design)
+  - at most 42 logos are shown; more than that cannot fit without overlapping
+{% endcomment %}
+{%- liquid
+  assign bs_namespace = section.settings.metafield_namespace
+  assign bs_logo_key = section.settings.logo_key
+  assign bs_exclusive_key = section.settings.exclusive_key
+  assign bs_max = 42
+
+  assign bs_count = 0
+  if section.settings.include_collections
+    paginate collections by 250
+      for bs_collection in collections
+        if bs_collection.template_suffix == 'brand' and bs_collection.metafields[bs_namespace][bs_logo_key].value != blank
+          assign bs_count = bs_count | plus: 1
+        endif
+      endfor
+    endpaginate
+  endif
+  for block in section.blocks
+    if block.settings.image != blank
+      assign bs_count = bs_count | plus: 1
+    endif
+  endfor
+  assign bs_count = bs_count | at_most: bs_max
+
+  assign bs_inner = bs_count
+  assign bs_offset = 0
+  if bs_count > 12
+    assign bs_inner = bs_count | times: 12.0 | divided_by: 35 | round | at_most: 12
+  else
+    comment
+      One ring: a count divisible by four would start with logos level with the
+      ends of the button, so turn the ring half a step.
+    endcomment
+    assign bs_remainder = bs_count | modulo: 4
+    if bs_remainder == 0 and bs_count > 0
+      assign bs_offset = 180.0 | divided_by: bs_count
+    endif
+  endif
+  assign bs_outer = bs_count | minus: bs_inner
+-%}
+{%- if bs_count > 0 -%}
+  {{ 'bs-brand-ring.css' | asset_url | stylesheet_tag }}
+  {%- if section.settings.rotate -%}
+    <script src="{{ 'bs-brand-ring.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="bs-brand-ring color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+    <div class="page-width">
+      <bs-brand-ring
+        class="bs-brand-ring__stage{% if bs_outer == 0 %} bs-brand-ring__stage--single{% endif %}{% if section.settings.blend_logos %} bs-brand-ring__stage--blend{% endif %}{% if section.settings.rotate %} bs-brand-ring__stage--rotate{% endif %}"
+        style="--bs-ring-duration: {{ section.settings.rotate_seconds }}s;"
+      >
+        <ul class="bs-brand-ring__list list-unstyled" role="list">
+          {%- assign bs_index = 0 -%}
+          {%- if section.settings.include_collections -%}
+            {%- paginate collections by 250 -%}
+              {%- for bs_pass in (1..2) -%}
+                {%- for bs_collection in collections -%}
+                  {%- liquid
+                    if bs_index >= bs_max
+                      break
+                    endif
+                    unless bs_collection.template_suffix == 'brand'
+                      continue
+                    endunless
+                    assign bs_logo = bs_collection.metafields[bs_namespace][bs_logo_key].value
+                    if bs_logo == blank
+                      continue
+                    endif
+                    assign bs_exclusive = bs_collection.metafields[bs_namespace][bs_exclusive_key].value
+                    if bs_pass == 1 and bs_exclusive != true
+                      continue
+                    endif
+                    if bs_pass == 2 and bs_exclusive == true
+                      continue
+                    endif
+                    render 'bs-brand-ring-logo', image: bs_logo, name: bs_collection.title, url: bs_collection.url, index: bs_index, inner: bs_inner, outer: bs_outer, offset: bs_offset
+                    assign bs_index = bs_index | plus: 1
+                  -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- endpaginate -%}
+          {%- endif -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              if bs_index >= bs_max
+                break
+              endif
+              if block.settings.image == blank
+                continue
+              endif
+              render 'bs-brand-ring-logo', image: block.settings.image, name: block.settings.name, url: block.settings.link, index: bs_index, inner: bs_inner, outer: bs_outer, offset: bs_offset, attributes: block.shopify_attributes
+              assign bs_index = bs_index | plus: 1
+            -%}
+          {%- endfor -%}
+        </ul>
+        {%- if section.settings.button_label != blank -%}
+          <a
+            {% if section.settings.button_link == blank %}
+              role="link" aria-disabled="true"
+            {% else %}
+              href="{{ section.settings.button_link }}"
+            {% endif %}
+            class="button bs-brand-ring__button"
+          >
+            {{- section.settings.button_label | escape -}}
+          </a>
+        {%- endif -%}
+      </bs-brand-ring>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Brand logo ring",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows brand logos in slowly rotating rings around the button. Brand collections that have a logo come first, then any Logo blocks. Up to 12 logos sit on one ring, more are split across two, and at most 42 are shown. The section stays hidden until there is at least one logo."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Explore Brands"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "default": "/collections"
+    },
+    {
+      "type": "header",
+      "content": "Logos"
+    },
+    {
+      "type": "checkbox",
+      "id": "include_collections",
+      "label": "Include brand collections",
+      "info": "Adds every brand collection that has a logo, linked to the collection, exclusive brands first. Use Logo blocks for brands that have no collection yet. A brand added both ways appears twice.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "blend_logos",
+      "label": "Blend white logo backgrounds into the section",
+      "info": "Makes logos saved on a white background sit cleanly on a light section. Turn off on dark backgrounds, where it would hide the logos.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Rotation"
+    },
+    {
+      "type": "checkbox",
+      "id": "rotate",
+      "label": "Rotate the rings",
+      "info": "The two rings turn in opposite directions and logos stay upright. Pauses while a logo is hovered or focused and while the section is off screen. Does not run for visitors who ask for reduced motion.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rotate_seconds",
+      "min": 40,
+      "max": 240,
+      "step": 10,
+      "unit": "s",
+      "label": "Time for one full turn",
+      "default": 120
+    },
+    {
+      "type": "header",
+      "content": "Brand data",
+      "info": "Where the section reads each brand's details from. Only change these if the collection metafields are renamed."
+    },
+    {
+      "type": "text",
+      "id": "metafield_namespace",
+      "label": "Collection metafield namespace",
+      "default": "brand"
+    },
+    {
+      "type": "text",
+      "id": "logo_key",
+      "label": "Logo metafield key",
+      "default": "logo"
+    },
+    {
+      "type": "text",
+      "id": "exclusive_key",
+      "label": "Exclusive metafield key",
+      "info": "Exclusive brands are placed first, on the inner ring.",
+      "default": "exclusive"
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Brand name",
+          "info": "Read out by screen readers. Not shown on the page."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand logo ring"
+    }
+  ]
+}
+{% endschema %}

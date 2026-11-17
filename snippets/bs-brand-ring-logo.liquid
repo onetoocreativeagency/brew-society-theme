@@ -1,0 +1,52 @@
+{% comment %}
+  Renders one logo of the brand logo ring (sections/bs-brand-ring.liquid) and
+  works out which ring it sits on and at what angle.
+
+  Accepts:
+  - image: {Object} the logo image
+  - name: {String} brand name, used as the accessible name
+  - url: {String} optional link
+  - index: {Number} zero-based position in the combined list of logos
+  - inner: {Number} how many logos sit on the inner ring
+  - outer: {Number} how many logos sit on the outer ring
+  - offset: {Number} degrees to turn the inner ring by
+  - attributes: {String} optional extra attributes for the list item
+
+  Usage:
+  {% render 'bs-brand-ring-logo', image: logo, name: collection.title, url: collection.url, index: 0, inner: 12, outer: 23, offset: 0 %}
+{% endcomment %}
+{%- liquid
+  if index < inner
+    assign bs_ring = 'inner'
+    assign bs_angle = index | times: 360.0 | divided_by: inner | plus: offset | round: 3
+  else
+    assign bs_ring = 'outer'
+    assign bs_angle = index | minus: inner | times: 360.0 | divided_by: outer | round: 3
+  endif
+-%}
+<li
+  class="bs-brand-ring__item bs-brand-ring__item--{{ bs_ring }}"
+  style="--bs-ring-angle: {{ bs_angle }}deg;"
+  {{ attributes }}
+>
+  {%- if url != blank -%}
+    <a href="{{ url }}" class="bs-brand-ring__link">
+  {%- else -%}
+    <span class="bs-brand-ring__link">
+  {%- endif -%}
+  {{-
+    image
+    | image_url: width: 400
+    | image_tag:
+      loading: 'lazy',
+      widths: '100, 200, 300, 400',
+      sizes: '(min-width: 750px) 8vw, 18vw',
+      alt: name,
+      class: 'bs-brand-ring__logo'
+  -}}
+  {%- if url != blank -%}
+    </a>
+  {%- else -%}
+    </span>
+  {%- endif -%}
+</li>

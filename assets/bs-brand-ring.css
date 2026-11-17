@@ -1,0 +1,154 @@
+/*
+  Brand logo ring (homepage). Figma: 4166:3495 desktop, 4203:4838 mobile.
+
+  The stage is the Figma square (1680 desktop, 910 mobile). Every size below is
+  a fraction of that square, so the whole lockup scales as one piece.
+  - Outer ring: 155.556 boxes on a 746.667 radius (9.2593% wide, 4.8 boxes out).
+  - Inner ring: 186.667 boxes on a 404.444 radius (11.1111% wide, 2.1667 boxes out).
+  - Logos sit inside 15% padding. Label is 67 / 1680 of the square.
+*/
+
+.bs-brand-ring {
+  --bs-ring-size: 231.55vw;
+  overflow: hidden;
+}
+
+/* Mobile: the square is 910 wide on a 393 screen and bleeds off both sides. */
+.bs-brand-ring__stage {
+  display: block;
+  position: relative;
+  width: var(--bs-ring-size);
+  margin-left: calc(50% - var(--bs-ring-size) / 2);
+  aspect-ratio: 1;
+}
+
+/* One ring only: the stage is cropped to the inner ring's height. */
+.bs-brand-ring__stage--single {
+  aspect-ratio: 1680 / 996;
+}
+
+/*
+  One ring on mobile: with this few logos none should be lost off the sides,
+  so the stage shrinks until the ring (59.26% of the stage) fits the screen.
+*/
+@media screen and (max-width: 749px) {
+  .bs-brand-ring__stage--single {
+    --bs-ring-size: calc((100vw - 2 * var(--bs-gutter)) / 0.5926);
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .bs-brand-ring {
+    --bs-ring-size: calc(100vw - 2 * var(--bs-gutter));
+  }
+
+  .bs-brand-ring__stage {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.bs-brand-ring__list {
+  margin: 0;
+}
+
+.bs-brand-ring__item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9.2593%;
+  aspect-ratio: 1;
+  margin: -4.6296% 0 0 -4.6296%;
+  transform: rotate(var(--bs-ring-angle)) translateY(-480%) rotate(calc(-1 * var(--bs-ring-angle)));
+}
+
+.bs-brand-ring__item--inner {
+  width: 11.1111%;
+  margin: -5.5556% 0 0 -5.5556%;
+  transform: rotate(var(--bs-ring-angle)) translateY(-216.667%) rotate(calc(-1 * var(--bs-ring-angle)));
+}
+
+/*
+  Many logo files have a white background. Multiply drops the white into the
+  section background. It is set on the item (not the image) because the item's
+  transform starts a new stacking context, and the blend has to reach the section.
+*/
+.bs-brand-ring__stage--blend .bs-brand-ring__item {
+  mix-blend-mode: multiply;
+}
+
+.bs-brand-ring__link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 15%;
+  border-radius: 50%;
+}
+
+.bs-brand-ring__logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bs-brand-ring__button.button {
+  --buttons-radius: 999px;
+  --buttons-radius-outset: 999px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  max-width: 37%;
+  min-height: 0;
+  padding: 0.6225em 1.167em;
+  transform: translate(-50%, -50%);
+  font-size: calc(var(--bs-ring-size) * 0.03988);
+  font-weight: var(--bs-weight-medium);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-button);
+  text-align: center;
+}
+
+/*
+  Rotation. Each item orbits the centre and its logo counter-turns by the same
+  amount, so logos stay upright. The outer ring runs the other way. Only the
+  rotate property is animated, so the browser can run it off the main thread.
+*/
+.bs-brand-ring__item,
+.bs-brand-ring__link,
+.bs-brand-ring__logo {
+  /*
+    Stated outright on purpose. Dawn sets box-sizing: inherit on everything, and
+    Chrome then recalculates styles on every frame of the rotation for elements
+    that inherit from an animated parent. Measured: 60 recalcs a second without
+    this, none with it.
+  */
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bs-brand-ring__stage--rotate .bs-brand-ring__item,
+  .bs-brand-ring__stage--rotate .bs-brand-ring__link {
+    animation: bs-brand-ring-orbit var(--bs-ring-duration, 120s) linear infinite;
+    animation-play-state: var(--bs-ring-play, running);
+  }
+
+  .bs-brand-ring__stage--rotate .bs-brand-ring__item--inner .bs-brand-ring__link,
+  .bs-brand-ring__stage--rotate .bs-brand-ring__item--outer {
+    animation-direction: reverse;
+  }
+
+  /* Hold still while a logo is hovered or focused, and while off screen (class set by bs-brand-ring.js). */
+  .bs-brand-ring__list:hover,
+  .bs-brand-ring__list:focus-within,
+  .bs-brand-ring__stage--offscreen {
+    --bs-ring-play: paused;
+  }
+}
+
+@keyframes bs-brand-ring-orbit {
+  to {
+    rotate: 360deg;
+  }
+}
