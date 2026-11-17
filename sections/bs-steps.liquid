@@ -1,0 +1,255 @@
+{{ 'bs-steps.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="bs-steps-wrapper section-{{ section.id }}-padding">
+  <div class="bs-steps color-{{ section.settings.color_scheme }} gradient">
+    <div class="bs-steps__header">
+      {%- if section.settings.label_left != blank or section.settings.label_right != blank -%}
+        <div class="bs-steps__labels">
+          <p>{{ section.settings.label_left | escape }}</p>
+          <p>{{ section.settings.label_right | escape }}</p>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="bs-steps__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="bs-steps__body">
+      {%- if section.blocks.size > 0 -%}
+        <ol
+          class="bs-steps__list"
+          role="list"
+          style="--bs-steps-columns: {{ section.blocks.size | at_most: 4 }};"
+        >
+          {%- for block in section.blocks -%}
+            {%- liquid
+              # The tint steps evenly from 25% of the panel colour on the first card to 100% on the last.
+              assign strength = 100
+              if section.blocks.size > 1
+                assign last_index = section.blocks.size | minus: 1
+                assign strength = forloop.index0 | times: 75.0 | divided_by: last_index | plus: 25 | round
+              endif
+
+              assign button_url = block.settings.button_link
+              assign show_button = false
+              if block.settings.button_label != blank
+                assign show_button = true
+              endif
+              if block.settings.use_wholesale_link
+                assign button_url = settings.wholesale_portal_url
+                if button_url == blank
+                  assign show_button = false
+                endif
+              endif
+            -%}
+            <li
+              class="bs-steps__item color-{{ section.settings.card_color_scheme }} gradient{% if strength < 50 %} bs-steps__item--pale{% endif %}"
+              style="--bs-steps-strength: {{ strength }}%;"
+              {{ block.shopify_attributes }}
+            >
+              <p class="bs-steps__number" aria-hidden="true">
+                {%- if forloop.index < 10 -%}0{%- endif -%}
+                {{- forloop.index -}}
+              </p>
+              <div class="bs-steps__content">
+                {%- if block.settings.title != blank or block.settings.text != blank -%}
+                  <div class="bs-steps__copy">
+                    {%- if block.settings.title != blank -%}
+                      <h3 class="bs-steps__title">{{ block.settings.title | escape }}</h3>
+                    {%- endif -%}
+                    {%- if block.settings.text != blank -%}
+                      <p class="bs-steps__text">{{ block.settings.text | escape }}</p>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+                {%- if show_button -%}
+                  <a
+                    class="bs-steps__button"
+                    {% if button_url == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ button_url }}"
+                    {% endif %}
+                    {% if block.settings.use_wholesale_link %}
+                      target="_blank" rel="noopener"
+                    {% endif %}
+                  >
+                    <span>{{ block.settings.button_label | escape }}</span>
+                    {%- if block.settings.use_wholesale_link -%}
+                      <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
+                    {%- endif -%}
+                  </a>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+
+      {%- if section.settings.closing != blank -%}
+        <p class="bs-steps__closing">{{ section.settings.closing }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Steps",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label_left",
+      "label": "Top left label",
+      "default": "Wholesale Process"
+    },
+    {
+      "type": "text",
+      "id": "label_right",
+      "label": "Top right label",
+      "default": "Three Steps"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Bold text shows in the strong colour on its own line, the rest is lighter.",
+      "default": "<strong>Wholesale ordering,</strong> made simple"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "closing",
+      "label": "Line under the steps",
+      "default": "Chat first? And get pricing → <a href=\"/pages/contact\">Contact Us</a>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Panel colour scheme",
+      "info": "The numbers and buttons are tints of the panel background colour.",
+      "default": "scheme-3"
+    },
+    {
+      "type": "color_scheme",
+      "id": "card_color_scheme",
+      "label": "Card colour scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Step title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Button"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_wholesale_link",
+          "label": "Use the wholesale ordering link",
+          "info": "Points the button at the link in Theme settings > Wholesale and opens it in a new tab. The button is hidden while that link is empty.",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Steps",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Get pricing",
+            "text": "Tell us about your business and we'll send wholesale pricing within 24 hours.",
+            "button_label": "View Catalogue",
+            "button_link": "shopify://collections"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Set up your account",
+            "text": "You'll need an ABN. Minimum order is $300.",
+            "button_label": "Create Account",
+            "use_wholesale_link": true
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Order online, any time",
+            "text": "Browse the range and order on Pepper. We deliver across Victoria + NSW.",
+            "button_label": "Order Wholesale",
+            "use_wholesale_link": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

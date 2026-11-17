@@ -1,0 +1,157 @@
+{{ 'bs-feature-cards.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- if section.blocks.size > 0 -%}
+  <div class="color-{{ section.settings.color_scheme }} gradient">
+    <div class="bs-feature-cards page-width section-{{ section.id }}-padding">
+      <ul
+        class="bs-feature-cards__list"
+        role="list"
+        style="--bs-feature-cards-columns: {{ section.blocks.size | at_most: 4 }};"
+      >
+        {%- for block in section.blocks -%}
+          <li class="bs-feature-cards__item" {{ block.shopify_attributes }}>
+            <div class="bs-feature-cards__media{% if block.settings.image_fit == 'cover' %} bs-feature-cards__media--cover{% endif %}">
+              {%- if block.settings.image != blank -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 1500
+                  | image_tag:
+                    widths: '375, 550, 750, 1100, 1500',
+                    sizes: '(min-width: 750px) 33vw, 100vw',
+                    loading: 'lazy'
+                }}
+              {%- endif -%}
+            </div>
+            {%- if block.settings.title != blank or block.settings.text != blank -%}
+              <div class="bs-feature-cards__content">
+                {%- if block.settings.title != blank -%}
+                  <h3 class="bs-feature-cards__title">{{ block.settings.title | escape }}</h3>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <p class="bs-feature-cards__text">{{ block.settings.text | escape }}</p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Feature cards",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_fit",
+          "label": "Image fit",
+          "options": [
+            { "value": "contain", "label": "Show the whole image" },
+            { "value": "cover", "label": "Fill the panel (may crop)" }
+          ],
+          "default": "contain"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature cards",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "Importer"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Developer"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Distributor"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

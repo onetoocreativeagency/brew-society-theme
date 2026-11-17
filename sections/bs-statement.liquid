@@ -1,0 +1,121 @@
+{{ 'bs-statement.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- if section.settings.text != blank -%}
+  {%- liquid
+    assign tag = 'p'
+    if section.settings.as_heading
+      assign tag = 'h2'
+    endif
+  -%}
+  <div class="color-{{ section.settings.color_scheme }} gradient">
+    <div class="bs-statement bs-statement--{{ section.settings.alignment }} bs-statement--{{ section.settings.max_width }}{% if section.settings.break_after_bold %} bs-statement--break{% endif %} page-width section-{{ section.id }}-padding">
+      <{{ tag }} class="bs-statement__text {{ section.settings.alignment }}">
+        {{- section.settings.text -}}
+      </{{ tag }}>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Statement",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text",
+      "info": "Bold text shows in the strong colour, everything else in grey. Links turn strong on hover.",
+      "default": "<strong>Growing brands</strong> in your hands"
+    },
+    {
+      "type": "checkbox",
+      "id": "break_after_bold",
+      "label": "Put the bold text on its own line",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "as_heading",
+      "label": "Mark up as a heading",
+      "info": "Turn off for lists of links or long sentences that are not a page heading.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "Maximum text width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "wide", "label": "Wide" },
+        { "value": "full", "label": "Full width" }
+      ],
+      "default": "narrow"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 256
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Statement"
+    }
+  ]
+}
+{% endschema %}

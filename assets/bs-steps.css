@@ -1,0 +1,233 @@
+/* Brew Society steps: inset rounded panel, two-tone heading, numbered cards with graded buttons. */
+
+.bs-steps-wrapper {
+  padding-left: var(--bs-space-8);
+  padding-right: var(--bs-space-8);
+}
+
+.bs-steps {
+  /* The panel colours, handed down to the cards, which run their own colour scheme. */
+  --bs-steps-accent: rgb(var(--color-background));
+  --bs-steps-on-accent: rgb(var(--color-foreground));
+  border-radius: var(--bs-space-40);
+  font-weight: var(--bs-weight-medium);
+}
+
+.bs-steps__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-128);
+  padding: var(--bs-space-32) var(--bs-space-8) var(--bs-space-64);
+}
+
+.bs-steps__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--bs-space-16);
+  padding: 0 var(--bs-space-32);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-heading);
+}
+
+.bs-steps__labels p {
+  margin: 0;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-steps__labels p:last-child {
+  margin-left: auto;
+}
+
+.bs-steps__heading {
+  margin: 0 auto;
+  max-width: 119.4rem;
+  /* 51px at 393 wide up to 67px at 1728 wide; shrinks below 393 so long words still fit. */
+  font-size: min(13vw, clamp(var(--bs-text-3x-large), 4.63rem + 1.2vw, var(--bs-text-4x-large)));
+  font-weight: inherit;
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-display);
+  text-align: center;
+  color: color-mix(in srgb, rgb(var(--color-foreground)) 58%, rgb(var(--color-background)));
+  overflow-wrap: break-word;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-steps__heading strong {
+  display: block;
+  font-weight: inherit;
+  color: rgb(var(--color-foreground));
+}
+
+.bs-steps__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-24);
+  padding: 0 var(--bs-space-8) var(--bs-space-64);
+}
+
+.bs-steps__list {
+  display: grid;
+  gap: var(--bs-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bs-steps__item {
+  /* Step tint: the panel colour mixed into the card background, stronger with each step. */
+  --bs-steps-tint: color-mix(in srgb, var(--bs-steps-accent) var(--bs-steps-strength, 100%), rgb(var(--color-background)));
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--bs-space-32);
+  min-height: 54rem;
+  padding: var(--bs-space-32) var(--bs-space-8);
+  border-radius: var(--bs-space-40);
+}
+
+.bs-steps__number {
+  margin: 0;
+  padding: 0 var(--bs-space-8);
+  font-size: min(var(--bs-text-8x-large), 62cqi);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  color: var(--bs-steps-tint);
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-steps__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-16);
+}
+
+.bs-steps__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-16);
+  padding: 0 var(--bs-space-8);
+}
+
+.bs-steps__title,
+.bs-steps__text {
+  margin: 0;
+  font-size: var(--bs-text-paragraph);
+  font-weight: inherit;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-steps__title {
+  position: relative;
+  padding-left: var(--bs-space-32);
+  color: rgb(var(--color-foreground));
+}
+
+/* Dot centred on the first line: on the line box, or on the capitals where the text box is trimmed. */
+.bs-steps__title::before {
+  content: '';
+  position: absolute;
+  top: calc((1.25em - var(--bs-space-16)) / 2);
+  left: 0;
+  width: var(--bs-space-16);
+  height: var(--bs-space-16);
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@supports (text-box: trim-both cap alphabetic) {
+  .bs-steps__title::before {
+    top: calc((1cap - var(--bs-space-16)) / 2);
+  }
+}
+
+.bs-steps__text {
+  color: var(--bs-color-grey);
+}
+
+.bs-steps__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5.2rem var(--bs-space-16);
+  border-radius: 999px;
+  background: var(--bs-steps-tint);
+  color: var(--bs-steps-on-accent);
+  font-size: min(var(--bs-text-3x-large), 13cqi);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-button);
+  text-align: center;
+  text-decoration: none;
+  transition: background-color var(--duration-short) ease, color var(--duration-short) ease;
+}
+
+.bs-steps__button span {
+  text-box: trim-both cap alphabetic;
+}
+
+/* Pale steps carry the label in the panel colour instead of the panel's text colour. */
+.bs-steps__item--pale .bs-steps__button {
+  color: var(--bs-steps-accent);
+}
+
+a.bs-steps__button:hover {
+  background: var(--bs-steps-accent);
+  color: var(--bs-steps-on-accent);
+}
+
+.bs-steps__closing {
+  margin: 0;
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-heading);
+  text-align: center;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-steps__closing a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bs-steps__closing a:hover,
+.bs-steps__closing a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+@media screen and (min-width: 990px) {
+  .bs-steps__body {
+    gap: var(--bs-space-32);
+    padding-left: var(--bs-space-16);
+    padding-right: var(--bs-space-16);
+  }
+
+  .bs-steps__list {
+    grid-template-columns: repeat(var(--bs-steps-columns, 3), minmax(0, 1fr));
+    gap: var(--bs-grid-gap);
+  }
+
+  .bs-steps__item {
+    min-height: 0;
+    aspect-ratio: 549 / 754;
+    padding-left: var(--bs-space-16);
+    padding-right: var(--bs-space-16);
+  }
+
+  .bs-steps__number {
+    padding: 0;
+    font-size: min(24rem, 46.5cqi);
+  }
+
+  .bs-steps__title,
+  .bs-steps__text,
+  .bs-steps__closing {
+    font-size: var(--bs-text-large);
+  }
+
+  .bs-steps__button {
+    font-size: min(var(--bs-text-4x-large), 13cqi);
+  }
+}
