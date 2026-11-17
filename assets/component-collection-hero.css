@@ -35,23 +35,30 @@
   }
 }
 
+/* Page title with the product count straight after it (Figma Shop - All 4166:4276). */
 .collection-hero__title {
-  margin: 2.5rem 0;
+  margin: 0;
+  text-box: trim-both cap alphabetic;
+}
+
+.collection-hero__count {
+  color: var(--bs-color-grey);
+}
+
+@media screen and (max-width: 749px) {
+  .collection-hero__title {
+    font-size: clamp(var(--bs-text-3x-large), 17vw, var(--bs-text-4x-large));
+  }
 }
 
 .collection-hero__title + .collection-hero__description {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  font-size: 1.6rem;
-  line-height: calc(1 + 0.5 / var(--font-body-scale));
+  margin-top: var(--bs-space-24);
+  margin-bottom: 0;
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
 }
 
 @media screen and (min-width: 750px) {
-  .collection-hero__title + .collection-hero__description {
-    font-size: 1.8rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-  }
 
   .collection-hero__description {
     max-width: 66.67%;

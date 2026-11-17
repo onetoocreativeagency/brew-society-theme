@@ -2,22 +2,43 @@
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
-  @media screen and (max-width: 749px) {
-    .collection-hero--with-image .collection-hero__inner {
-      padding-bottom: calc({{ settings.media_shadow_vertical_offset | at_least: 0 }}px + 2rem);
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
 {%- endstyle -%}
 
+{%- liquid
+  assign bs_title = collection.title
+  if collection.handle == 'all' and section.settings.all_title != blank
+    assign bs_title = section.settings.all_title
+  endif
+-%}
+
 <div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
-  <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+  <div class="collection-hero__inner page-width section-{{ section.id }}-padding{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="collection-hero__text-wrapper">
-      <h1 class="collection-hero__title">
+      <h1 class="collection-hero__title hxxl">
         <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
-        {{- collection.title | escape -}}
+        {{- bs_title | escape -}}
+        {%- if section.settings.show_product_count -%}
+          <span class="collection-hero__count">
+            <span aria-hidden="true">{{ collection.all_products_count }}</span>
+            <span class="visually-hidden">
+              , {{ 'products.facets.product_count_simple' | t: count: collection.all_products_count -}}
+            </span>
+          </span>
+        {%- endif -%}
       </h1>
 
-      {%- if section.settings.show_collection_description -%}
+      {%- if section.settings.show_collection_description and collection.description != blank -%}
         <div class="collection-hero__description rte">{{ collection.description }}</div>
       {%- endif -%}
     </div>
@@ -55,9 +76,22 @@
       "content": "t:sections.main-collection-banner.settings.paragraph.content"
     },
     {
+      "type": "text",
+      "id": "all_title",
+      "default": "All",
+      "label": "t:sections.main-collection-banner.settings.all_title.label",
+      "info": "t:sections.main-collection-banner.settings.all_title.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "default": true,
+      "label": "t:sections.main-collection-banner.settings.show_product_count.label"
+    },
+    {
       "type": "checkbox",
       "id": "show_collection_description",
-      "default": true,
+      "default": false,
       "label": "t:sections.main-collection-banner.settings.show_collection_description.label"
     },
     {
@@ -71,6 +105,30 @@
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 256
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 0
     }
   ]
 }

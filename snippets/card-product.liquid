@@ -2,7 +2,6 @@
   Renders a product card.
 
   @param {product} [card_product] - The product to display. When blank, a placeholder card is rendered.
-  @param {string} [media_aspect_ratio] - The product image aspect ratio. Allowed values are `adapt`, `portrait`, and `square`. Defaults to `square`.
   @param {string} [image_shape] - The product image mask. Allowed values are `default`, `arch`, `blob`, `chevronleft`, `chevronright`, `diamond`, `parallelogram`, and `round`. Defaults to `default`.
   @param {boolean} [show_secondary_image] - Whether to show the second product image on hover. Defaults to `false`.
   @param {boolean} [show_vendor] - Whether to show the product vendor. Defaults to `false`.
@@ -20,7 +19,7 @@
   @param {object} [section] - The current section context, supplied implicitly when rendered from a section and used by quick-add controls.
 
   @example
-  {% render 'card-product', card_product: product, media_aspect_ratio: 'adapt', show_secondary_image: true, section_id: section.id, quick_add: 'standard', product_view_context: 'collection' %}
+  {% render 'card-product', card_product: product, show_secondary_image: true, section_id: section.id, quick_add: 'standard', product_view_context: 'collection' %}
 {% enddoc %}
 {%- unless skip_styles -%}
   {{ 'component-rating.css' | asset_url | stylesheet_tag }}
@@ -32,15 +31,21 @@
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
-    assign ratio = 1
-    if card_product.featured_media and media_aspect_ratio == 'portrait'
-      assign ratio = 0.8
-    elsif card_product.featured_media and media_aspect_ratio == 'adapt'
-      assign ratio = card_product.featured_media.aspect_ratio
+    comment
+      Brew Society card: the image panel is always 408:611 (Figma Card 4127:3140).
+      One label sits in the panel's top-left corner: Sold Out (computed), otherwise the
+      custom.badge metafield. Wholesale-only products show "Wholesale Only" in place of the price.
+    endcomment
+    assign ratio = 0.66776
+    assign bs_wholesale_only = false
+    if card_product.metafields.custom.wholesale_only.value == true
+      assign bs_wholesale_only = true
     endif
-    if ratio == 0 or ratio == null
-      assign ratio = 1
+    assign bs_label = card_product.metafields.custom.badge.value
+    if card_product.available == false and bs_wholesale_only == false
+      assign bs_label = 'products.product.sold_out' | t
     endif
+    assign bs_sizes = '(min-width: 990px) calc((100vw - 96px) / 4), calc((100vw - 40px) / 2)'
   -%}
 
   <product-component view-event-payload="{{ card_product | standard_event_data: 'view', context: product_view_context | escape }}">
@@ -76,7 +81,7 @@
                     {{ card_product.featured_media | image_url }} {{ card_product.featured_media.width }}w
                   "
                   src="{{ card_product.featured_media | image_url: width: 533 }}"
-                  sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+                  sizes="{{ bs_sizes }}"
                   alt="{{ card_product.featured_media.alt | escape }}"
                   class="motion-reduce"
                   {% unless lazy_load == false %}
@@ -99,7 +104,7 @@
                       {{ card_product.media[1] | image_url }} {{ card_product.media[1].width }}w
                     "
                     src="{{ card_product.media[1] | image_url: width: 533 }}"
-                    sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+                    sizes="{{ bs_sizes }}"
                     alt="{{ card_product.media[1].alt | escape }}"
                     class="motion-reduce"
                     loading="lazy"
@@ -122,26 +127,16 @@
                   href="{{ card_product.url }}"
                   id="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }}"
                   class="full-unstyled-link"
-                  aria-labelledby="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }}{% if card_product.available == false or card_product.compare_at_price > card_product.price %} NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}{% endif %}"
+                  aria-labelledby="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }}{% if bs_label != blank %} NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}{% endif %}"
                 >
                   {{ card_product.title | escape }}
                 </a>
               </h3>
             </div>
-            <div class="card__badge {{ settings.badge_position }}">
-              {%- if card_product.available == false -%}
-                <span
-                  id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
-                  class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}"
-                >
-                  {{- 'products.product.sold_out' | t -}}
-                </span>
-              {%- elsif card_product.compare_at_price > card_product.price and card_product.available -%}
-                <span
-                  id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
-                  class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
-                >
-                  {{- 'products.product.on_sale' | t -}}
+            <div class="card__badge">
+              {%- if bs_label != blank -%}
+                <span id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}" class="bs-card-label">
+                  {{- bs_label | escape -}}
                 </span>
               {%- endif -%}
             </div>
@@ -159,7 +154,7 @@
                 href="{{ card_product.url }}"
                 id="CardLink-{{ section_id }}-{{ card_product.id }}"
                 class="full-unstyled-link"
-                aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }}{% if card_product.available == false or card_product.compare_at_price > card_product.price %} Badge-{{ section_id }}-{{ card_product.id }}{% endif %}"
+                aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }}{% if bs_label != blank %} Badge-{{ section_id }}-{{ card_product.id }}{% endif %}"
               >
                 {{ card_product.title | escape }}
               </a>
@@ -208,7 +203,18 @@
                 </p>
               {%- endif -%}
 
-              {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
+              <div class="bs-card-price">
+                {%- if bs_wholesale_only -%}
+                  {{ 'products.product.wholesale_only' | t }}
+                {%- else -%}
+                  {%- assign bs_price = card_product.price | money_without_trailing_zeros -%}
+                  {%- if card_product.price_varies -%}
+                    {{ 'products.product.price.from_price_html' | t: price: bs_price }}
+                  {%- else -%}
+                    {{ bs_price }}
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
               {%- if card_product.quantity_price_breaks_configured? -%}
                 {% if card_product.variants_count == 1 and quick_add == 'bulk' %}
                   {% liquid
@@ -552,22 +558,12 @@
               </div>
             {% endif %}
           {% endif %}
-          <div class="card__badge {{ settings.badge_position }}">
-            {%- if card_product.available == false -%}
-              <span
-                id="Badge-{{ section_id }}-{{ card_product.id }}"
-                class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}"
-              >
-                {{- 'products.product.sold_out' | t -}}
-              </span>
-            {%- elsif card_product.compare_at_price > card_product.price and card_product.available -%}
-              <span
-                id="Badge-{{ section_id }}-{{ card_product.id }}"
-                class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
-              >
-                {{- 'products.product.on_sale' | t -}}
-              </span>
-            {%- endif -%}
+          <div class="card__badge">
+            {%- if bs_label != blank -%}
+                <span id="Badge-{{ section_id }}-{{ card_product.id }}" class="bs-card-label">
+                  {{- bs_label | escape -}}
+                </span>
+              {%- endif -%}
           </div>
         </div>
       </div>
@@ -575,11 +571,7 @@
   </product-component>
 {%- else -%}
   {%- liquid
-    assign ratio = 1
-    assign placeholder = true
-    if media_aspect_ratio == 'portrait'
-      assign ratio = 0.8
-    endif
+    assign ratio = 0.66776
   -%}
   <div class="card-wrapper product-card-wrapper underline-links-hover">
     <div
@@ -593,6 +585,7 @@
     >
       <div
         class="card__inner{% if settings.card_style == 'standard' %} color-{{ settings.card_color_scheme }} gradient{% endif %} ratio"
+        style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
       >
         <div
           class="card__media {% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}"
@@ -620,7 +613,7 @@
               <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
               <div class="caption-with-letter-spacing light">{{ 'products.product.vendor' | t }}</div>
             {%- endif -%}
-            {% render 'price', placeholder: placeholder, show_compare_at_price: true %}
+            <div class="bs-card-price">{{ 1999 | money_without_trailing_zeros }}</div>
           </div>
         </div>
       </div>

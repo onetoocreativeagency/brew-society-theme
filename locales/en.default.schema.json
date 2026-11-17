@@ -1891,6 +1891,13 @@
         "paragraph": {
           "content": "Collection details are [managed in your admin](https://help.shopify.com/manual/products/collections/collection-layout)"
         },
+        "all_title": {
+          "label": "Heading for the all-products page",
+          "info": "Shown on /collections/all in place of \"Products\"."
+        },
+        "show_product_count": {
+          "label": "Product count after the heading"
+        },
         "show_collection_description": {
           "label": "Description"
         },
@@ -1902,6 +1909,10 @@
     "main-collection-product-grid": {
       "name": "Product grid",
       "settings": {
+        "category_menu": {
+          "label": "Category links menu",
+          "info": "Links shown above the grid, each with its product count. Leave empty to hide the row."
+        },
         "products_per_page": {
           "label": "Products per page"
         },
