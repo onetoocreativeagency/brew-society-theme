@@ -1,0 +1,55 @@
+/* Brew Society statement: big two-tone line. Bold text is strong, the rest is grey. */
+
+.bs-statement {
+  display: flex;
+  justify-content: center;
+}
+
+.bs-statement--left {
+  justify-content: flex-start;
+}
+
+.bs-statement--right {
+  justify-content: flex-end;
+}
+
+.bs-statement__text {
+  margin: 0;
+  max-width: var(--bs-statement-max-width, none);
+  /* 51px at 393 wide up to 67px at 1728 wide; shrinks below 393 so long words still fit. */
+  font-size: min(13vw, clamp(var(--bs-text-3x-large), 4.63rem + 1.2vw, var(--bs-text-4x-large)));
+  font-weight: var(--bs-weight-medium);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-display);
+  color: var(--bs-color-grey);
+  overflow-wrap: break-word;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-statement--narrow {
+  --bs-statement-max-width: 119.4rem;
+}
+
+.bs-statement--wide {
+  --bs-statement-max-width: 146.5rem;
+}
+
+.bs-statement__text strong {
+  font-weight: inherit;
+  color: rgb(var(--color-foreground));
+}
+
+.bs-statement--break strong {
+  display: block;
+}
+
+.bs-statement__text a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-short) ease;
+}
+
+.bs-statement__text a:hover,
+.bs-statement__text a:focus-visible {
+  color: rgb(var(--color-foreground));
+}

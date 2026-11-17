@@ -1,0 +1,88 @@
+/* Brew Society feature cards: illustration panel, then a dot, title and description. */
+
+.bs-feature-cards__list {
+  display: grid;
+  gap: var(--bs-grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-feature-cards__list {
+    grid-template-columns: repeat(var(--bs-feature-cards-columns, 3), minmax(0, 1fr));
+  }
+}
+
+.bs-feature-cards__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-40);
+}
+
+/* Neutral panel on any colour scheme; also the empty state before an image is uploaded. */
+.bs-feature-cards__media,
+.bs-feature-cards__media:empty {
+  display: block;
+  height: 37.3rem;
+  overflow: hidden;
+  border-radius: var(--bs-space-32);
+  background: color-mix(in srgb, var(--bs-color-grey) 16%, rgb(var(--color-background)));
+}
+
+.bs-feature-cards__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.bs-feature-cards__media--cover img {
+  object-fit: cover;
+}
+
+.bs-feature-cards__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-16);
+  padding: 0 var(--bs-space-8);
+}
+
+.bs-feature-cards__title,
+.bs-feature-cards__text {
+  margin: 0;
+  font-size: var(--bs-text-large);
+  font-weight: var(--bs-weight-medium);
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-box: trim-both cap alphabetic;
+}
+
+.bs-feature-cards__title {
+  position: relative;
+  padding-left: var(--bs-space-32);
+  color: rgb(var(--color-foreground));
+}
+
+/* Dot centred on the first line: on the line box, or on the capitals where the text box is trimmed. */
+.bs-feature-cards__title::before {
+  content: '';
+  position: absolute;
+  top: calc((1.25em - var(--bs-space-16)) / 2);
+  left: 0;
+  width: var(--bs-space-16);
+  height: var(--bs-space-16);
+  border-radius: 50%;
+  background: rgb(var(--color-button));
+}
+
+@supports (text-box: trim-both cap alphabetic) {
+  .bs-feature-cards__title::before {
+    top: calc((1cap - var(--bs-space-16)) / 2);
+  }
+}
+
+.bs-feature-cards__text {
+  max-width: 41.2rem;
+  color: var(--bs-color-grey);
+}
