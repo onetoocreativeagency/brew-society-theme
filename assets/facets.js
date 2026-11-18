@@ -441,7 +441,7 @@ class FacetRemove extends HTMLElement {
 
 customElements.define('facet-remove', FacetRemove);
 
-/* Brew Society: the Filter & Sort drawer opens and closes like the cart drawer and the buy panel.
+/* Brew Society: the Filter & Sort drawer opens and closes like the cart drawer.
    Dawn's MenuDrawer slides each filter group in as a submenu and only locks scrolling on phones;
    here the groups are plain accordions (native <details>), Escape closes the drawer from anywhere,
    focus moves into the panel and the page behind is locked at every width. */

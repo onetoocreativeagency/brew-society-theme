@@ -1,11 +1,11 @@
-/* Brew Society drawer: the one side panel shared by the cart drawer (Figma 4166:4817), the buy
-   panel (4166:4667) and the Filter & Sort drawer. A 50% white veil with blur over the page, then
+/* Brew Society drawer: the one side panel shared by the cart drawer (Figma 4166:4817) and the
+   Filter & Sort drawer. A 50% white veil with blur over the page, then
    a panel from the right: full width on phones, 597px from 750px, one scrolling column that
-   starts with the Close pill. Change the panel here and all three follow.
+   starts with the Close pill. Change the panel here and both follow.
 
    Markup: `.bs-drawer` on the veil, `.bs-drawer__panel` on the panel (also given the cart colour
    scheme), `.bs-drawer__close` on the Close pill. The panel slides in when the veil has `.active`
-   (cart drawer), `[open]` (buy panel) or sits in a `.menu-opening` disclosure (filters drawer).
+   (cart drawer) or sits in a `.menu-opening` disclosure (filters drawer).
 
    The doubled classes win over Dawn's component rules whichever file loads last. */
 
@@ -49,7 +49,6 @@
 }
 
 .bs-drawer.active .bs-drawer__panel,
-.bs-drawer[open] .bs-drawer__panel,
 .menu-opening .bs-drawer .bs-drawer__panel {
   transform: translateX(0);
 }

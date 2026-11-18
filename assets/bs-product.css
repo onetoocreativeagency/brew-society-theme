@@ -1,7 +1,70 @@
-/* Brew Society buy panel: the product information shared by the product page and the side
-   panel (Figma 4166:4667, wholesale-only 4219:5115, page 4244:2036, mobile 4245:2128).
+/* Brew Society product page (Figma "Shop - Product" 4244:2036, mobile 4245:2128).
    Loaded by sections/main-product.liquid after Dawn's section-main-product.css, which it
-   overrides. Rules under `quick-add-modal` apply to the side panel only. */
+   overrides. */
+
+/* Breadcrumbs: Shop, category, brand, product. Commas on desktop, slashes on phones. */
+.bs-breadcrumbs {
+  padding-top: var(--bs-space-4);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+}
+
+.bs-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--bs-space-8);
+  margin: 0;
+}
+
+.bs-breadcrumbs li {
+  color: rgb(var(--color-foreground));
+}
+
+.bs-breadcrumbs li:not(:last-child) {
+  display: flex;
+  gap: var(--bs-space-8);
+  color: var(--bs-color-grey);
+}
+
+.bs-breadcrumbs li:not(:last-child)::after {
+  content: '/';
+}
+
+.bs-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bs-breadcrumbs a:hover {
+  color: rgb(var(--color-foreground));
+}
+
+.bs-breadcrumbs + .product.bs-buy {
+  margin-top: var(--bs-space-32);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-breadcrumbs {
+    padding-top: var(--bs-space-16);
+    font-size: var(--bs-text-large);
+  }
+
+  .bs-breadcrumbs ol {
+    column-gap: 0.25em;
+  }
+
+  .bs-breadcrumbs li:not(:last-child) {
+    gap: 0;
+  }
+
+  .bs-breadcrumbs li:not(:last-child)::after {
+    content: ',';
+  }
+
+  .bs-breadcrumbs + .product.bs-buy {
+    margin-top: var(--bs-space-64);
+  }
+}
 
 /* Layout: one column on mobile, gallery and information side by side from 750px. */
 .product.bs-buy.grid {
@@ -51,6 +114,32 @@
   display: flex;
   flex-direction: column;
   gap: var(--bs-space-8);
+}
+
+.bs-buy media-gallery > slider-component:first-of-type {
+  position: relative;
+}
+
+/* Sold Out or the custom.badge label, top left of the image as on the card. */
+.bs-buy__label {
+  position: absolute;
+  top: var(--bs-space-16);
+  left: var(--bs-space-16);
+  z-index: 1;
+  color: rgb(var(--color-foreground));
+  font-size: var(--bs-text-large);
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: var(--bs-tracking-display);
+  line-height: var(--bs-leading-display);
+  text-box: trim-both cap alphabetic;
+  pointer-events: none;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy__label {
+    top: var(--bs-space-24);
+    left: var(--bs-space-24);
+  }
 }
 
 .bs-buy .product__media-list.product__media-list {
@@ -135,6 +224,7 @@
 .bs-buy .thumbnail {
   border: 0;
   border-radius: 0;
+  background-color: var(--bs-color-white);
 }
 
 .bs-buy .thumbnail img {
@@ -178,16 +268,36 @@
 }
 
 /* Brand and category tags (product page only). */
+/* Each pair is two equal columns, 321px wide on phones, so the chips line up. */
 .bs-buy__tags {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--bs-space-8) var(--bs-space-32);
+  flex-direction: column;
+  gap: var(--bs-space-8);
 }
 
 .bs-buy__tags > div {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(max-content, 1fr);
   align-items: center;
   gap: var(--bs-space-16);
+  width: min(32.1rem, 100%);
+}
+
+.bs-buy__tags dd {
+  justify-self: start;
+  white-space: nowrap;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy__tags {
+    flex-direction: row;
+    gap: var(--bs-space-16);
+  }
+
+  .bs-buy__tags > div {
+    flex: 1 1 0;
+    width: auto;
+  }
 }
 
 .bs-buy__tags dt {
@@ -226,7 +336,23 @@
 
 .bs-buy .product__title > h1 {
   font-size: var(--bs-text-3x-large);
-  font-size: clamp(var(--bs-text-2x-large), 14cqi, var(--bs-text-4x-large));
+  line-height: var(--bs-leading-display);
+}
+
+@media screen and (min-width: 750px) {
+  /* 160px in the 576px column at 1728, scaling down with the column. Longer names (set in
+     main-product.liquid by length) step down to 90px and 67px. */
+  .bs-buy .bs-buy__title--short > h1 {
+    font-size: clamp(var(--bs-text-3x-large), 27.8cqi, var(--bs-text-7x-large));
+  }
+
+  .bs-buy .bs-buy__title--medium > h1 {
+    font-size: clamp(var(--bs-text-3x-large), 15.6cqi, var(--bs-text-5x-large));
+  }
+
+  .bs-buy .bs-buy__title--long > h1 {
+    font-size: clamp(var(--bs-text-3x-large), 11.6cqi, var(--bs-text-4x-large));
+  }
 }
 
 .bs-buy .product__title > a > h2,
@@ -238,25 +364,48 @@
 }
 
 .bs-buy .product__info-container > .bs-buy__price {
-  margin-top: calc(var(--bs-space-8) * -1);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bs-space-4) calc(var(--bs-space-8) + var(--bs-space-4));
+  margin-top: calc((var(--bs-space-8) + var(--bs-space-4)) * -1);
+  color: rgb(var(--color-foreground));
+}
+
+.bs-buy__variant {
+  color: var(--bs-color-grey);
+}
+
+.bs-buy--wholesale-only .bs-buy__price {
   color: var(--bs-color-grey-text);
 }
 
 @media screen and (min-width: 750px) {
   .bs-buy .product__info-container > .bs-buy__price {
+    column-gap: var(--bs-space-16);
     margin-top: calc(var(--bs-space-16) * -1);
   }
 }
 
 /* Information: the product description as an accordion. */
+/* Information and any collapsible rows: blue when open, grey when closed, stacked flush. */
+.bs-buy .product__info-container > .bs-buy__info + .bs-buy__info {
+  margin-top: calc(var(--bs-space-24) * -1);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy .product__info-container > .bs-buy__info + .bs-buy__info {
+    margin-top: calc(var(--bs-space-32) * -1);
+  }
+}
+
 .bs-buy__info > summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 5.4rem;
   padding: var(--bs-space-8);
-  background-color: rgb(var(--color-button));
-  color: rgb(var(--color-button-text));
+  background-color: var(--bs-color-grey);
+  color: var(--bs-color-white);
   font-size: var(--bs-text-paragraph);
   line-height: var(--bs-leading-body);
   list-style: none;
@@ -271,12 +420,17 @@
   content: '+';
 }
 
+.bs-buy__info[open] > summary {
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
 .bs-buy__info[open] > summary::after {
   content: '\2013';
 }
 
 .bs-buy__info-body {
-  padding: var(--bs-space-16) var(--bs-space-16) var(--bs-space-24);
+  padding: var(--bs-space-16) var(--bs-gutter) var(--bs-space-24);
   font-size: var(--bs-text-paragraph);
   line-height: var(--bs-leading-body);
   overflow-wrap: break-word;
@@ -293,6 +447,13 @@
 .bs-buy__info-body img {
   max-width: 100%;
   height: auto;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy__info-body {
+    padding-right: var(--bs-space-16);
+    padding-left: var(--bs-space-16);
+  }
 }
 
 /* Options: one row of pills per option, the selected one filled. */
@@ -332,17 +493,23 @@
 
 .bs-buy .product-form__input--pill input[type='radio'] + label {
   box-sizing: border-box;
-  min-width: 6.4rem;
+  min-width: 0;
   margin: 0;
-  padding: 0.9rem;
+  padding: var(--bs-space-8) var(--bs-space-16);
   border: 0.1rem solid rgb(var(--color-foreground));
-  border-radius: 1.6rem;
+  border-radius: 2.4rem;
   background-color: transparent;
   color: rgb(var(--color-foreground));
   font-size: var(--bs-text-paragraph);
   font-weight: var(--bs-weight-regular);
   letter-spacing: 0;
   line-height: var(--bs-leading-body);
+}
+
+@media screen and (min-width: 750px) {
+  .bs-buy .product-form__input--pill input[type='radio'] + label {
+    border-radius: 1.6rem;
+  }
 }
 
 .bs-buy .product-form__input--pill input[type='radio'] + label::before {
@@ -430,59 +597,19 @@
   margin-bottom: 0;
 }
 
+@media screen and (min-width: 750px) {
+  .bs-buy .button.bs-pill {
+    padding: 0.776em 1.164em;
+  }
+}
+
+.bs-buy__note {
+  margin: 0;
+  color: var(--bs-color-grey);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+}
+
 .bs-buy .product-form__error-message-wrapper:not([hidden]) {
   margin-bottom: var(--bs-space-8);
-}
-
-/* Side panel: the image and the name share the first row, everything else runs full width. */
-quick-add-modal .product.bs-buy.grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: auto;
-  gap: 0 var(--bs-grid-gap);
-}
-
-quick-add-modal .product.bs-buy.grid > .product__info-wrapper,
-quick-add-modal .bs-buy .product__info-container {
-  display: contents;
-}
-
-quick-add-modal .product.bs-buy.grid > .product__media-wrapper {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-}
-
-quick-add-modal .bs-buy .product-media-container .media {
-  aspect-ratio: 274.5 / 418;
-}
-
-quick-add-modal .bs-buy .product__info-container > * {
-  grid-column: 1 / -1;
-  margin-top: var(--bs-space-24);
-}
-
-quick-add-modal .bs-buy .product__info-container > .product__title {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: end;
-  margin-top: 0;
-  padding-bottom: var(--bs-space-8);
-}
-
-quick-add-modal .bs-buy .product__info-container > .bs-buy__price {
-  grid-column: 2;
-  grid-row: 2;
-  align-self: start;
-  margin-top: 0;
-  padding-top: var(--bs-space-8);
-}
-
-quick-add-modal .bs-buy .product__title > a {
-  color: inherit;
-}
-
-@media screen and (min-width: 750px) {
-  quick-add-modal .bs-buy .product__info-container > .bs-buy__price {
-    margin-top: 0;
-  }
 }

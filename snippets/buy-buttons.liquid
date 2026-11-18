@@ -8,6 +8,7 @@
   @param {boolean} [show_pickup_availability] - Whether to render pickup availability. Defaults to `false`.
   @param {boolean} [wholesale_only] - Whether the product is sold through the wholesale portal only. Hides the add-to-cart form. Defaults to `false`.
   @param {string} [wholesale_url] - The wholesale ordering link. The Buy Wholesale button is hidden when blank.
+  @param {string} [wholesale_note] - A note shown under the Buy Wholesale button.
   @param {object} [section] - The current section context, supplied implicitly when rendered from a section and used for IDs and pickup-availability colors.
 
   @example
@@ -130,6 +131,9 @@
     >
       {{- 'products.product.buy_wholesale' | t -}}
     </a>
+    {%- if wholesale_note != blank -%}
+      <p class="bs-buy__note">{{ wholesale_note | escape }}</p>
+    {%- endif -%}
   {%- endif -%}
 
   {%- if show_pickup_availability and wholesale_only != true -%}

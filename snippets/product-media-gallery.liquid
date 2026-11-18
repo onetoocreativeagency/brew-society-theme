@@ -6,6 +6,7 @@
   @param {object} [section] - The current product section context, supplied implicitly when rendered from that section and used for gallery IDs, behavior, and presentation.
   @param {number} [limit] - The maximum number of media items to render. Defaults to all media.
   @param {model} [first_3d_model] - The first 3D model, used to render the gallery's Shopify XR button.
+  @param {string} [label] - A label shown over the top-left corner of the main image, such as Sold Out.
 
   @example
   {% render 'product-media-gallery', product: product, variant_images: variant_images, first_3d_model: first_3d_model, limit: 1 %}
@@ -53,6 +54,9 @@
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
   <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
+    {%- if label != blank -%}
+      <span class="bs-buy__label">{{ label | escape }}</span>
+    {%- endif -%}
     <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
       {{ 'accessibility.skip_to_product_info' | t }}
     </a>
