@@ -45,7 +45,7 @@ Every brand and every product type is a Shopify **collection**. Two collection t
 - `templates/collection.json` — category collections and `/collections/all` (the Shop), with native Search & Discovery filters.
 - `/collections` (list-collections) — the Brands catalogue: brand cards grouped under product-type headings, Exclusive first. No filter JS.
 - **Menu counts**: the grey numbers after Brands, Shop and collection links come from `snippets/bs-menu-count.liquid` (`{% render 'bs-menu-count', link: link %}`), styled by `.bs-menu-count` in `base.css`. Reuse it wherever a menu is rendered; don't reimplement the counting.
-- **Buy panel**: Dawn's quick-add modal and `/products/<handle>` are one component. Don't design or build them separately.
+- **Product page**: product cards link straight to `/products/<handle>` (Figma "Shop - Product" `4244:2036`, mobile `4245:2128`). The side buy panel was dropped (Marcel, 2026-11-18); don't reintroduce a quick-add overlay. Product page styles live in `assets/bs-product.css`.
 - **Cart**: drawer (theme setting `cart_type` is `drawer`).
 - **Wholesale** is not sold on Shopify. Every wholesale CTA links out to the Pepper ordering portal (ABN required). No customer-account or B2B work. The portal link is the theme setting `settings.wholesale_portal_url` (Theme settings → Wholesale). Every Order Wholesale button reads it; never hard-code the URL or add a second setting for it. Hide the button when it is blank.
 
@@ -73,7 +73,7 @@ The brand's hero product shot is the collection's own image, and its About text 
 
 | Key | Type | Used for |
 |---|---|---|
-| `custom.wholesale_only` | boolean | "Wholesale Only" label on the card; the buy panel shows "Wholesale Pricing in Portal" and Buy Wholesale only, no price or Add to Cart |
+| `custom.wholesale_only` | boolean | "Wholesale Only" label on the card; the product page shows "Wholesale Pricing in Portal" and Buy Wholesale only, no price or Add to Cart |
 | `custom.badge` | single line text | Card label such as New. "Sold Out" is computed, not stored |
 
 A product's brand is the collection it belongs to that has the `brand` template suffix. The vendor field is not usable (almost every product's vendor is "Brew Society.").
@@ -115,7 +115,7 @@ One package (about one PR) per session, on its own `claude/…` branch:
 2. Footer
 3. Product card and collection grid (Shop, category)
 4. Brand collection template and Brands catalogue
-5. Buy panel (quick-add modal + product page) and cart drawer
+5. Product page and cart drawer
 6. Homepage sections
 7. Generic page, Contact, FAQ, 404
 

@@ -3,6 +3,21 @@
 }
 
 .related-products__heading {
-  margin: 0 0 var(--bs-space-32);
+  margin: 0 0 var(--bs-space-24);
   text-align: center;
+}
+
+/* Figma "Shop - Product": 51px on phones, 213px at 1728. */
+.related-products__heading.hxxl {
+  font-size: var(--bs-text-3x-large);
+}
+
+@media screen and (min-width: 750px) {
+  .related-products__heading {
+    margin-bottom: var(--bs-space-32);
+  }
+
+  .related-products__heading.hxxl {
+    font-size: clamp(var(--bs-text-5x-large), 12.3vw, var(--bs-text-8x-large));
+  }
 }
