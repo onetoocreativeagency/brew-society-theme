@@ -796,7 +796,7 @@ a.active-facets__button.focused .active-facets__button-inner {
 
 .mobile-facets__info {
   margin: 0 0 var(--bs-space-16);
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 .mobile-facets__heading {
@@ -1033,7 +1033,7 @@ input.mobile-facets__checkbox {
 }
 
 .mobile-facets__clear {
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   text-decoration: none;
 }
 
