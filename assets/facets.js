@@ -273,7 +273,7 @@ class FacetFiltersForm extends HTMLElement {
       document.querySelector(selector).innerHTML = html.querySelector(selector).innerHTML;
     });
 
-    document.getElementById('FacetFiltersFormMobile').closest('menu-drawer').bindEvents();
+    document.getElementById('FacetFiltersFormMobile').closest('bs-facets-drawer').bindEvents();
   }
 
   static renderCounts(source, target) {
@@ -440,3 +440,41 @@ class FacetRemove extends HTMLElement {
 }
 
 customElements.define('facet-remove', FacetRemove);
+
+/* Brew Society: the Filter & Sort drawer opens and closes like the cart drawer and the buy panel.
+   Dawn's MenuDrawer slides each filter group in as a submenu and only locks scrolling on phones;
+   here the groups are plain accordions (native <details>), Escape closes the drawer from anywhere,
+   focus moves into the panel and the page behind is locked at every width. */
+class BsFacetsDrawer extends MenuDrawer {
+  bindEvents() {
+    // facets.js calls this again after each render; the main summary is never replaced.
+    if (this.eventsBound) return;
+    this.eventsBound = true;
+    this.mainDetailsToggle.querySelector('summary').addEventListener('click', this.onSummaryClick.bind(this));
+  }
+
+  onKeyUp(event) {
+    if (event.code.toUpperCase() !== 'ESCAPE' || !this.mainDetailsToggle.hasAttribute('open')) return;
+    this.closeMenuDrawer(event, this.mainDetailsToggle.querySelector('summary'));
+  }
+
+  openMenuDrawer(summaryElement) {
+    // Runs once the click has opened the <details>, so the panel can take focus.
+    setTimeout(() => {
+      this.mainDetailsToggle.classList.add('menu-opening');
+      const panel = this.querySelector('.bs-drawer__panel');
+      trapFocus(panel, panel);
+    });
+    summaryElement.setAttribute('aria-expanded', true);
+    document.body.classList.add('overflow-hidden');
+  }
+
+  closeMenuDrawer(event, elementToFocus = false) {
+    if (event === undefined) return;
+    super.closeMenuDrawer(event, elementToFocus);
+    elementToFocus?.setAttribute('aria-expanded', false);
+    document.body.classList.remove('overflow-hidden');
+  }
+}
+
+customElements.define('bs-facets-drawer', BsFacetsDrawer);

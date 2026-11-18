@@ -36,9 +36,14 @@
   {{ 'quick-add.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
   <template class="bs-buy-panel-template">
-    <quick-add-modal id="QuickAdd-BuyPanel" class="quick-add-modal bs-buy-panel">
-      <div role="dialog" aria-modal="true" class="quick-add-modal__content" tabindex="-1">
-        <button id="ModalClose-BuyPanel" type="button" class="button bs-pill bs-pill--close">
+    <quick-add-modal id="QuickAdd-BuyPanel" class="quick-add-modal bs-buy-panel bs-drawer">
+      <div
+        role="dialog"
+        aria-modal="true"
+        class="quick-add-modal__content bs-drawer__panel gradient color-{{ settings.cart_color_scheme }}"
+        tabindex="-1"
+      >
+        <button id="ModalClose-BuyPanel" type="button" class="button bs-pill bs-pill--close bs-drawer__close">
           {{- 'accessibility.close' | t -}}
         </button>
         <div id="QuickAddInfo-BuyPanel" class="quick-add-modal__content-info"></div>

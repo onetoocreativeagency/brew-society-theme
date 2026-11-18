@@ -44,13 +44,6 @@
   justify-content: center;
 }
 
-cart-drawer.is-empty .drawer__inner {
-  display: grid;
-  grid-template-rows: 1fr;
-  align-items: center;
-  padding: 0;
-}
-
 cart-drawer.is-empty .drawer__header {
   display: none;
 }
@@ -93,10 +86,6 @@ cart-drawer:not(.is-empty) .cart-drawer__collection {
   background-color: transparent;
   border: none;
   cursor: pointer;
-}
-
-.cart-drawer__warnings .drawer__close {
-  right: 5px;
 }
 
 .drawer__close .svg-wrapper {
@@ -414,46 +403,9 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 }
 
 /* Brew Society cart drawer (Figma "Shop - Cart Drawer" 4166:4817).
-   The same panel as the buy panel: a 50% white veil, a Close pill, then one scrolling column
-   with the items, the total and Checkout. Dawn's table markup is kept for cart.js. */
-.drawer {
-  background-color: rgba(255, 255, 255, 0.5);
-  -webkit-backdrop-filter: blur(14.65px);
-  backdrop-filter: blur(14.65px);
-}
-
-.drawer__inner,
-cart-drawer.is-empty .drawer__inner {
-  box-sizing: border-box;
-  container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--bs-space-24);
-  width: 100vw;
-  max-width: none;
-  padding: var(--bs-space-16) var(--bs-space-16) var(--bs-space-128);
-  border: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-@media screen and (min-width: 750px) {
-  .drawer__inner,
-  cart-drawer.is-empty .drawer__inner {
-    width: 59.7rem;
-  }
-}
-
-.cart-drawer .drawer__close.bs-pill {
-  position: relative;
-  top: auto;
-  right: auto;
-  display: inline-flex;
-  flex: none;
-}
-
+   The veil, the panel and the Close pill come from assets/bs-drawer.css, shared with the buy
+   panel and the filters drawer. Inside: the items, the total and Checkout in one column.
+   Dawn's table markup is kept for cart.js. */
 .drawer__header {
   flex: none;
   flex-direction: column;

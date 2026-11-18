@@ -19,11 +19,11 @@
   }
 </style>
 
-<cart-drawer class="drawer{% if cart == empty %} is-empty{% endif %}">
+<cart-drawer class="drawer bs-drawer{% if cart == empty %} is-empty{% endif %}">
   <div id="CartDrawer" class="cart-drawer">
     <div id="CartDrawer-Overlay" class="cart-drawer__overlay"></div>
     <div
-      class="drawer__inner gradient color-{{ settings.cart_color_scheme }}"
+      class="drawer__inner bs-drawer__panel gradient color-{{ settings.cart_color_scheme }}"
       role="dialog"
       aria-modal="true"
       aria-label="{{ 'sections.cart.title' | t }}"
@@ -34,7 +34,7 @@
           <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
             <div class="cart-drawer__empty-content">
               <button
-                class="drawer__close button bs-pill bs-pill--close"
+                class="drawer__close bs-drawer__close button bs-pill bs-pill--close"
                 type="button"
                 onclick="this.closest('cart-drawer').close()"
               >
@@ -62,7 +62,7 @@
       {%- endif -%}
       <div class="drawer__header">
         <button
-          class="drawer__close button bs-pill bs-pill--close"
+          class="drawer__close bs-drawer__close button bs-pill bs-pill--close"
           type="button"
           onclick="this.closest('cart-drawer').close()"
         >

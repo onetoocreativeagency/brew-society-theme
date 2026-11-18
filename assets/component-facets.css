@@ -749,8 +749,19 @@ a.active-facets__button.focused .active-facets__button-inner {
   right: 0;
   bottom: 0;
   z-index: 100;
-  background-color: rgba(var(--color-foreground), 0.5);
   pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-default) ease;
+}
+
+.menu-opening .mobile-facets {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-facets {
+    transition: none;
+  }
 }
 
 .mobile-facets__disclosure {
@@ -768,50 +779,24 @@ a.active-facets__button.focused .active-facets__button-inner {
 }
 
 .mobile-facets__inner {
-  background-color: rgb(var(--color-background));
-  width: calc(100% - 5rem);
-  margin-left: auto;
-  height: 100%;
-  overflow-y: auto;
   pointer-events: all;
-  transition: transform var(--duration-default) ease;
-  max-width: 37.5rem;
-  display: flex;
-  flex-direction: column;
-  border-color: rgba(var(--color-foreground), var(--drawer-border-opacity));
-  border-style: solid;
-  border-width: 0 0 0 var(--drawer-border-width);
-  filter: drop-shadow(
-    var(--drawer-shadow-horizontal-offset) var(--drawer-shadow-vertical-offset) var(--drawer-shadow-blur-radius)
-      rgba(var(--color-shadow), var(--drawer-shadow-opacity))
-  );
 }
 
-.menu-opening .mobile-facets__inner {
-  transform: translateX(0);
-}
-
-.js .disclosure-has-popup:not(.menu-opening) .mobile-facets__inner {
-  transform: translateX(105vw);
-}
-
+/* Heading row, as "Cart (4)" in the cart drawer. */
 .mobile-facets__header {
-  border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
-  padding: 1rem 2.5rem;
-  text-align: center;
-  display: flex;
-  position: sticky;
-  top: 0;
-  z-index: 2;
+  flex: none;
 }
 
 .mobile-facets__header-inner {
-  flex-grow: 1;
-  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--bs-space-16);
 }
 
 .mobile-facets__info {
-  padding: 0 2.6rem;
+  margin: 0 0 var(--bs-space-16);
+  color: var(--bs-color-grey-text);
 }
 
 .mobile-facets__heading {
@@ -889,15 +874,6 @@ a.active-facets__button.focused .active-facets__button-inner {
   width: 2.2rem;
 }
 
-details.menu-opening .mobile-facets__close {
-  display: flex;
-  opacity: 1;
-}
-
-details.menu-opening .mobile-facets__close .svg-wrapper {
-  margin: 0;
-}
-
 .mobile-facets__close-button {
   align-items: center;
   background-color: transparent;
@@ -908,7 +884,8 @@ details.menu-opening .mobile-facets__close .svg-wrapper {
   padding: 1.2rem 2.6rem;
   text-decoration: none;
 
-  display: grid;
+  /* Each filter group is an accordion row, so Dawn's submenu Back button is not used. */
+  display: none;
   grid-template-columns: min-content 1fr;
   text-align: start;
 }
@@ -923,13 +900,11 @@ details.menu-opening .mobile-facets__close .svg-wrapper {
 }
 
 .mobile-facets__main {
-  padding: 2.7rem 0 0;
   position: relative;
   z-index: 1;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  border-top: 0.1rem solid var(--bs-color-black);
 }
 
 .mobile-facets__details[open] .icon-caret {
@@ -937,6 +912,7 @@ details.menu-opening .mobile-facets__close .svg-wrapper {
 }
 
 .mobile-facets__highlight {
+  display: none;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -953,8 +929,24 @@ details.menu-opening .mobile-facets__close .svg-wrapper {
   visibility: visible;
 }
 
+.mobile-facets__details {
+  border-bottom: 0.1rem solid var(--bs-color-black);
+}
+
 .mobile-facets__summary {
-  padding: 1.3rem 2.5rem;
+  padding: var(--bs-space-16) 0;
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: var(--bs-tracking-display);
+  line-height: var(--bs-leading-heading);
+  cursor: pointer;
+}
+
+.mobile-facets__summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-facets__summary .icon-caret {
+  position: static;
 }
 
 .mobile-facets__summary .svg-wrapper {
@@ -966,34 +958,17 @@ details.menu-opening .mobile-facets__close .svg-wrapper {
   align-items: center;
 }
 
-.js .mobile-facets__submenu {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-  z-index: 3;
-  transform: translateX(100%);
-  visibility: hidden;
-  display: flex;
-  flex-direction: column;
+.mobile-facets__submenu {
+  padding: 0 0 var(--bs-space-16);
 }
 
-.js details[open] > .mobile-facets__submenu {
-  transition: transform 0.4s cubic-bezier(0.29, 0.63, 0.44, 1), visibility 0.4s cubic-bezier(0.29, 0.63, 0.44, 1);
+/* Each group has its own Clear and Apply in Dawn; the drawer has one pair at the bottom. */
+.mobile-facets__submenu .mobile-facets__footer {
+  display: none;
 }
 
-.js details[open].menu-opening > .mobile-facets__submenu {
-  transform: translateX(0);
-  visibility: visible;
-}
-
-.js .menu-drawer__submenu .mobile-facets__submenu {
-  overflow-y: auto;
-}
-
-.js .mobile-facets .submenu-open {
-  visibility: hidden; /* hide menus from screen readers when hidden by submenu */
+.mobile-facets__submenu .facets__price {
+  padding: 0;
 }
 
 .mobile-facets__item {
@@ -1006,15 +981,15 @@ input.mobile-facets__checkbox {
   width: 1.6rem;
   height: 1.6rem;
   position: absolute;
-  left: 2.1rem;
-  top: 1.2rem;
+  left: 0;
+  top: var(--bs-space-8);
   z-index: 0;
   appearance: none;
   -webkit-appearance: none;
 }
 
 .mobile-facets__label {
-  padding: 1.5rem 2rem 1.5rem 2.5rem;
+  padding: var(--bs-space-8) 0;
   width: 100%;
   transition: background-color 0.2s ease;
   word-break: break-word;
@@ -1031,8 +1006,8 @@ input.mobile-facets__checkbox {
 
 .mobile-facets__label .icon-checkmark {
   position: absolute;
-  top: 1.9rem;
-  left: 2.8rem;
+  top: calc(var(--bs-space-8) + 0.4rem);
+  left: 0.3rem;
   visibility: hidden;
   width: 11px;
   height: 9px;
@@ -1048,29 +1023,32 @@ input.mobile-facets__checkbox {
   display: block;
 }
 
+/* Apply and Clear all, as Checkout and View Cart in the cart drawer. */
 .mobile-facets__footer {
-  border-top: 0.1rem solid rgba(var(--color-foreground), 0.08);
-  padding: 2rem;
-  bottom: 0;
-  position: sticky;
   display: flex;
-  z-index: 2;
-  margin-top: auto;
-  background-color: rgb(var(--color-background));
-  background: var(--gradient-background);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--bs-space-16);
+  margin-top: var(--bs-space-24);
 }
 
-.mobile-facets__footer > * + * {
-  margin-left: 1rem;
+.mobile-facets__clear {
+  color: var(--bs-color-grey-text);
+  text-decoration: none;
 }
 
-.mobile-facets__footer > * {
-  width: 50%;
+.mobile-facets__clear:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
 }
 
 .mobile-facets__sort {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: var(--bs-tracking-display);
+  line-height: var(--bs-leading-heading);
 }
 
 .mobile-facets__sort label {
@@ -1318,26 +1296,39 @@ input.mobile-facets__checkbox {
   padding: var(--bs-space-4) calc(var(--bs-space-8) + var(--bs-space-4));
 }
 
-.mobile-facets__heading {
-  font-size: var(--bs-text-large);
+/* Drawer type matches the cart drawer: demibold, 16 on phones and 21 from 750px. */
+.mobile-facets__heading,
+.mobile-facets__count,
+.mobile-facets__summary,
+.mobile-facets__sort,
+.mobile-facets__sort .select .select__select,
+.mobile-facets__clear {
+  margin: 0;
+  font-family: var(--font-body-family);
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: var(--bs-tracking-display);
+  line-height: var(--bs-leading-heading);
 }
 
 .mobile-facets__count {
-  color: var(--bs-color-grey-text);
-  font-size: var(--bs-text-paragraph);
-}
-
-.mobile-facets__footer .button {
-  min-height: var(--bs-space-48);
+  flex-grow: 0;
+  color: rgb(var(--color-foreground));
 }
 
 .mobile-facets__sort .select .select__select {
-  font-size: var(--bs-text-paragraph);
-  letter-spacing: 0;
+  height: auto;
+  color: rgb(var(--color-foreground));
 }
 
 @media screen and (min-width: 750px) {
-  .facets-container-drawer .mobile-facets__open {
+  .facets-container-drawer .mobile-facets__open,
+  .mobile-facets__heading,
+  .mobile-facets__count,
+  .mobile-facets__summary,
+  .mobile-facets__sort,
+  .mobile-facets__sort .select .select__select,
+  .mobile-facets__clear {
     font-size: var(--bs-text-large);
   }
 }
