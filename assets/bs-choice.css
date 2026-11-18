@@ -36,7 +36,7 @@
   border: 0.1rem solid transparent;
   border-radius: var(--bs-space-16);
   background: rgb(var(--color-background));
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   font-size: var(--bs-text-paragraph);
   font-weight: var(--bs-weight-medium);
   line-height: 1.25;

@@ -29,7 +29,7 @@
   gap: var(--bs-space-8);
   font-size: var(--bs-text-paragraph);
   line-height: var(--bs-leading-body);
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   text-decoration: none;
   transition: color var(--duration-short) ease;
 }
@@ -136,7 +136,7 @@
   font-weight: var(--bs-weight-demibold);
   line-height: var(--bs-leading-heading);
   letter-spacing: var(--bs-tracking-display);
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 .bs-brand-card__row > * {
@@ -265,7 +265,7 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--bs-space-8);
   padding: calc(var(--bs-space-8) + var(--bs-space-4)) 0;
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 .bs-brand-list__row--head {
@@ -396,7 +396,7 @@
   padding-top: var(--bs-space-16);
   font-size: var(--bs-text-paragraph);
   line-height: var(--bs-leading-body);
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 .bs-brand-hero__breadcrumb ol {

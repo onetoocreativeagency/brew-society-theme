@@ -93,7 +93,7 @@
   left: var(--bs-space-24);
   font-size: var(--bs-text-small);
   letter-spacing: 0;
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 .contact .text-area {

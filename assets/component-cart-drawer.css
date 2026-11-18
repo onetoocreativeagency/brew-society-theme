@@ -533,7 +533,7 @@ cart-drawer-items {
 .cart-drawer .cart-item__details {
   grid-column: 2;
   grid-row: 2;
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 .cart-drawer .cart-item__details > * {
@@ -608,7 +608,7 @@ cart-drawer-items {
   grid-column: 2;
   grid-row: 3;
   margin-top: var(--bs-space-16);
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
 }
 
 /* Remove sits at the foot of the row, so nothing between it and the row is positioned. */
@@ -699,7 +699,7 @@ cart-drawer-items {
 .cart-drawer .tax-note {
   display: block;
   margin: var(--bs-space-8) 0 0;
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   font-size: var(--bs-text-small);
 }
 
@@ -711,6 +711,6 @@ cart-drawer-items {
 }
 
 .cart-drawer__view-cart {
-  color: var(--bs-color-grey);
+  color: var(--bs-color-grey-text);
   text-decoration: none;
 }
