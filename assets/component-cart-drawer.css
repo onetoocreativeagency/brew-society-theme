@@ -422,9 +422,15 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 .cart-drawer__view-cart {
   font-family: var(--font-body-family);
   font-size: var(--bs-text-paragraph);
-  font-weight: var(--bs-weight-demibold);
+  font-weight: var(--bs-weight-medium);
   letter-spacing: var(--bs-tracking-display);
   line-height: var(--bs-leading-heading);
+}
+
+/* Total and View Cart stay DemiBold (Figma Shop - Cart Drawer (Items) 4290:3120). */
+.cart-drawer .totals > *,
+.cart-drawer__view-cart {
+  font-weight: var(--bs-weight-demibold);
 }
 
 @media screen and (min-width: 750px) {
@@ -442,11 +448,17 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   display: flex;
   justify-content: space-between;
   margin: 0;
+  color: var(--bs-color-black);
 }
 
-/* Empty cart. */
+/* Empty cart: Close at the top, the message centred, Continue shopping at the foot
+   (Figma Shop - Cart Drawer (Empty) 4288:3067, mobile 4288:3154). */
 cart-drawer.is-empty cart-drawer-items {
   display: none;
+}
+
+cart-drawer.is-empty .bs-drawer__panel.bs-drawer__panel {
+  padding-bottom: var(--bs-space-16);
 }
 
 .drawer__inner-empty {
@@ -455,14 +467,21 @@ cart-drawer.is-empty cart-drawer-items {
   overflow: visible;
 }
 
+cart-drawer.is-empty .drawer__inner-empty {
+  flex: 1 0 auto;
+}
+
 .cart-drawer .cart-drawer__warnings {
-  flex: none;
-  text-align: left;
+  flex: 1 0 auto;
+  display: flex;
+  text-align: center;
 }
 
 .cart-drawer__empty-content {
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: var(--bs-space-24);
 }
 
@@ -470,8 +489,8 @@ cart-drawer.is-empty cart-drawer-items {
   margin: 0;
 }
 
-.cart-drawer__empty-content .cart__login-title {
-  font-size: var(--bs-text-large);
+.cart-drawer .cart__empty-text {
+  text-box: trim-both cap alphabetic;
 }
 
 /* Items: the image panel on the left, name, price, variant and quantity beside it. */
@@ -562,8 +581,14 @@ cart-drawer-items {
   display: block;
   color: rgb(var(--color-foreground));
   font: inherit;
-  letter-spacing: inherit;
+  letter-spacing: var(--bs-tracking-button);
   text-decoration: none;
+}
+
+@media screen and (min-width: 750px) {
+  .cart-drawer .cart-item__name {
+    line-height: 1.2;
+  }
 }
 
 .cart-drawer .cart-item__name:hover {

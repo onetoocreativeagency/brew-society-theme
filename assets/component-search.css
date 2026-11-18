@@ -72,3 +72,43 @@ input::-webkit-search-decoration {
 .template-search__results {
   position: relative;
 }
+
+/* Brew Society search field on the search page (Figma Search Field 4277:2292): 64px tall,
+   16px corners and a 1px outline in the scheme foreground. Floating label 10px, value 16px. */
+.template-search__search {
+  --inputs-radius: 1.6rem;
+  --inputs-radius-outset: 1.6rem;
+}
+
+.template-search__search .field__input {
+  height: 6.2rem;
+  padding: 2.5rem 9.8rem 1.1rem 1.9rem;
+  letter-spacing: 0.04em;
+}
+
+.template-search__search .field__label {
+  left: calc(var(--inputs-border-width) + 1.9rem);
+  top: calc(var(--inputs-border-width) + 1.8rem);
+}
+
+.template-search__search .field__input:focus ~ .field__label,
+.template-search__search .field__input:not(:placeholder-shown) ~ .field__label,
+.template-search__search .field__input:-webkit-autofill ~ .field__label {
+  top: calc(var(--inputs-border-width) + 1rem);
+  left: calc(var(--inputs-border-width) + 1.9rem);
+}
+
+.template-search__search .field__button {
+  top: 50%;
+  height: 4.4rem;
+  transform: translateY(-50%);
+}
+
+.template-search__search .reset__button::after,
+.template-search__search .reset__button:not(:focus)::after,
+.template-search__search .reset__button:not(:focus-visible)::after {
+  top: 50%;
+  height: 2.7rem;
+  border-right-color: rgba(var(--color-foreground), 0.15);
+  transform: translateY(-50%);
+}
