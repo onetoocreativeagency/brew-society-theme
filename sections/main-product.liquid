@@ -170,7 +170,19 @@
                     </dl>
                   {%- endif -%}
                 {%- when 'title' -%}
-                  <div class="product__title" {{ block.shopify_attributes }}>
+                  {%- liquid
+                    comment
+                      Figma sets the name at 160px ("Oat Milk"). Longer names step down so whole
+                      words still fit the column.
+                    endcomment
+                    assign bs_title_size = 'short'
+                    if product.title.size > 24
+                      assign bs_title_size = 'long'
+                    elsif product.title.size > 12
+                      assign bs_title_size = 'medium'
+                    endif
+                  -%}
+                  <div class="product__title bs-buy__title--{{ bs_title_size }}" {{ block.shopify_attributes }}>
                     <h1>{{ product.title | escape }}</h1>
                     <a href="{{ product.url }}" class="product__title">
                       <h2 class="h1">

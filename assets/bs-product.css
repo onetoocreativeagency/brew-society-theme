@@ -277,7 +277,7 @@
 
 .bs-buy__tags > div {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(max-content, 1fr);
   align-items: center;
   gap: var(--bs-space-16);
   width: min(32.1rem, 100%);
@@ -285,6 +285,7 @@
 
 .bs-buy__tags dd {
   justify-self: start;
+  white-space: nowrap;
 }
 
 @media screen and (min-width: 750px) {
@@ -339,9 +340,18 @@
 }
 
 @media screen and (min-width: 750px) {
-  /* 160px in the 576px column at 1728, scaling down with the column. */
-  .bs-buy .product__title > h1 {
+  /* 160px in the 576px column at 1728, scaling down with the column. Longer names (set in
+     main-product.liquid by length) step down to 90px and 67px. */
+  .bs-buy .bs-buy__title--short > h1 {
     font-size: clamp(var(--bs-text-3x-large), 27.8cqi, var(--bs-text-7x-large));
+  }
+
+  .bs-buy .bs-buy__title--medium > h1 {
+    font-size: clamp(var(--bs-text-3x-large), 15.6cqi, var(--bs-text-5x-large));
+  }
+
+  .bs-buy .bs-buy__title--long > h1 {
+    font-size: clamp(var(--bs-text-3x-large), 11.6cqi, var(--bs-text-4x-large));
   }
 }
 
