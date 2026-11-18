@@ -1,0 +1,75 @@
+/* Brew Society drawer: the one side panel shared by the cart drawer (Figma 4166:4817), the buy
+   panel (4166:4667) and the Filter & Sort drawer. A 50% white veil with blur over the page, then
+   a panel from the right: full width on phones, 597px from 750px, one scrolling column that
+   starts with the Close pill. Change the panel here and all three follow.
+
+   Markup: `.bs-drawer` on the veil, `.bs-drawer__panel` on the panel (also given the cart colour
+   scheme), `.bs-drawer__close` on the Close pill. The panel slides in when the veil has `.active`
+   (cart drawer), `[open]` (buy panel) or sits in a `.menu-opening` disclosure (filters drawer).
+
+   The doubled classes win over Dawn's component rules whichever file loads last. */
+
+.bs-drawer.bs-drawer {
+  --bs-drawer-width: 59.7rem;
+  background: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(14.65px);
+  backdrop-filter: blur(14.65px);
+}
+
+.bs-drawer__panel.bs-drawer__panel {
+  box-sizing: border-box;
+  container-type: inline-size;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--bs-space-24);
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: var(--bs-space-16) var(--bs-space-16) var(--bs-space-128);
+  border: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateX(100%);
+  transition: transform var(--duration-default) ease;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-drawer__panel.bs-drawer__panel {
+    width: var(--bs-drawer-width);
+  }
+}
+
+.bs-drawer.active .bs-drawer__panel,
+.bs-drawer[open] .bs-drawer__panel,
+.menu-opening .bs-drawer .bs-drawer__panel {
+  transform: translateX(0);
+}
+
+.bs-drawer__panel:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.bs-drawer__close.bs-drawer__close {
+  position: relative;
+  top: auto;
+  right: auto;
+  display: inline-flex;
+  flex: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-drawer.bs-drawer,
+  .bs-drawer__panel.bs-drawer__panel {
+    transition: none;
+  }
+}

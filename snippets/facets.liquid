@@ -443,7 +443,7 @@
     </facet-filters-form>
   {%- endif -%}
   {% comment %}  Drawer and mobile filter {% endcomment %}
-  <menu-drawer
+  <bs-facets-drawer
     class="mobile-facets__wrapper{% if filter_type == 'horizontal' or filter_type == 'vertical' %} medium-hide large-up-hide{% endif %}"
     data-breakpoint="mobile"
   >
@@ -477,11 +477,26 @@
         </span>
       </summary>
       <facet-filters-form>
-        <form id="FacetFiltersFormMobile" class="mobile-facets">
-          <div class="mobile-facets__inner gradient">
+        <form id="FacetFiltersFormMobile" class="mobile-facets bs-drawer">
+          <div
+            class="mobile-facets__inner bs-drawer__panel gradient color-{{ settings.cart_color_scheme }}"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="FacetsDrawerHeading-{{ section.id }}"
+            tabindex="-1"
+          >
+            <button
+              type="button"
+              class="button bs-pill bs-pill--close bs-drawer__close"
+              onclick="this.closest('.mobile-facets__wrapper').querySelector('summary').click()"
+            >
+              {{- 'accessibility.close' | t -}}
+            </button>
             <div class="mobile-facets__header">
               <div class="mobile-facets__header-inner">
-                <h2 class="mobile-facets__heading{% unless filter_type == 'drawer' %} medium-hide large-up-hide{% endunless %}">
+                <h2
+                  id="FacetsDrawerHeading-{{ section.id }}"
+                  class="mobile-facets__heading{% unless filter_type == 'drawer' %} medium-hide large-up-hide{% endunless %}">
                   {%- if enable_filtering and enable_sorting -%}
                     {{ 'products.facets.filter_and_sort' | t }}
                   {%- elsif enable_filtering -%}
@@ -537,7 +552,7 @@
                           <div>
                             <span>{{ filter.label | escape }}</span>
                             <span class="mobile-facets__arrow">
-                              {{- 'icon-arrow.svg' | inline_asset_content -}}
+                              {{- 'icon-caret.svg' | inline_asset_content -}}
                             </span>
                           </div>
                         </summary>
@@ -679,7 +694,7 @@
                           <div>
                             <span>{{ filter.label | escape }}</span>
                             <span class="mobile-facets__arrow">
-                              {{- 'icon-arrow.svg' | inline_asset_content -}}
+                              {{- 'icon-caret.svg' | inline_asset_content -}}
                             </span>
                           </div>
                         </summary>
@@ -761,18 +776,18 @@
               {%- endif -%}
 
               <div class="mobile-facets__footer">
-                <facet-remove class="mobile-facets__clear-wrapper">
-                  <a href="{{ results_url }}" class="mobile-facets__clear underlined-link">
-                    {{- 'products.facets.clear_all' | t -}}
-                  </a>
-                </facet-remove>
                 <button
                   type="button"
-                  class="button button--primary"
+                  class="button bs-pill"
                   onclick="this.closest('.mobile-facets__wrapper').querySelector('summary').click()"
                 >
                   {{ 'products.facets.apply' | t }}
                 </button>
+                <facet-remove class="mobile-facets__clear-wrapper">
+                  <a href="{{ results_url }}" class="mobile-facets__clear">
+                    {{- 'products.facets.clear_all' | t -}}
+                  </a>
+                </facet-remove>
               </div>
             </div>
 
@@ -788,7 +803,7 @@
         </form>
       </facet-filters-form>
     </details>
-  </menu-drawer>
+  </bs-facets-drawer>
 
   <div class="active-facets active-facets-mobile medium-hide large-up-hide">
     {%- for filter in results.filters -%}
