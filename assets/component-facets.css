@@ -782,9 +782,11 @@ a.active-facets__button.focused .active-facets__button-inner {
   pointer-events: all;
 }
 
-/* Heading row, as "Cart (4)" in the cart drawer. */
+/* Heading row: "Filter & Sort" and the count in black over a black rule (Figma 4282:2763). */
 .mobile-facets__header {
   flex: none;
+  padding-bottom: 2.5rem;
+  border-bottom: 0.1rem solid var(--bs-color-black);
 }
 
 .mobile-facets__header-inner {
@@ -904,7 +906,6 @@ a.active-facets__button.focused .active-facets__button-inner {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  border-top: 0.1rem solid var(--bs-color-black);
 }
 
 .mobile-facets__details[open] .icon-caret {
@@ -930,15 +931,31 @@ a.active-facets__button.focused .active-facets__button-inner {
 }
 
 .mobile-facets__details {
-  border-bottom: 0.1rem solid var(--bs-color-black);
+  border-bottom: 0.1rem solid rgb(var(--color-foreground));
 }
 
+/* Each group row is 64px with its rule (Figma Filter Group 4277:2285). Open, the header shrinks
+   to the label and its padding, and the body follows. */
 .mobile-facets__summary {
-  padding: var(--bs-space-16) 0;
-  font-weight: var(--bs-weight-demibold);
-  letter-spacing: var(--bs-tracking-display);
-  line-height: var(--bs-leading-heading);
+  display: flex;
+  align-items: center;
+  min-height: 6.3rem;
+  padding: 1.9rem 0 1.8rem;
   cursor: pointer;
+}
+
+.mobile-facets__details[open] > .mobile-facets__summary {
+  min-height: 0;
+}
+
+.mobile-facets__summary > div {
+  flex: 1;
+  gap: var(--bs-space-8);
+}
+
+.mobile-facets__summary > div > span:first-child,
+.mobile-facets__sort label {
+  text-box: trim-both cap alphabetic;
 }
 
 .mobile-facets__summary::-webkit-details-marker {
@@ -959,7 +976,7 @@ a.active-facets__button.focused .active-facets__button-inner {
 }
 
 .mobile-facets__submenu {
-  padding: 0 0 var(--bs-space-16);
+  padding: 0 0 1.7rem;
 }
 
 /* Each group has its own Clear and Apply in Dawn; the drawer has one pair at the bottom. */
@@ -968,32 +985,77 @@ a.active-facets__button.focused .active-facets__button-inner {
 }
 
 .mobile-facets__submenu .facets__price {
+  --inputs-radius: 1.6rem;
+  --inputs-radius-outset: 1.6rem;
   padding: 0;
+}
+
+/* Price range: "$" and a 64px field with 16px corners, twice (Figma 4286:2995). */
+.mobile-facets__submenu .facets__price .field-currency {
+  margin-right: var(--bs-space-4);
+  color: rgb(var(--color-foreground));
+}
+
+.mobile-facets__submenu .facets__price .field__input {
+  height: 6.2rem;
+  padding: 2.6rem 1.4rem 1rem;
+  letter-spacing: 0.04em;
+}
+
+.mobile-facets__submenu .facets__price .field__label {
+  top: calc(50% - 1.2rem);
+  left: calc(var(--inputs-border-width) + 1.4rem);
+  color: rgb(var(--color-foreground));
+  letter-spacing: 0.04em;
+}
+
+.mobile-facets__submenu .facets__price .field__input:focus ~ .field__label,
+.mobile-facets__submenu .facets__price .field__input:not(:placeholder-shown) ~ .field__label {
+  top: calc(var(--inputs-border-width) + 1rem);
+  left: calc(var(--inputs-border-width) + 1.4rem);
 }
 
 .mobile-facets__item {
   position: relative;
 }
 
-input.mobile-facets__checkbox {
-  border: 0;
+/* Checkbox list: 54px boxes with 16px corners and a 1px outline, 8px apart (Figma 4286:2988).
+   The input draws the box; Dawn's 16px square icon is not used. */
+.mobile-facets__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bs-space-8);
+}
+
+.mobile-facets__label > input.mobile-facets__checkbox {
+  border: 0.1rem solid rgb(var(--color-foreground));
+  border-radius: 1.6rem;
   position: absolute;
-  width: 1.6rem;
-  height: 1.6rem;
-  position: absolute;
+  width: 5.4rem;
+  height: 5.4rem;
   left: 0;
-  top: var(--bs-space-8);
+  top: 0;
   z-index: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
 }
 
 .mobile-facets__label {
-  padding: var(--bs-space-8) 0;
+  position: relative;
+  align-items: center;
+  min-height: 5.4rem;
+  padding: 0 0 0 calc(5.4rem + 1.2rem);
   width: 100%;
   transition: background-color 0.2s ease;
   word-break: break-word;
   display: flex;
+}
+
+.mobile-facets__label > svg:not(.icon-checkmark) {
+  display: none;
 }
 
 .mobile-facets__label > svg {
@@ -1006,8 +1068,8 @@ input.mobile-facets__checkbox {
 
 .mobile-facets__label .icon-checkmark {
   position: absolute;
-  top: calc(var(--bs-space-8) + 0.4rem);
-  left: 0.3rem;
+  top: calc(50% - 0.45rem);
+  left: calc(2.7rem - 5.5px);
   visibility: hidden;
   width: 11px;
   height: 9px;
@@ -1023,18 +1085,21 @@ input.mobile-facets__checkbox {
   display: block;
 }
 
-/* Apply and Clear all, as Checkout and View Cart in the cart drawer. */
+/* Apply and Remove all: under the groups on phones, pinned to the foot of the panel from 750px
+   (Figma 4282:2781, mobile 4282:2850). */
 .mobile-facets__footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--bs-space-16);
+  gap: 1.8rem;
   margin-top: var(--bs-space-24);
 }
 
 .mobile-facets__clear {
+  display: block;
   color: var(--bs-color-grey-text);
   text-decoration: none;
+  text-box: trim-both cap alphabetic;
 }
 
 .mobile-facets__clear:hover {
@@ -1043,12 +1108,10 @@ input.mobile-facets__checkbox {
 }
 
 .mobile-facets__sort {
+  flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: var(--bs-weight-demibold);
-  letter-spacing: var(--bs-tracking-display);
-  line-height: var(--bs-leading-heading);
 }
 
 .mobile-facets__sort label {
@@ -1296,7 +1359,7 @@ input.mobile-facets__checkbox {
   padding: var(--bs-space-4) calc(var(--bs-space-8) + var(--bs-space-4));
 }
 
-/* Drawer type matches the cart drawer: demibold, 16 on phones and 21 from 750px. */
+/* Drawer type: Medium, 16 on phones and 21 from 750px (Figma Shop - Filter Drawer 4282:2692). */
 .mobile-facets__heading,
 .mobile-facets__count,
 .mobile-facets__summary,
@@ -1306,19 +1369,51 @@ input.mobile-facets__checkbox {
   margin: 0;
   font-family: var(--font-body-family);
   font-size: var(--bs-text-paragraph);
-  font-weight: var(--bs-weight-demibold);
+  font-weight: var(--bs-weight-medium);
   letter-spacing: var(--bs-tracking-display);
   line-height: var(--bs-leading-heading);
 }
 
+.mobile-facets__summary,
+.mobile-facets__sort label,
+.mobile-facets__clear {
+  letter-spacing: var(--bs-tracking-button);
+}
+
+.mobile-facets__heading,
+.mobile-facets__count {
+  color: var(--bs-color-black);
+  text-box: trim-both cap alphabetic;
+}
+
 .mobile-facets__count {
   flex-grow: 0;
-  color: rgb(var(--color-foreground));
+}
+
+.mobile-facets__arrow,
+.mobile-facets__sort .select .svg-wrapper {
+  width: 1.2rem;
+  height: 0.72rem;
+}
+
+.mobile-facets__summary .icon-caret {
+  width: 100%;
+  height: 100%;
 }
 
 .mobile-facets__sort .select .select__select {
   height: auto;
   color: rgb(var(--color-foreground));
+}
+
+/* The panel is a plain column with 16px all round; spacing comes from the parts below. */
+.mobile-facets__inner.bs-drawer__panel.bs-drawer__panel {
+  gap: 0;
+  padding-bottom: var(--bs-space-16);
+}
+
+.mobile-facets__inner .bs-drawer__close {
+  margin-bottom: var(--bs-space-24);
 }
 
 @media screen and (min-width: 750px) {
@@ -1331,4 +1426,29 @@ input.mobile-facets__checkbox {
   .mobile-facets__clear {
     font-size: var(--bs-text-large);
   }
+
+  .mobile-facets__header {
+    padding-bottom: 3rem;
+  }
+
+  .mobile-facets__arrow,
+  .mobile-facets__sort .select .svg-wrapper {
+    width: 1rem;
+    height: 0.6rem;
+  }
+
+  .mobile-facets__inner .bs-drawer__close {
+    margin-bottom: var(--bs-space-32);
+  }
+
+  .mobile-facets__main {
+    flex: 1 0 auto;
+  }
+
+  .mobile-facets__main > .mobile-facets__footer {
+    gap: 2rem;
+    margin-top: auto;
+    padding-top: var(--bs-space-24);
+  }
 }
+

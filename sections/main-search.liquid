@@ -16,17 +16,29 @@
 <script src="{{ 'main-search.js' | asset_url }}" defer="defer"></script>
 
 <style>
+  /* Title and field centred (Figma Search 4280:2274, mobile 4281:2489). The field spans the
+     middle two of the four grid columns from 750px and the full width on phones. */
   .template-search__header {
-    margin-bottom: 3rem;
+    margin-bottom: var(--bs-space-32);
+    text-align: center;
   }
 
   .template-search__search {
-    margin: 0 0 3.5rem;
-    max-width: 74.1rem;
+    margin: 0 auto;
   }
 
   .template-search__search .search {
-    margin-top: 3rem;
+    margin-top: var(--bs-space-32);
+  }
+
+  @media screen and (min-width: 750px) {
+    .template-search__search {
+      max-width: calc((100% - 3 * var(--bs-grid-gap)) / 2 + var(--bs-grid-gap));
+    }
+
+    .template-search__search .search {
+      margin-top: var(--bs-space-64);
+    }
   }
 
   .template-search--empty {
@@ -35,7 +47,7 @@
 
   @media screen and (min-width: 750px) {
     .template-search__header {
-      margin-bottom: 5rem;
+      margin-bottom: var(--bs-space-64);
     }
   }
 
