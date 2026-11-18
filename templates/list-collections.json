@@ -2,7 +2,9 @@
   "sections": {
     "main": {
       "type": "main-list-collections",
-      "settings": {}
+      "settings": {
+        "card_image": "logo"
+      }
     }
   },
   "order": [
