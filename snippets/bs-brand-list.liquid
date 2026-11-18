@@ -1,7 +1,8 @@
 {% comment %}
   Renders the list view of every brand collection (Figma Brands - All [List View] 4166:4532):
   a table of name, category, range size, origin and relationship. A hovered or
-  focused row is highlighted and shows that brand's product shot.
+  focused row is highlighted and shows that brand's logo on a square, which eases
+  after the cursor (assets/bs-brand-list.js).
   Used by the Brands catalogue and under the brand page.
 
   Accepts:
@@ -10,7 +11,9 @@
   Usage:
   {% render 'bs-brand-list', config: section.settings %}
 {% endcomment %}
+<script src="{{ 'bs-brand-list.js' | asset_url }}" defer="defer"></script>
 {%- comment -%} The rows are laid out with CSS grid, so the table roles are stated explicitly. {%- endcomment -%}
+<bs-brand-list>
 <table class="bs-brand-list" role="table">
   <caption class="visually-hidden">
     {{ 'sections.brands.table_caption' | t }}
@@ -28,3 +31,4 @@
     {%- render 'bs-brand-each', item: 'row', config: config -%}
   </tbody>
 </table>
+</bs-brand-list>

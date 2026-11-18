@@ -39,6 +39,8 @@
 .collection-hero__title {
   margin: 0;
   text-box: trim-both cap alphabetic;
+  /* Round figures (6, 0) dip just below the baseline; keep them clear of the next section. */
+  padding-bottom: 0.04em;
 }
 
 .collection-hero__count {

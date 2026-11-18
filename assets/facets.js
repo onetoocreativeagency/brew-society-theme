@@ -163,6 +163,12 @@ class FacetFiltersForm extends HTMLElement {
       containerDesktop.innerHTML = count;
       containerDesktop.classList.remove('loading');
     }
+    // Brew Society: the number after the collection title follows the filtered count.
+    const heroCount = document.getElementById('CollectionHeroCount');
+    if (heroCount && sourceCount.dataset.productCount) {
+      heroCount.querySelector('[data-count]').textContent = sourceCount.dataset.productCount;
+      heroCount.querySelector('[data-count-text]').textContent = `, ${sourceCount.textContent.trim()}`;
+    }
     const loadingSpinners = document.querySelectorAll(
       '.facets-container .loading__spinner, facet-filters-form .loading__spinner',
     );

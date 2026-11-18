@@ -51,17 +51,19 @@
   {%- when 'row' -%}
     {%- liquid
       assign bs_range = bs_meta[config.range_size_key].value | default: brand.all_products_count
-      assign bs_image = brand.image | default: bs_meta[config.logo_key].value
+      assign bs_image = bs_meta[config.logo_key].value | default: brand.image
     -%}
     <tr class="bs-brand-list__row" role="row" data-brand data-category="{{ bs_category | handleize }}">
       <td class="bs-brand-list__name" role="cell">
         <a href="{{ brand.url }}" class="bs-brand-list__link">{{ brand.title | escape }}</a>
         {%- if bs_image != blank -%}
-          {{-
-            bs_image
-            | image_url: width: 600
-            | image_tag: loading: 'lazy', widths: '300, 600', sizes: '233px', alt: '', class: 'bs-brand-list__image'
-          -}}
+          <span class="bs-brand-list__preview color-{{ settings.card_color_scheme }} gradient">
+            {{-
+              bs_image
+              | image_url: width: 600
+              | image_tag: loading: 'lazy', widths: '300, 600', sizes: '233px', alt: '', class: 'bs-brand-list__image'
+            -}}
+          </span>
         {%- endif -%}
       </td>
       <td class="bs-brand-list__category" role="cell">{{ bs_category | escape }}</td>
