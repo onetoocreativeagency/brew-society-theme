@@ -23,6 +23,10 @@
     assign bs_ring = 'outer'
     assign bs_angle = index | minus: inner | times: 360.0 | divided_by: outer | round: 3
   endif
+  # Width over height, so the CSS can give every logo about the same area (a brand
+  # logo is a media_image, a block's logo an image).
+  assign bs_ratio = image.aspect_ratio | default: image.preview_image.aspect_ratio | default: 1
+  assign bs_ratio_style = '--bs-logo-ratio: ' | append: bs_ratio | append: ';'
 -%}
 <li
   class="bs-brand-ring__item bs-brand-ring__item--{{ bs_ring }}"
@@ -42,6 +46,7 @@
       widths: '100, 200, 300, 400',
       sizes: '(min-width: 750px) 8vw, 18vw',
       alt: name,
+      style: bs_ratio_style,
       class: 'bs-brand-ring__logo'
   -}}
   {%- if url != blank -%}
