@@ -14,45 +14,41 @@
   }
 {%- endstyle -%}
 
-{%- if section.settings.image != blank or request.design_mode -%}
-  <div class="color-{{ section.settings.color_scheme }} gradient">
-    <div class="bs-team-photo page-width section-{{ section.id }}-padding">
-      <div class="bs-team-photo__frame">
-        {%- if section.settings.image != blank -%}
-          {{
-            section.settings.image
-            | image_url: width: 3360
-            | image_tag:
-              widths: '375, 750, 1100, 1500, 1780, 2400, 3360',
-              sizes: '100vw',
-              class: 'bs-team-photo__image'
-          }}
-        {%- else -%}
-          {{ 'hero-apparel-1' | placeholder_svg_tag: 'bs-team-photo__image placeholder-svg' }}
-        {%- endif -%}
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="bs-team-photo page-width section-{{ section.id }}-padding">
+    <div class="bs-team-photo__frame{% if section.settings.image == blank %} bs-placeholder{% endif %}">
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 3360
+          | image_tag:
+            widths: '375, 750, 1100, 1500, 1780, 2400, 3360',
+            sizes: '100vw',
+            class: 'bs-team-photo__image'
+        }}
+      {%- endif -%}
 
-        {%- if section.blocks.size > 0 -%}
-          <ul class="bs-team-photo__people" role="list">
-            {%- for block in section.blocks -%}
-              {%- if block.settings.name == blank -%}
-                {%- continue -%}
-              {%- endif -%}
-              <li
-                class="bs-team-photo__person{% if block.settings.show_by_default %} bs-team-photo__person--default{% endif %}"
-                {{ block.shopify_attributes }}
-              >
-                <button class="bs-team-photo__button" type="button">
-                  <span class="bs-team-photo__dot"></span>
-                  <span class="bs-team-photo__name">{{ block.settings.name | escape }}</span>
-                </button>
-              </li>
-            {%- endfor -%}
-          </ul>
-        {%- endif -%}
-      </div>
+      {%- if section.blocks.size > 0 -%}
+        <ul class="bs-team-photo__people" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.name == blank -%}
+              {%- continue -%}
+            {%- endif -%}
+            <li
+              class="bs-team-photo__person{% if block.settings.show_by_default %} bs-team-photo__person--default{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              <button class="bs-team-photo__button" type="button">
+                <span class="bs-team-photo__dot"></span>
+                <span class="bs-team-photo__name">{{ block.settings.name | escape }}</span>
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
     </div>
   </div>
-{%- endif -%}
+</div>
 
 {% schema %}
 {

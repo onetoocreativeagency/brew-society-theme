@@ -5,7 +5,6 @@
   overflow: hidden;
   aspect-ratio: 3 / 2;
   border-radius: var(--bs-space-32);
-  background: rgba(var(--color-foreground), 0.06);
 }
 
 .bs-team-photo__image {

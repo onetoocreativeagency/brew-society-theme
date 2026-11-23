@@ -159,6 +159,14 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   color: var(--bs-color-grey);
 }
 
+/* Empty image slot: a plain tinted box, as on the home feature cards. The slot sets the size,
+   aspect ratio and corners. */
+.bs-placeholder,
+.bs-placeholder:empty {
+  display: block;
+  background-color: color-mix(in srgb, var(--bs-color-grey) 16%, rgb(var(--color-background)));
+}
+
 .isolate {
   position: relative;
   z-index: 0;
