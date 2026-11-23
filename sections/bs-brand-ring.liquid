@@ -58,9 +58,7 @@
 -%}
 {%- if bs_count > 0 -%}
   {{ 'bs-brand-ring.css' | asset_url | stylesheet_tag }}
-  {%- if section.settings.rotate -%}
-    <script src="{{ 'bs-brand-ring.js' | asset_url }}" defer="defer"></script>
-  {%- endif -%}
+  <script src="{{ 'bs-brand-ring.js' | asset_url }}" defer="defer"></script>
 
   {%- style -%}
     .section-{{ section.id }}-padding {
@@ -154,7 +152,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shows brand logos in slowly rotating rings around the button. Brand collections that have a logo come first, then any Logo blocks. From four logos they are split across two rings, about a third on the inner one, and at most 42 are shown. The section stays hidden until there is at least one logo."
+      "content": "Shows brand logos in slowly rotating rings around the button. Visitors can grab a ring and spin it. Brand collections that have a logo come first, then any Logo blocks. From four logos they are split across two rings, about a third on the inner one, and at most 42 are shown. The section stays hidden until there is at least one logo."
     },
     {
       "type": "header",
@@ -198,7 +196,7 @@
       "type": "checkbox",
       "id": "rotate",
       "label": "Rotate the rings",
-      "info": "The two rings turn in opposite directions and logos stay upright. Pauses while a logo is hovered or focused and while the section is off screen. Does not run for visitors who ask for reduced motion.",
+      "info": "The two rings turn in opposite directions and logos stay upright. Pauses while a logo is hovered or focused and while the section is off screen. Does not run for visitors who ask for reduced motion. Rings can be spun by dragging either way.",
       "default": true
     },
     {
