@@ -1,0 +1,141 @@
+{% comment %}
+  Category links: a big centred, comma-separated line of categories (Figma Home
+  4166:3362 and 4250:5056, under the brand rings). Same type as the Statement
+  section, whose stylesheet it shares.
+
+  One Category block per item. A block with a collection links to it, labelled
+  with the label or else the collection title. A block can instead link to any
+  URL, such as /collections/all (Shopify's automatic all-products collection,
+  which the collection picker does not list). A block with only a label shows as
+  plain text, so categories without a collection yet can sit in the list.
+{% endcomment %}
+{{ 'bs-statement.css' | asset_url | stylesheet_tag }}
+{{ 'bs-category-links.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- if section.blocks.size > 0 -%}
+  <div class="color-{{ section.settings.color_scheme }} gradient">
+    <div class="bs-statement bs-statement--center bs-statement--narrow page-width section-{{ section.id }}-padding">
+      <ul class="bs-statement__text center bs-category-links list-unstyled" role="list">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign label = block.settings.label | default: block.settings.collection.title
+            if label == blank
+              continue
+            endif
+            assign link = block.settings.collection.url | default: block.settings.link
+          -%}
+          <li
+            class="bs-category-links__item{% if block.settings.highlight %} bs-category-links__item--strong{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {%- if link != blank -%}
+              <a href="{{ link }}">{{ label | escape }}</a>
+            {%- else -%}
+              {{- label | escape -}}
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Category links",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 30,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Add a Category block for each category, in order. Categories with a collection or a link are links; the rest show as plain text until they have one."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Colour scheme",
+      "default": "scheme-2"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 256,
+      "step": 8,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 128
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection",
+          "info": "Optional. Without a collection or a link the category shows as plain text."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Or link to",
+          "info": "Used when no collection is chosen, e.g. All products."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "info": "Leave blank to use the collection's title."
+        },
+        {
+          "type": "checkbox",
+          "id": "highlight",
+          "label": "Show in the strong colour",
+          "info": "The rest of the line is grey.",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Category links"
+    }
+  ]
+}
+{% endschema %}
