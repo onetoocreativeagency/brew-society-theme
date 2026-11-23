@@ -191,6 +191,8 @@
     %}
 
     <div class="header__icons{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header__icons--localization header-localization{% endif %}">
+      {%- comment -%} Only rendered when a selector is on: an empty wrapper is a flex item and adds a second gap before Cart. {%- endcomment -%}
+      {%- if country_selector or language_selector -%}
       <div class="desktop-localization-wrapper">
         {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
           <localization-form class="small-hide medium-hide" data-prevent-hide>
@@ -214,6 +216,7 @@
           </localization-form>
         {%- endif -%}
       </div>
+      {%- endif -%}
 
       {%- for block in section.blocks -%}
         {%- case block.type -%}

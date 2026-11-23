@@ -30,6 +30,8 @@
           | image_tag: widths: '375, 750, 1080, 1500, 2160', sizes: '(min-width: 750px) 62vw, 100vw', alt: ''
         }}
       </div>
+    {%- else -%}
+      <div class="bs-404__media bs-404__media--placeholder bs-placeholder"></div>
     {%- endif -%}
 
     {%- if section.blocks.size > 0 -%}
@@ -61,7 +63,7 @@
       "type": "image_picker",
       "id": "image",
       "label": "Image",
-      "info": "Shown between the 404 and the buttons. Optional."
+      "info": "Shown between the 404 and the buttons. A tinted box holds its place until an image is added."
     },
     {
       "type": "color_scheme",
