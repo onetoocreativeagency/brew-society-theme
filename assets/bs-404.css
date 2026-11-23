@@ -18,6 +18,12 @@
   max-width: 108rem;
 }
 
+/* No image yet: a tinted box at the line-up's size (1080 x 660 in Figma). */
+.bs-404__media--placeholder {
+  aspect-ratio: 1080 / 660;
+  border-radius: var(--bs-space-32);
+}
+
 .bs-404__media img {
   display: block;
   width: 100%;
@@ -41,6 +47,12 @@
   .bs-404__media {
     margin-top: calc(var(--bs-space-32) * -1);
     margin-bottom: calc(var(--bs-space-64) * -1);
+  }
+
+  /* A box does not tuck under the 404 or the buttons the way the cut-out line-up does. */
+  .bs-404__media--placeholder {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .bs-404__buttons {

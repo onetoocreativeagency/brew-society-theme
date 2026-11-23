@@ -49,6 +49,8 @@
             class: 'bs-brand-card__image'
         -}}
       </div>
+    {%- else -%}
+      <div class="bs-brand-card__placeholder bs-placeholder"></div>
     {%- endif -%}
     <div class="bs-brand-card__row">
       {%- if bs_meta[exclusive_key].value == true -%}

@@ -107,6 +107,12 @@
   mix-blend-mode: multiply;
 }
 
+/* No image or logo yet: the panel shows a tinted box. */
+.bs-brand-card__placeholder {
+  position: absolute;
+  inset: 0;
+}
+
 .bs-brand-card__media--logo {
   inset: 25% 12%;
 }
