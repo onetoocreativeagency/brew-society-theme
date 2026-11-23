@@ -27,7 +27,7 @@
     endif
   -%}
   <div class="color-{{ section.settings.color_scheme }} gradient">
-    <div class="bs-statement bs-statement--{{ section.settings.alignment }} bs-statement--{{ section.settings.max_width }}{% if section.settings.break_after_bold %} bs-statement--break{% endif %}{% if section.settings.paragraph %} bs-statement--paragraph{% endif %}{% if section.settings.scroll_reveal %} bs-statement--reveal{% endif %} page-width section-{{ section.id }}-padding">
+    <div class="bs-statement bs-statement--{{ section.settings.alignment }} bs-statement--{{ section.settings.max_width }}{% if section.settings.break_after_bold %} bs-statement--break{% endif %}{% if section.settings.paragraph %} bs-statement--paragraph{% endif %}{% if section.settings.scroll_reveal %} bs-statement--reveal{% unless section.settings.text contains '<strong>' %} bs-statement--reveal-plain{% endunless %}{% endif %} page-width section-{{ section.id }}-padding">
       {%- if section.settings.scroll_reveal -%}<bs-scroll-reveal class="bs-statement__reveal">{%- endif -%}
       <{{ tag }} class="bs-statement__text {{ section.settings.alignment }}">
         {{- section.settings.text -}}
@@ -70,7 +70,7 @@
       "type": "checkbox",
       "id": "scroll_reveal",
       "label": "Reveal text colour on scroll",
-      "info": "The words turn from grey to the strong colour one by one as the visitor scrolls past. Visitors who prefer reduced motion see the text in the strong colour.",
+      "info": "The bold words turn from grey to the strong colour one by one as the visitor scrolls past; the rest stays grey. Text with no bold turns strong throughout. Visitors who prefer reduced motion see the finished colours.",
       "default": false
     },
     {

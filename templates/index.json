@@ -260,6 +260,7 @@
       "settings": {
         "text": "<strong>Growing brands</strong> in your hands",
         "break_after_bold": true,
+        "scroll_reveal": true,
         "as_heading": true,
         "alignment": "center",
         "max_width": "narrow",
@@ -282,6 +283,7 @@
         "category_2": {
           "type": "category",
           "settings": {
+            "collection": "alt-milks",
             "label": "Alt. Milks",
             "highlight": false
           }
@@ -289,6 +291,7 @@
         "category_3": {
           "type": "category",
           "settings": {
+            "collection": "confectionery",
             "label": "Confectionery",
             "highlight": false
           }
@@ -296,6 +299,7 @@
         "category_4": {
           "type": "category",
           "settings": {
+            "collection": "snacks",
             "label": "Snacks",
             "highlight": false
           }
@@ -303,6 +307,7 @@
         "category_5": {
           "type": "category",
           "settings": {
+            "collection": "drinks",
             "label": "Drinks",
             "highlight": false
           }
@@ -318,6 +323,7 @@
         "category_7": {
           "type": "category",
           "settings": {
+            "collection": "coffee",
             "label": "Coffee",
             "highlight": false
           }
@@ -325,6 +331,7 @@
         "category_8": {
           "type": "category",
           "settings": {
+            "collection": "bakery",
             "label": "Bakery",
             "highlight": false
           }
@@ -332,6 +339,7 @@
         "category_9": {
           "type": "category",
           "settings": {
+            "collection": "water",
             "label": "Water",
             "highlight": false
           }
@@ -339,6 +347,7 @@
         "category_10": {
           "type": "category",
           "settings": {
+            "collection": "packaging",
             "label": "Packaging",
             "highlight": false
           }
@@ -403,6 +412,7 @@
         "label_left": "Wholesale Process",
         "label_right": "Three Steps",
         "heading": "<strong>Wholesale ordering,</strong> made simple",
+        "scroll_reveal": true,
         "closing": "Chat first? And get pricing → <a href=\"/pages/contact\">Contact Us</a>",
         "color_scheme": "scheme-3",
         "card_color_scheme": "scheme-2",
