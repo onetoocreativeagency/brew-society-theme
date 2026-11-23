@@ -122,9 +122,9 @@
 }
 
 /*
-  Rotation. Each item orbits the centre and its logo counter-turns by the same
+  Rotation. Each item orbits the centre and its link counter-turns by the same
   amount, so logos stay upright. The outer ring runs the other way. Only the
-  rotate property is animated, so the browser can run it off the main thread.
+  rotate property changes, so no frame needs layout.
 */
 .bs-brand-ring__item,
 .bs-brand-ring__link,
@@ -138,9 +138,53 @@
   box-sizing: border-box;
 }
 
+/*
+  With bs-brand-ring.js running, the script sets each ring's turn (auto-rotation
+  and drag to spin). Vertical swipes still scroll the page on touch.
+*/
+.bs-brand-ring__stage--js {
+  touch-action: pan-y pinch-zoom;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.bs-brand-ring__stage--js .bs-brand-ring__item,
+.bs-brand-ring__stage--js .bs-brand-ring__link {
+  will-change: rotate;
+}
+
+.bs-brand-ring__stage--js .bs-brand-ring__item--inner {
+  rotate: var(--bs-ring-turn-inner, 0deg);
+}
+
+.bs-brand-ring__stage--js .bs-brand-ring__item--inner .bs-brand-ring__link {
+  rotate: calc(-1 * var(--bs-ring-turn-inner, 0deg));
+}
+
+.bs-brand-ring__stage--js .bs-brand-ring__item--outer {
+  rotate: var(--bs-ring-turn-outer, 0deg);
+}
+
+.bs-brand-ring__stage--js .bs-brand-ring__item--outer .bs-brand-ring__link {
+  rotate: calc(-1 * var(--bs-ring-turn-outer, 0deg));
+}
+
+@media (hover: hover) {
+  .bs-brand-ring__stage--js,
+  .bs-brand-ring__stage--js .bs-brand-ring__link {
+    cursor: grab;
+  }
+}
+
+.bs-brand-ring__stage--dragging,
+.bs-brand-ring__stage--dragging * {
+  cursor: grabbing;
+}
+
+/* Until the script runs (or without it): CSS rotation, no dragging. */
 @media (prefers-reduced-motion: no-preference) {
-  .bs-brand-ring__stage--rotate .bs-brand-ring__item,
-  .bs-brand-ring__stage--rotate .bs-brand-ring__link {
+  .bs-brand-ring__stage--rotate:not(.bs-brand-ring__stage--js) .bs-brand-ring__item,
+  .bs-brand-ring__stage--rotate:not(.bs-brand-ring__stage--js) .bs-brand-ring__link {
     animation: bs-brand-ring-orbit var(--bs-ring-duration, 120s) linear infinite;
     animation-play-state: var(--bs-ring-play, running);
   }
@@ -150,10 +194,9 @@
     animation-direction: reverse;
   }
 
-  /* Hold still while a logo is hovered or focused, and while off screen (class set by bs-brand-ring.js). */
+  /* Hold still while a logo is hovered or focused. */
   .bs-brand-ring__list:hover,
-  .bs-brand-ring__list:focus-within,
-  .bs-brand-ring__stage--offscreen {
+  .bs-brand-ring__list:focus-within {
     --bs-ring-play: paused;
   }
 }
