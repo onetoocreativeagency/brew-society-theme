@@ -12,6 +12,80 @@
     "bs_hero_trail_7JLm4F": {
       "type": "bs-hero-trail",
       "name": "Hero with image trail",
+      "blocks": {
+        "image_1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-daelmans-stroopwafel-cube.png"
+          }
+        },
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-johnny-cashew-honey-sea-salt.png"
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-simply-roasted-sea-salt.png"
+          }
+        },
+        "image_4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-ordinary-soda-yuzu.png"
+          }
+        },
+        "image_5": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-fredericks-strong-house.png"
+          }
+        },
+        "image_6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-chow-cacao-creamy-milk.png"
+          }
+        },
+        "image_7": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-tea-culture-matcha.png"
+          }
+        },
+        "image_8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-special-friends-oat.png"
+          }
+        },
+        "image_9": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-tonys-milk-180g.png"
+          }
+        },
+        "image_10": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-prana-chai-1kg.png"
+          }
+        }
+      },
+      "block_order": [
+        "image_1",
+        "image_2",
+        "image_3",
+        "image_4",
+        "image_5",
+        "image_6",
+        "image_7",
+        "image_8",
+        "image_9",
+        "image_10"
+      ],
       "settings": {
         "heading": "Earth’s best food + drink brands, door to door",
         "text": "Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
@@ -20,7 +94,7 @@
         "secondary_link": "shopify://collections/all",
         "collection": "sodas",
         "image_scale": 100,
-        "blend_images": true,
+        "blend_images": false,
         "enable_trail": true,
         "color_scheme": "scheme-2",
         "padding_top": 0,
