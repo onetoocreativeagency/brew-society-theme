@@ -167,8 +167,30 @@
     grid-column: 1 / -1;
   }
 
-  .bs-collection-bar > .facets-wrapper:has(.facets-container-drawer) {
+  /* With the drawer, the control sits on column four and the active filters get their own row
+     under it (Figma Shop - Active Filters 4294:3496). The wrappers between the bar and those two
+     drop out of the layout so both are cells of this grid. */
+  .bs-collection-bar > .facets-wrapper:has(.facets-container-drawer),
+  .bs-collection-bar > .facets-wrapper .facets-container-drawer,
+  .bs-collection-bar > .facets-wrapper .facets-container-drawer .facets-pill,
+  .bs-collection-bar > .facets-wrapper .facets-container-drawer .facets__form {
+    display: contents;
+  }
+
+  .bs-collection-bar .facets-container-drawer .mobile-facets__wrapper {
     grid-column: 4;
+    grid-row: 1;
+  }
+
+  /* The row ends at the right gutter. It is at least column four wide, so it starts under the
+     control, and grows leftwards only when the filters need more room. */
+  .bs-collection-bar .facets-container-drawer .active-facets-desktop {
+    grid-column: 1 / -1;
+    justify-self: end;
+    width: max-content;
+    min-width: calc((100% - 3 * var(--bs-grid-gap)) / 4);
+    max-width: 100%;
+    margin-top: 0;
   }
 }
 
