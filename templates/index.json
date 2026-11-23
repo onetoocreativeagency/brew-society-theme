@@ -46,28 +46,40 @@
         "image_6": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/hero-chow-cacao-creamy-milk.png"
+            "image": "shopify://shop_images/hero-vivani-80-date-sugar.png"
           }
         },
         "image_7": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/hero-tea-culture-matcha.png"
+            "image": "shopify://shop_images/hero-chow-cacao-creamy-milk.png"
           }
         },
         "image_8": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/hero-special-friends-oat.png"
+            "image": "shopify://shop_images/hero-tea-culture-matcha.png"
           }
         },
         "image_9": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/hero-tonys-milk-180g.png"
+            "image": "shopify://shop_images/hero-special-friends-oat.png"
           }
         },
         "image_10": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-allies-daily-greens.png"
+          }
+        },
+        "image_11": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-tonys-milk-180g.png"
+          }
+        },
+        "image_12": {
           "type": "image",
           "settings": {
             "image": "shopify://shop_images/hero-prana-chai-1kg.png"
@@ -84,7 +96,9 @@
         "image_7",
         "image_8",
         "image_9",
-        "image_10"
+        "image_10",
+        "image_11",
+        "image_12"
       ],
       "settings": {
         "heading": "Earth’s best food + drink brands, door to door",
@@ -254,14 +268,95 @@
         "padding_bottom": 64
       }
     },
-    "statement_categories": {
-      "type": "bs-statement",
+    "category_links": {
+      "type": "bs-category-links",
+      "blocks": {
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "link": "shopify://collections/all",
+            "label": "All",
+            "highlight": true
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "label": "Alt. Milks",
+            "highlight": false
+          }
+        },
+        "category_3": {
+          "type": "category",
+          "settings": {
+            "label": "Confectionery",
+            "highlight": false
+          }
+        },
+        "category_4": {
+          "type": "category",
+          "settings": {
+            "label": "Snacks",
+            "highlight": false
+          }
+        },
+        "category_5": {
+          "type": "category",
+          "settings": {
+            "label": "Drinks",
+            "highlight": false
+          }
+        },
+        "category_6": {
+          "type": "category",
+          "settings": {
+            "collection": "tea",
+            "label": "Tea",
+            "highlight": false
+          }
+        },
+        "category_7": {
+          "type": "category",
+          "settings": {
+            "label": "Coffee",
+            "highlight": false
+          }
+        },
+        "category_8": {
+          "type": "category",
+          "settings": {
+            "label": "Bakery",
+            "highlight": false
+          }
+        },
+        "category_9": {
+          "type": "category",
+          "settings": {
+            "label": "Water",
+            "highlight": false
+          }
+        },
+        "category_10": {
+          "type": "category",
+          "settings": {
+            "label": "Packaging",
+            "highlight": false
+          }
+        }
+      },
+      "block_order": [
+        "category_1",
+        "category_2",
+        "category_3",
+        "category_4",
+        "category_5",
+        "category_6",
+        "category_7",
+        "category_8",
+        "category_9",
+        "category_10"
+      ],
       "settings": {
-        "text": "<a href=\"/collections/all\"><strong>All</strong></a>, Alt. Milks, Confectionery, Snacks, Drinks, <a href=\"/collections/tea\">Tea</a>, Coffee, Bakery, Water, Packaging",
-        "break_after_bold": false,
-        "as_heading": false,
-        "alignment": "center",
-        "max_width": "narrow",
         "color_scheme": "scheme-6",
         "padding_top": 64,
         "padding_bottom": 128
@@ -322,7 +417,7 @@
     "feature_cards",
     "statement_growing",
     "bs_brand_ring_gGaJKC",
-    "statement_categories",
+    "category_links",
     "wholesale_steps",
     "image_banner",
     "featured_collection"
