@@ -3562,3 +3562,4 @@ details-disclosure > details {
     font-size: clamp(var(--bs-text-5x-large), 12.3vw, var(--bs-text-8x-large));
   }
 }
+
