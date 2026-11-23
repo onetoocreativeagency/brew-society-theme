@@ -1,0 +1,28 @@
+/*
+  Category links (Figma Home 4250:5056). Type, width and the grey come from
+  bs-statement.css; this lays the list out as one wrapping line of
+  comma-separated items.
+*/
+.bs-category-links {
+  padding: 0;
+}
+
+.bs-category-links__item {
+  display: inline;
+}
+
+/* The comma belongs to the item, so a highlighted item's comma is strong too (as in Figma). */
+.bs-category-links__item:not(:last-child)::after {
+  content: ', ';
+}
+
+.bs-category-links__item--strong {
+  color: rgb(var(--color-foreground));
+}
+
+.bs-category-links a:hover,
+.bs-category-links a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 0.04em;
+  text-underline-offset: 0.12em;
+}

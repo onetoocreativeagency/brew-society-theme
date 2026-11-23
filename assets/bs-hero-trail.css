@@ -6,30 +6,52 @@
   blend would have nothing to blend with and white photo backgrounds would
   come back as boxes.
 */
+/*
+  The hero fills the rest of the first screen: --bs-hero-top is the height of
+  the announcement bar and header above it, measured by the section's inline
+  script. The fallbacks are those heights at the design sizes, for the moment
+  before the script runs. Images take whatever height the headline and buttons
+  leave; the headline and buttons also shrink on short screens.
+*/
 .bs-hero-trail {
-  display: block;
+  --bs-hero-heading-size: clamp(var(--bs-text-3x-large), min(9.26vw, 7svh), var(--bs-text-7x-large));
+  display: flex;
+  flex-direction: column;
   position: relative;
   isolation: isolate;
   overflow-x: clip;
+  box-sizing: border-box;
+  height: calc(100svh - var(--bs-hero-top, 11.4rem));
+  /* Not the first section, or a very short window: keep room for the content. */
+  min-height: min(100svh, 48rem);
 }
 
-/* Reserves the image area above the headline. Sizes are Figma's, per width. */
+/*
+  The image area. Resting images are sized against both its width and height
+  (container units), so a short wide screen gets smaller images rather than an
+  overflowing hero. It reaches a little way behind the headline, as in Figma.
+*/
 .bs-hero-trail__stage {
   position: relative;
-  aspect-ratio: 393 / 370;
+  flex: 1 1 0;
+  min-height: 0;
+  margin-bottom: calc(var(--bs-hero-heading-size) * -0.45);
+  container-type: size;
   pointer-events: none;
-  --bs-hero-trail-size: calc(34vw * var(--bs-hero-trail-scale, 1));
   --bs-hero-trail-ratio: 1.4;
+  --bs-hero-trail-size: calc(min(34cqw, 36cqh) * var(--bs-hero-trail-scale, 1));
 }
 
+/* Centres sit within the room the area leaves for each image, so none is cut off. */
 .bs-hero-trail__item {
+  --bs-hero-trail-height: calc(var(--bs-hero-trail-size) * var(--bs-hero-trail-ratio));
   position: absolute;
-  top: var(--my, 50%);
-  left: var(--mx, 50%);
+  top: calc(var(--bs-hero-trail-height) / 2 + (100% - var(--bs-hero-trail-height)) * var(--my, 50) / 100);
+  left: calc(var(--bs-hero-trail-size) / 2 + (100% - var(--bs-hero-trail-size)) * var(--mx, 50) / 100);
   z-index: 1;
   width: var(--bs-hero-trail-size);
   max-width: none;
-  height: calc(var(--bs-hero-trail-size) * var(--bs-hero-trail-ratio));
+  height: var(--bs-hero-trail-height);
   object-fit: contain;
   transform: translate(-50%, -50%) rotate(var(--mr, 0deg));
   transition: opacity 0.4s ease calc(var(--i, 0) * 20ms);
@@ -57,16 +79,18 @@
 
 .bs-hero-trail__content {
   display: flex;
+  flex: none;
   flex-direction: column;
   align-items: center;
-  gap: var(--bs-space-32);
+  gap: min(var(--bs-space-32), 3svh);
+  padding-bottom: var(--bs-gutter);
   text-align: center;
 }
 
 .bs-hero-trail__heading {
   margin: 0;
   max-width: 100%;
-  font-size: clamp(var(--bs-text-3x-large), 9.26vw, var(--bs-text-7x-large));
+  font-size: var(--bs-hero-heading-size);
   font-weight: var(--bs-weight-medium);
   line-height: var(--bs-leading-display);
   letter-spacing: var(--bs-tracking-display);
@@ -91,7 +115,7 @@
 }
 
 .button.bs-hero-trail__button {
-  min-height: 13.1rem;
+  min-height: min(13.1rem, 15svh);
   padding: var(--bs-space-16) min(1.167em, 4.525vw);
   border-radius: 999px;
   font-size: var(--bs-text-2x-large);
@@ -111,15 +135,19 @@
 }
 
 @media screen and (min-width: 750px) {
+  .bs-hero-trail {
+    --bs-hero-heading-size: clamp(var(--bs-text-3x-large), min(9.26vw, 16svh), var(--bs-text-7x-large));
+    height: calc(100svh - var(--bs-hero-top, 16.2rem));
+  }
+
   .bs-hero-trail__stage {
-    aspect-ratio: 1728 / 461;
-    --bs-hero-trail-size: calc(min(10vw, 22rem) * var(--bs-hero-trail-scale, 1));
+    --bs-hero-trail-size: calc(min(max(10cqw, 18cqh), 22rem, 30cqh) * var(--bs-hero-trail-scale, 1));
     --bs-hero-trail-ratio: 1.25;
   }
 
   .bs-hero-trail__item {
-    top: var(--y, 50%);
-    left: var(--x, 50%);
+    top: calc(var(--bs-hero-trail-height) / 2 + (100% - var(--bs-hero-trail-height)) * var(--y, 50) / 100);
+    left: calc(var(--bs-hero-trail-size) / 2 + (100% - var(--bs-hero-trail-size)) * var(--x, 50) / 100);
     transform: translate(-50%, -50%) rotate(var(--r, 0deg));
   }
 
@@ -138,7 +166,8 @@
   }
 
   .bs-hero-trail__text {
-    display: none;
+    max-width: 55rem;
+    font-size: var(--bs-text-large);
   }
 
   .bs-hero-trail__buttons {
@@ -148,7 +177,7 @@
 
   .button.bs-hero-trail__button {
     min-height: 2.2575em;
-    font-size: clamp(var(--bs-text-2x-large), 3.88vw, var(--bs-text-4x-large));
+    font-size: clamp(var(--bs-text-2x-large), min(3.88vw, 6.7svh), var(--bs-text-4x-large));
   }
 }
 

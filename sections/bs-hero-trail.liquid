@@ -15,15 +15,6 @@
 {%- endstyle -%}
 
 {%- liquid
-  comment
-    Resting positions, read from Figma (Home 4166:3362 and mobile 4203:4836):
-    centre x, centre y (percent of the image area) and rotation, left to right
-    along the arc. Fewer than sixteen images are spread evenly along it; images
-    past the sixteenth have no resting place and only appear in the trail.
-  endcomment
-  assign slots = '18.43,30.2,-13.21|22.3,36.49,-60|26.67,51.32,15|30.6,64.9,-8.93|35.53,66.92,-52.07|40.72,75.75,-30|45.86,89.13,-15|49.08,92.95,14.36|54.07,80.33,-22.96|57.44,64.71,15|61.35,51.89,-15|65.27,40.09,-9.53|69.35,24.77,6.04|75.35,17.22,12.08|80.28,13.97,15.42|83.68,15.12,18.15' | split: '|'
-  assign mobile_slots = '25.55,61.73,12.08|62.11,24.32,0|84.61,63.11,18.15' | split: '|'
-
   assign use_blocks = false
   assign image_count = 0
   for block in section.blocks
@@ -44,10 +35,6 @@
   assign sizes_desktop = scale | times: 10 | round
   assign sizes_mobile = scale | times: 34 | round
   assign sizes = '(min-width: 750px) ' | append: sizes_desktop | append: 'vw, ' | append: sizes_mobile | append: 'vw'
-  assign step = 1
-  if image_count < 16 and image_count > 0
-    assign step = 16.0 | divided_by: image_count
-  endif
   assign index = 0
 -%}
 
@@ -67,18 +54,13 @@
           {%- endif -%}
           {%- liquid
             assign image = block.settings.image
-            assign slot_index = index | times: step | floor
-            assign slot = slots[slot_index] | split: ','
-            assign mobile_slot = mobile_slots[index] | split: ','
             assign loading = 'lazy'
             if index < 3
               assign loading = 'eager'
             endif
           -%}
           {%- capture item_style -%}
-            --i: {{ index }};
-            {%- if slot.size == 3 %} --x: {{ slot[0] }}%; --y: {{ slot[1] }}%; --r: {{ slot[2] }}deg;{% endif -%}
-            {%- if mobile_slot.size == 3 %} --mx: {{ mobile_slot[0] }}%; --my: {{ mobile_slot[1] }}%; --mr: {{ mobile_slot[2] }}deg;{% endif -%}
+            {%- render 'bs-hero-trail-position', index: index, count: image_count -%}
           {%- endcapture -%}
           {{
             image
@@ -100,18 +82,13 @@
           {%- endif -%}
           {%- liquid
             assign image = product.featured_image
-            assign slot_index = index | times: step | floor
-            assign slot = slots[slot_index] | split: ','
-            assign mobile_slot = mobile_slots[index] | split: ','
             assign loading = 'lazy'
             if index < 3
               assign loading = 'eager'
             endif
           -%}
           {%- capture item_style -%}
-            --i: {{ index }};
-            {%- if slot.size == 3 %} --x: {{ slot[0] }}%; --y: {{ slot[1] }}%; --r: {{ slot[2] }}deg;{% endif -%}
-            {%- if mobile_slot.size == 3 %} --mx: {{ mobile_slot[0] }}%; --my: {{ mobile_slot[1] }}%; --mr: {{ mobile_slot[2] }}deg;{% endif -%}
+            {%- render 'bs-hero-trail-position', index: index, count: image_count -%}
           {%- endcapture -%}
           {{
             image
@@ -173,6 +150,27 @@
     {%- endif -%}
   </div>
 </bs-hero-trail>
+{%- comment -%}
+  The hero fills what is left of the first screen under the announcement bar and
+  header. Their height is only known in the browser, so it is measured here,
+  before the hero is painted, and again whenever the page above it resizes.
+{%- endcomment -%}
+<script>
+  (function () {
+    var hero = document.currentScript.previousElementSibling;
+    var measure = function () {
+      hero.style.setProperty('--bs-hero-top', hero.getBoundingClientRect().top + window.scrollY + 'px');
+    };
+    measure();
+    if (window.ResizeObserver) {
+      var observer = new ResizeObserver(measure);
+      observer.observe(document.body);
+      document.querySelectorAll('.shopify-section-group-header-group').forEach(function (group) {
+        observer.observe(group);
+      });
+    }
+  })();
+</script>
 
 {%- if section.settings.enable_trail and image_count > 0 -%}
   <script src="{{ 'bs-hero-trail.js' | asset_url }}" defer="defer"></script>
@@ -198,7 +196,7 @@
       "type": "textarea",
       "id": "text",
       "label": "Supporting line",
-      "info": "Optional. Shown on mobile only, as designed.",
+      "info": "Optional. Shown between the headline and the buttons.",
       "default": "Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW."
     },
     {

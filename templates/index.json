@@ -12,6 +12,94 @@
     "bs_hero_trail_7JLm4F": {
       "type": "bs-hero-trail",
       "name": "Hero with image trail",
+      "blocks": {
+        "image_1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-daelmans-stroopwafel-cube.png"
+          }
+        },
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-johnny-cashew-honey-sea-salt.png"
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-simply-roasted-sea-salt.png"
+          }
+        },
+        "image_4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-ordinary-soda-yuzu.png"
+          }
+        },
+        "image_5": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-fredericks-strong-house.png"
+          }
+        },
+        "image_6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-vivani-80-date-sugar.png"
+          }
+        },
+        "image_7": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-chow-cacao-creamy-milk.png"
+          }
+        },
+        "image_8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-tea-culture-matcha.png"
+          }
+        },
+        "image_9": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-special-friends-oat.png"
+          }
+        },
+        "image_10": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-allies-daily-greens.png"
+          }
+        },
+        "image_11": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-tonys-milk-180g.png"
+          }
+        },
+        "image_12": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/hero-prana-chai-1kg.png"
+          }
+        }
+      },
+      "block_order": [
+        "image_1",
+        "image_2",
+        "image_3",
+        "image_4",
+        "image_5",
+        "image_6",
+        "image_7",
+        "image_8",
+        "image_9",
+        "image_10",
+        "image_11",
+        "image_12"
+      ],
       "settings": {
         "heading": "Earth’s best food + drink brands, door to door",
         "text": "Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
@@ -20,7 +108,7 @@
         "secondary_link": "shopify://collections/all",
         "collection": "sodas",
         "image_scale": 100,
-        "blend_images": true,
+        "blend_images": false,
         "enable_trail": true,
         "color_scheme": "scheme-2",
         "padding_top": 0,
@@ -117,8 +205,9 @@
     "statement_intro": {
       "type": "bs-statement",
       "settings": {
-        "text": "<strong>Brew Society is Melbourne’s premium</strong> distributor for exclusive food and drink brands in Victoria and NSW.",
+        "text": "Brew Society is Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
         "break_after_bold": false,
+        "scroll_reveal": true,
         "as_heading": true,
         "alignment": "center",
         "max_width": "wide",
@@ -179,14 +268,95 @@
         "padding_bottom": 64
       }
     },
-    "statement_categories": {
-      "type": "bs-statement",
+    "category_links": {
+      "type": "bs-category-links",
+      "blocks": {
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "link": "shopify://collections/all",
+            "label": "All",
+            "highlight": true
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "label": "Alt. Milks",
+            "highlight": false
+          }
+        },
+        "category_3": {
+          "type": "category",
+          "settings": {
+            "label": "Confectionery",
+            "highlight": false
+          }
+        },
+        "category_4": {
+          "type": "category",
+          "settings": {
+            "label": "Snacks",
+            "highlight": false
+          }
+        },
+        "category_5": {
+          "type": "category",
+          "settings": {
+            "label": "Drinks",
+            "highlight": false
+          }
+        },
+        "category_6": {
+          "type": "category",
+          "settings": {
+            "collection": "tea",
+            "label": "Tea",
+            "highlight": false
+          }
+        },
+        "category_7": {
+          "type": "category",
+          "settings": {
+            "label": "Coffee",
+            "highlight": false
+          }
+        },
+        "category_8": {
+          "type": "category",
+          "settings": {
+            "label": "Bakery",
+            "highlight": false
+          }
+        },
+        "category_9": {
+          "type": "category",
+          "settings": {
+            "label": "Water",
+            "highlight": false
+          }
+        },
+        "category_10": {
+          "type": "category",
+          "settings": {
+            "label": "Packaging",
+            "highlight": false
+          }
+        }
+      },
+      "block_order": [
+        "category_1",
+        "category_2",
+        "category_3",
+        "category_4",
+        "category_5",
+        "category_6",
+        "category_7",
+        "category_8",
+        "category_9",
+        "category_10"
+      ],
       "settings": {
-        "text": "<a href=\"/collections/all\"><strong>All</strong></a>, Alt. Milks, Confectionery, Snacks, Drinks, <a href=\"/collections/tea\">Tea</a>, Coffee, Bakery, Water, Packaging",
-        "break_after_bold": false,
-        "as_heading": false,
-        "alignment": "center",
-        "max_width": "narrow",
         "color_scheme": "scheme-6",
         "padding_top": 64,
         "padding_bottom": 128
@@ -247,7 +417,7 @@
     "feature_cards",
     "statement_growing",
     "bs_brand_ring_gGaJKC",
-    "statement_categories",
+    "category_links",
     "wholesale_steps",
     "image_banner",
     "featured_collection"

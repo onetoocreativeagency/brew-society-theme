@@ -1,0 +1,61 @@
+{% comment %}
+  Outputs the inline style that places one resting image of the homepage hero
+  (sections/bs-hero-trail.liquid): its place in the list (--i), its resting
+  position on desktop (--x, --y, --r) and on mobile (--mx, --my, --mr).
+
+  Resting places, read from Figma (Home 4166:3362, mobile 4203:4836): centre x,
+  centre y and rotation, left to right along the desktop arc. x and y are
+  percentages of the room the image area leaves for an image's centre, so a
+  resting image never leaves the area.
+
+  Desktop: up to sixteen images are spaced evenly along the whole arc, at points
+  between the Figma resting places, each taking the rotation of the nearest one.
+  Images past the sixteenth have no resting place and only appear in the trail.
+  Mobile rests the first three images.
+
+  Accepts:
+  - index: {Number} zero-based position of the image
+  - count: {Number} how many images the hero has
+
+  Usage:
+  {% capture style %}{% render 'bs-hero-trail-position', index: 0, count: 10 %}{% endcapture %}
+{% endcomment %}
+{%- liquid
+  assign slots = '18.43,30.2,-13.21|22.3,36.49,-60|26.67,51.32,15|30.6,64.9,-8.93|35.53,66.92,-52.07|40.72,75.75,-30|45.86,89.13,-15|49.08,92.95,14.36|54.07,80.33,-22.96|57.44,64.71,15|61.35,51.89,-15|65.27,40.09,-9.53|69.35,24.77,6.04|75.35,17.22,12.08|80.28,13.97,15.42|83.68,15.12,18.15' | split: '|'
+  assign mobile_slots = '25.55,61.73,12.08|62.11,24.32,0|84.61,63.11,18.15' | split: '|'
+  assign last_slot = slots.size | minus: 1
+
+  # Where along the arc this image rests, counted in Figma resting places.
+  assign at = -1
+  if count == 1
+    assign at = 7.5
+  elsif count <= slots.size
+    assign gaps = count | minus: 1
+    assign at = index | times: 1.0 | times: last_slot | divided_by: gaps
+  elsif index < slots.size
+    assign at = index
+  endif
+-%}
+--i: {{ index }};
+{%- if at >= 0 -%}
+  {%- liquid
+    assign from_index = at | floor | at_most: last_slot
+    assign to_index = from_index | plus: 1 | at_most: last_slot
+    assign share = at | minus: from_index
+    assign from = slots[from_index] | split: ','
+    assign to = slots[to_index] | split: ','
+    assign from_x = from[0] | times: 1.0
+    assign from_y = from[1] | times: 1.0
+    assign x = to[0] | times: 1.0 | minus: from_x | times: share | plus: from_x | round: 2
+    assign y = to[1] | times: 1.0 | minus: from_y | times: share | plus: from_y | round: 2
+    assign rotation = from[2]
+    if share >= 0.5
+      assign rotation = to[2]
+    endif
+  -%}
+  {{- ' ' -}}--x: {{ x }}; --y: {{ y }}; --r: {{ rotation }}deg;
+{%- endif -%}
+{%- assign mobile = mobile_slots[index] | split: ',' -%}
+{%- if mobile.size == 3 -%}
+  {{- ' ' -}}--mx: {{ mobile[0] }}; --my: {{ mobile[1] }}; --mr: {{ mobile[2] }}deg;
+{%- endif -%}
