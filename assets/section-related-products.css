@@ -21,3 +21,12 @@
     font-size: clamp(var(--bs-text-5x-large), 12.3vw, var(--bs-text-8x-large));
   }
 }
+
+/* Phones: columns a full grid gap apart and rows 32px apart, as on the Shop grid
+   (Figma mobile cards 4246:2220). */
+@media screen and (max-width: 749px) {
+  .related-products .product-grid {
+    --grid-mobile-horizontal-spacing: var(--bs-grid-gap);
+    row-gap: var(--bs-space-32);
+  }
+}

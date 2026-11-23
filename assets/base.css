@@ -159,6 +159,14 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   color: var(--bs-color-grey);
 }
 
+/* Empty image slot: a plain tinted box, as on the home feature cards. The slot sets the size,
+   aspect ratio and corners. */
+.bs-placeholder,
+.bs-placeholder:empty {
+  display: block;
+  background-color: color-mix(in srgb, var(--bs-color-grey) 16%, rgb(var(--color-background)));
+}
+
 .isolate {
   position: relative;
   z-index: 0;
@@ -2382,17 +2390,6 @@ input[type='checkbox'] {
   height: 4.4rem;
   width: 4.4rem;
   padding: 0;
-}
-
-.header__icon--menu[aria-expanded='true']::before {
-  content: '';
-  top: 100%;
-  left: 0;
-  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
-  width: 100%;
-  display: block;
-  position: absolute;
-  background: rgba(var(--color-foreground), 0.5);
 }
 
 details .header__icon-close {

@@ -1,7 +1,8 @@
 {%- doc -%}
-  Outputs the id of the colour scheme shared by the page background and the header on the
-  home page, content pages, policies and the 404 page (theme setting "home_color_scheme").
-  Outputs nothing on every other page, which keeps the first colour scheme.
+  Outputs the id of the colour scheme shared by the page background, the header and the footer
+  on the home page, content pages, policies and the 404 page (theme setting "home_color_scheme").
+  Outputs nothing on every other page (shop, product, Brands, brand, search, cart), which keeps
+  the first colour scheme; the header and footer then use their own colour scheme setting.
 
   @example
   {%- capture bs_page_scheme -%}{%- render 'bs-page-scheme' -%}{%- endcapture -%}

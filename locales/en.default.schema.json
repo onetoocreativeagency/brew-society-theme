@@ -378,7 +378,7 @@
       "settings": {
         "home_color_scheme": {
           "label": "Home and content page background",
-          "info": "The page and header colours on the home page, content pages, policies and the 404 page. Shop pages use the first colour scheme."
+          "info": "The page, header and footer colours on the home page, content pages, policies and the 404 page. Shop pages use the first colour scheme."
         },
         "page_width": {
           "label": "Page width"
@@ -1167,6 +1167,10 @@
         }
       },
       "settings": {
+        "color_scheme": {
+          "label": "Color scheme on shop pages",
+          "info": "Match the shop page background. On the home page, content pages, policies and the 404 page the footer follows Theme settings > Layout."
+        },
         "image": {
           "label": "Image",
           "info": "Shown above the legal links, for example a product line-up."

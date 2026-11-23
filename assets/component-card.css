@@ -610,6 +610,11 @@
   mix-blend-mode: multiply;
 }
 
+/* No media: the tinted box is not blended, so it matches the other placeholders. */
+.product-card-wrapper .card__inner .card__media.bs-placeholder {
+  mix-blend-mode: normal;
+}
+
 .product-card-wrapper .card--media .card__inner .card__content {
   position: static;
   padding: 0;

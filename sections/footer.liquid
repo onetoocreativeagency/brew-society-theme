@@ -22,7 +22,10 @@
   }
 {%- endstyle -%}
 
-<footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+{%- comment -%} The footer takes the page background, as the header does (snippets/bs-page-scheme.liquid). {%- endcomment -%}
+{%- capture bs_page_scheme -%}{%- render 'bs-page-scheme' -%}{%- endcapture -%}
+{%- assign bs_page_scheme = bs_page_scheme | strip -%}
+<footer class="footer color-{{ bs_page_scheme | default: section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
   <div class="footer__inner page-width">
     {%- assign cta_block = section.blocks | where: 'type', 'call_to_action' | first -%}
     {%- if cta_block -%}
@@ -405,8 +408,9 @@
     {
       "type": "color_scheme",
       "id": "color_scheme",
-      "label": "t:sections.all.colors.label",
-      "default": "scheme-2"
+      "label": "t:sections.footer.settings.color_scheme.label",
+      "info": "t:sections.footer.settings.color_scheme.info",
+      "default": "scheme-1"
     },
     {
       "type": "image_picker",

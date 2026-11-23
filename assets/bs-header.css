@@ -12,9 +12,10 @@
   white-space: nowrap;
 }
 
+/* Scales from the mobile size at 990px, so the one-row menu fits at small desktop widths. */
 @media screen and (min-width: 990px) {
   .header__wordmark {
-    font-size: clamp(4.2rem, 3.3vw, 5.7rem);
+    font-size: clamp(3.4rem, 3.3vw, 5.7rem);
   }
 }
 
@@ -25,15 +26,48 @@
 
 .button.header__wholesale {
   min-height: 6.3rem;
-  padding: 0 var(--bs-space-32);
+  padding: 0 var(--bs-space-24);
   font-size: var(--bs-text-large);
   line-height: var(--bs-leading-heading);
   letter-spacing: var(--bs-tracking-button);
   white-space: nowrap;
 }
 
+@media screen and (min-width: 1280px) {
+  .button.header__wholesale {
+    padding: 0 var(--bs-space-32);
+  }
+}
+
 /* At the top of the page the header has no band of its own, so the hero's images can
    sit behind it as in Figma. Once it is stuck while scrolling it gets its background back. */
 .section-header:not(.shopify-section-header-sticky) .header-wrapper {
   background: transparent;
+}
+
+/* Mobile header bar (Figma 4207:6873): Cart, then the round menu button, 8px apart. */
+@media screen and (max-width: 989px) {
+  header-drawer {
+    display: flex;
+    align-items: center;
+    gap: var(--bs-space-8);
+  }
+}
+
+/* While the full-screen menu is open the header sits above the announcement bar, and the logo
+   and Cart stay above the menu (the close button is lifted in component-menu-drawer.css). */
+.section-header.menu-open {
+  z-index: 5;
+}
+
+.header > .header__heading,
+.header > .header__heading-link,
+.header__drawer-cart {
+  position: relative;
+  z-index: 2;
+}
+
+/* On the open menu the Cart count takes the display grey, as the menu counts do. */
+.menu-open .header__drawer-cart .bs-menu-count {
+  color: var(--bs-color-grey);
 }
