@@ -87,16 +87,16 @@
 
 /*
   Every logo gets about the same area, so a long thin wordmark and a square badge
-  read at a similar weight. Width = 55% of the item x the square root of the
-  logo's width/height; a wide wordmark may spill past its item, up to 120%.
+  read at a similar weight. Width = 47% of the item x the square root of the
+  logo's width/height; a wide wordmark may spill past its item, up to 105%.
 */
 .bs-brand-ring__logo {
   position: absolute;
   top: 50%;
   left: 50%;
   display: block;
-  width: 70%;
-  width: min(120%, 55% * sqrt(var(--bs-logo-ratio, 1)));
+  width: 60%;
+  width: min(105%, 47% * sqrt(var(--bs-logo-ratio, 1)));
   height: auto;
   max-height: 90%;
   object-fit: contain;

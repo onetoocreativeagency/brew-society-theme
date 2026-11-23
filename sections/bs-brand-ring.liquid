@@ -10,8 +10,11 @@
   The two are not de-duplicated.
 
   Ring split:
-  - up to 12 logos: one ring (the inner one)
-  - 13 or more: two rings, about a third inside (12 of 35, as in the design)
+  - up to 3 logos: one ring (the inner one)
+  - 4 or more: two rings. The inner ring takes about a third (12 of 35, as in
+    the design), which spaces logos about evenly along both rings, since the
+    inner ring is about half as long. At least two logos sit inside, and at
+    most 12 (more would overlap there).
   - at most 42 logos are shown; more than that cannot fit without overlapping
 {% endcomment %}
 {%- liquid
@@ -39,8 +42,8 @@
 
   assign bs_inner = bs_count
   assign bs_offset = 0
-  if bs_count > 12
-    assign bs_inner = bs_count | times: 12.0 | divided_by: 35 | round | at_most: 12
+  if bs_count > 3
+    assign bs_inner = bs_count | times: 12.0 | divided_by: 35 | round | at_least: 2 | at_most: 12
   else
     comment
       One ring: a count divisible by four would start with logos level with the
@@ -151,7 +154,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shows brand logos in slowly rotating rings around the button. Brand collections that have a logo come first, then any Logo blocks. Up to 12 logos sit on one ring, more are split across two, and at most 42 are shown. The section stays hidden until there is at least one logo."
+      "content": "Shows brand logos in slowly rotating rings around the button. Brand collections that have a logo come first, then any Logo blocks. From four logos they are split across two rings, about a third on the inner one, and at most 42 are shown. The section stays hidden until there is at least one logo."
     },
     {
       "type": "header",
