@@ -580,22 +580,58 @@ class HeaderDrawer extends MenuDrawer {
       `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`
     );
     this.header.classList.add('menu-open');
+    this.setHeaderScheme(true);
 
+    // The menu fills the screen, so focus moves to its first link. The trap covers the whole drawer,
+    // which includes the Cart link and the close button in the header bar.
     setTimeout(() => {
       this.mainDetailsToggle.classList.add('menu-opening');
+      const firstLink = this.mainDetailsToggle.querySelector('.menu-drawer__menu-item');
+      trapFocus(this, firstLink || summaryElement);
     });
 
     summaryElement.setAttribute('aria-expanded', true);
     window.addEventListener('resize', this.onResize);
-    trapFocus(this.mainDetailsToggle, summaryElement);
     document.body.classList.add(`overflow-hidden-${this.dataset.breakpoint}`);
   }
 
   closeMenuDrawer(event, elementToFocus) {
     if (!elementToFocus) return;
     super.closeMenuDrawer(event, elementToFocus);
+    this.mainDetailsToggle.querySelector('summary').setAttribute('aria-expanded', false);
     this.header.classList.remove('menu-open');
+    this.setHeaderScheme(false);
     window.removeEventListener('resize', this.onResize);
+  }
+
+  // Escape closes the menu from anywhere in the drawer, including the Cart link in the header bar.
+  onKeyUp(event) {
+    if (event.code.toUpperCase() !== 'ESCAPE') return;
+
+    const openDetailsElement = event.target.closest('details[open]');
+    if (openDetailsElement && openDetailsElement !== this.mainDetailsToggle) {
+      this.closeSubmenu(openDetailsElement);
+    } else if (this.mainDetailsToggle.hasAttribute('open')) {
+      this.closeMenuDrawer(event, this.mainDetailsToggle.querySelector('summary'));
+    }
+  }
+
+  // While the menu is open the header bar takes the menu's colour scheme, so the logo, Cart and
+  // close button sit on the full-screen menu in its colours.
+  setHeaderScheme(open) {
+    const wrapper = this.closest('.header-wrapper');
+    const menuScheme = this.dataset.menuScheme;
+    if (!wrapper || !menuScheme) return;
+
+    if (open) {
+      this.headerScheme = [...wrapper.classList].find((name) => name.startsWith('color-'));
+      if (this.headerScheme === menuScheme) return;
+      wrapper.classList.remove(this.headerScheme);
+      wrapper.classList.add(menuScheme);
+    } else if (this.headerScheme && this.headerScheme !== menuScheme) {
+      wrapper.classList.remove(menuScheme);
+      wrapper.classList.add(this.headerScheme);
+    }
   }
 
   onResize = () => {

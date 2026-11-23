@@ -1,5 +1,7 @@
+/* Above the full-screen menu, so it becomes the close button. */
 .header__icon--menu {
-  position: initial;
+  position: relative;
+  z-index: 2;
 }
 
 .js menu-drawer > details > summary::before,
@@ -25,34 +27,39 @@ menu-drawer > details[open] > summary::before {
   transition: opacity var(--duration-default) ease, visibility var(--duration-default) ease;
 }
 
+/* Full-screen menu (Figma 4264:4957). It covers the whole viewport, announcement bar included;
+   the header bar's logo, Cart and close button stay on top of it, and the links start below them.
+   dvh keeps the Order Wholesale pill above mobile browser toolbars. */
 .menu-drawer {
-  position: absolute;
-  transform: translateX(-100%);
-  visibility: hidden;
-  z-index: 3;
+  position: fixed;
+  top: 0;
   left: 0;
-  top: 100%;
   width: 100%;
-  padding: 0;
+  height: 100vh;
+  height: 100dvh;
+  padding: var(--header-bottom-position, 0) 0 0;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1;
   background-color: rgb(var(--color-background));
   overflow-x: hidden;
-  filter: drop-shadow(
-    var(--drawer-shadow-horizontal-offset) var(--drawer-shadow-vertical-offset) var(--drawer-shadow-blur-radius)
-      rgba(var(--color-shadow), var(--drawer-shadow-opacity))
-  );
 }
 
-.js .menu-drawer {
-  height: calc(100vh - 100%);
-  height: calc(var(--viewport-height, 100vh) - (var(--header-bottom-position, 100%)));
+/* Visible at once on open, so focus can move into the menu straight away; hidden after the fade on close. */
+.js details[open] > .menu-drawer {
+  transition: opacity var(--duration-default) ease, visibility 0s linear var(--duration-default);
 }
 
-.js details[open] > .menu-drawer,
 .js details[open] > .menu-drawer__submenu {
   transition: transform var(--duration-default) ease, visibility var(--duration-default) ease;
 }
 
-.js details[open].menu-opening > .menu-drawer,
+.js details[open].menu-opening > .menu-drawer {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--duration-default) ease, visibility 0s;
+}
+
 details[open].menu-opening > .menu-drawer__submenu {
   transform: translateX(0);
   visibility: visible;
@@ -76,7 +83,7 @@ details[open].menu-opening > .menu-drawer__submenu {
 }
 
 .menu-drawer__navigation {
-  padding: var(--bs-space-24) 0;
+  padding: var(--bs-space-16) 0;
 }
 
 .menu-drawer__inner-submenu {
@@ -92,8 +99,14 @@ details[open].menu-opening > .menu-drawer__submenu {
 .menu-drawer .menu-drawer__menu-item {
   padding: 0 var(--bs-gutter);
   text-decoration: none;
-  font-size: var(--bs-text-4x-large);
+  font-size: var(--bs-text-3x-large);
   line-height: var(--bs-leading-heading);
+}
+
+/* The count sits at text size, centred on the large link, so it reads as a superscript. */
+.menu-drawer .menu-drawer__menu-item .bs-menu-count {
+  font-size: var(--bs-text-large);
+  line-height: var(--bs-leading-body);
 }
 
 .menu-drawer summary.menu-drawer__menu-item {
@@ -161,6 +174,15 @@ details[open].menu-opening > .menu-drawer__submenu {
   gap: var(--bs-space-16);
   padding: var(--bs-space-16) var(--bs-gutter);
   position: relative;
+}
+
+/* Order Wholesale fills the width at the foot of the menu: 128px tall, 38px label. */
+.menu-drawer .button.header__wholesale {
+  --buttons-radius: 999px;
+  --buttons-radius-outset: 999px;
+  width: 100%;
+  min-height: 12.8rem;
+  font-size: var(--bs-text-2x-large);
 }
 
 .menu-drawer .list-social {

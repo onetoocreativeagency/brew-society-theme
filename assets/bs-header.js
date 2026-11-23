@@ -1,10 +1,16 @@
-/* Cart link inside the mobile menu: opens the cart drawer and mirrors the header cart count. */
+/* Cart link in the mobile header bar: opens the cart drawer (closing the menu first if it is open)
+   and mirrors the desktop header cart count. */
 class BsCartLink extends HTMLElement {
   connectedCallback() {
     this.bubble = document.getElementById('cart-icon-bubble');
-    if (!this.bubble) return;
+    this.link = this.querySelector('a');
+    if (!this.bubble || !this.link) return;
 
-    this.querySelector('a').addEventListener('click', this.onClick.bind(this));
+    if (document.querySelector('cart-drawer')) {
+      this.link.setAttribute('role', 'button');
+      this.link.setAttribute('aria-haspopup', 'dialog');
+    }
+    this.link.addEventListener('click', this.onClick.bind(this));
     this.observer = new MutationObserver(this.syncCount.bind(this));
     this.observer.observe(this.bubble, { childList: true });
   }
@@ -15,13 +21,13 @@ class BsCartLink extends HTMLElement {
 
   onClick(event) {
     const cartDrawer = document.querySelector('cart-drawer');
-    const headerDrawer = this.closest('header-drawer');
-    if (!cartDrawer || !headerDrawer) return;
+    if (!cartDrawer) return;
 
     event.preventDefault();
-    const summary = headerDrawer.querySelector('summary');
-    headerDrawer.closeMenuDrawer(event, summary);
-    cartDrawer.open(summary);
+    const headerDrawer = this.closest('header-drawer');
+    const menu = headerDrawer && headerDrawer.querySelector('details');
+    if (menu && menu.hasAttribute('open')) headerDrawer.closeMenuDrawer(event, menu.querySelector('summary'));
+    cartDrawer.open(this.link);
   }
 
   syncCount() {
