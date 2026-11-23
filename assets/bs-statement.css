@@ -67,3 +67,17 @@
     font-size: var(--bs-text-2x-large);
   }
 }
+
+/*
+  "Reveal text colour on scroll": the whole statement is in the strong colour.
+  bs-scroll-reveal.js splits it into words, turns them grey and scrubs them back
+  as the statement scrolls through the screen. Without JS, without GSAP or with
+  reduced motion the text simply stays strong.
+*/
+.bs-statement__reveal {
+  display: contents;
+}
+
+.bs-statement--reveal .bs-statement__text {
+  color: rgb(var(--color-foreground));
+}

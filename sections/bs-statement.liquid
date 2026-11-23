@@ -1,4 +1,9 @@
 {{ 'bs-statement.css' | asset_url | stylesheet_tag }}
+{%- if section.settings.scroll_reveal -%}
+  <script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'ScrollTrigger.min.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'bs-scroll-reveal.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 {%- style -%}
   .section-{{ section.id }}-padding {
@@ -22,10 +27,12 @@
     endif
   -%}
   <div class="color-{{ section.settings.color_scheme }} gradient">
-    <div class="bs-statement bs-statement--{{ section.settings.alignment }} bs-statement--{{ section.settings.max_width }}{% if section.settings.break_after_bold %} bs-statement--break{% endif %}{% if section.settings.paragraph %} bs-statement--paragraph{% endif %} page-width section-{{ section.id }}-padding">
+    <div class="bs-statement bs-statement--{{ section.settings.alignment }} bs-statement--{{ section.settings.max_width }}{% if section.settings.break_after_bold %} bs-statement--break{% endif %}{% if section.settings.paragraph %} bs-statement--paragraph{% endif %}{% if section.settings.scroll_reveal %} bs-statement--reveal{% endif %} page-width section-{{ section.id }}-padding">
+      {%- if section.settings.scroll_reveal -%}<bs-scroll-reveal class="bs-statement__reveal">{%- endif -%}
       <{{ tag }} class="bs-statement__text {{ section.settings.alignment }}">
         {{- section.settings.text -}}
       </{{ tag }}>
+      {%- if section.settings.scroll_reveal -%}</bs-scroll-reveal>{%- endif -%}
     </div>
   </div>
 {%- endif -%}
@@ -57,6 +64,13 @@
       "id": "paragraph",
       "label": "Set as a paragraph",
       "info": "Indents the first line and opens up the line spacing, for a statement that runs over several lines.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "scroll_reveal",
+      "label": "Reveal text colour on scroll",
+      "info": "The words turn from grey to the strong colour one by one as the visitor scrolls past. Visitors who prefer reduced motion see the text in the strong colour.",
       "default": false
     },
     {

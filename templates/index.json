@@ -117,8 +117,9 @@
     "statement_intro": {
       "type": "bs-statement",
       "settings": {
-        "text": "<strong>Brew Society is Melbourne’s premium</strong> distributor for exclusive food and drink brands in Victoria and NSW.",
+        "text": "Brew Society is Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
         "break_after_bold": false,
+        "scroll_reveal": true,
         "as_heading": true,
         "alignment": "center",
         "max_width": "wide",
