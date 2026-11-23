@@ -1345,6 +1345,11 @@ a.active-facets__button.focused .active-facets__button-inner {
   gap: var(--bs-space-8);
 }
 
+/* No filters applied: no row, so its margin doesn't push the grid down. */
+.facets-container-drawer .active-facets:not(:has(.active-facets__button)) {
+  display: none;
+}
+
 .facets-container-drawer .active-facets__button,
 .facets-container-drawer .active-facets__button-remove,
 .facets-container-drawer .active-facets__button-wrapper {
