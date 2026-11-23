@@ -11,18 +11,98 @@
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
 
+    {%- liquid
+      # Store name without its trailing full stop, for the title suffix.
+      assign bs_shop_name = shop.name | strip
+      assign bs_shop_name_last = bs_shop_name | slice: -1
+      if bs_shop_name_last == '.'
+        assign bs_shop_name = bs_shop_name | remove_last: '.'
+      endif
+
+      # Title and description fallbacks. Shopify fills page_description with the home
+      # page description when a resource has none, so that counts as missing.
+      # A collection has a custom SEO title when page_title differs from its title.
+      assign bs_title = page_title
+      assign bs_description = page_description
+      assign bs_description_missing = false
+      if page_description == blank or page_description == shop.description
+        assign bs_description_missing = true
+      endif
+      assign bs_noindex = false
+
+      case request.page_type
+        when 'collection'
+          if collection.template_suffix == 'brand'
+            if page_title == collection.title
+              assign bs_title = 'general.seo.brand_title' | t: brand: collection.title
+            endif
+            if bs_description_missing
+              assign bs_description = 'general.seo.brand_description' | t: brand: collection.title
+            endif
+          elsif collection.handle == 'all'
+            if page_title == collection.title
+              assign bs_title = 'general.seo.shop_title' | t
+            endif
+            if bs_description_missing
+              assign bs_description = 'general.seo.shop_description' | t
+            endif
+          else
+            if bs_description_missing
+              assign bs_description = 'general.seo.category_description' | t: collection: collection.title
+            endif
+            if collection.all_products_count == 0
+              assign bs_noindex = true
+            endif
+          endif
+        when 'list-collections'
+          assign bs_title = 'general.seo.brands_title' | t
+          if bs_description_missing
+            capture bs_brand_count
+              render 'bs-brand-count'
+            endcapture
+            assign bs_description = 'general.seo.brands_description' | t: count: bs_brand_count
+          endif
+        when 'product'
+          if bs_description_missing
+            capture bs_brand_handle
+              render 'bs-product-brand', product: product
+            endcapture
+            if bs_brand_handle != blank
+              assign bs_brand_name = collections[bs_brand_handle].title
+            elsif product.vendor != blank
+              unless product.vendor contains bs_shop_name
+                assign bs_brand_name = product.vendor
+              endunless
+            endif
+            if bs_brand_name != blank
+              assign bs_description = 'general.seo.product_description_with_brand' | t: product: product.title, brand: bs_brand_name
+            else
+              assign bs_description = 'general.seo.product_description' | t: product: product.title
+            endif
+          endif
+        when 'blog'
+          if blog.articles_count == 0
+            assign bs_noindex = true
+          endif
+      endcase
+    -%}
+
     <title>
-      {{ page_title }}
+      {{ bs_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
       {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      {%- unless bs_title contains bs_shop_name %} | {{ bs_shop_name }}{% endunless -%}
     </title>
 
-    {% if page_description %}
-      <meta name="description" content="{{ page_description | escape }}">
+    {% if bs_description != blank %}
+      <meta name="description" content="{{ bs_description | escape }}">
     {% endif %}
 
-    {% render 'meta-tags' %}
+    {%- if bs_noindex -%}
+      <meta name="robots" content="noindex, follow">
+    {%- endif %}
+
+    {% render 'meta-tags', title: bs_title, description: bs_description %}
 
     <script type="module">
       import * as StandardEvents from 'https://cdn.shopify.com/storefront/standard-events.js';

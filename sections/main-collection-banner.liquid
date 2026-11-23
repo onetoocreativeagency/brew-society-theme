@@ -26,8 +26,15 @@
   <div class="collection-hero__inner page-width section-{{ section.id }}-padding{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="collection-hero__text-wrapper">
       <h1 class="collection-hero__title hxxl">
-        <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
-        {{- bs_title | escape -}}
+        {%- if collection.handle == 'all' -%}
+          {%- comment -%} The Shop reads "Shop" to search engines and screen readers; the visible title is hidden from assistive tech. {%- endcomment -%}
+          <span class="visually-hidden">{{ 'general.seo.shop_title' | t }}</span>
+          {%- comment -%} No whitespace here, so nothing sits before the visible title. {%- endcomment -%}
+          <span aria-hidden="true">{{- bs_title | escape -}}</span>
+        {%- else -%}
+          <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
+          {{- bs_title | escape -}}
+        {%- endif -%}
         {%- if section.settings.show_product_count -%}
           {%- comment -%}
             No whitespace before the number: the count sits tight against the title.

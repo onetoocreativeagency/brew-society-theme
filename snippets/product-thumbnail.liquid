@@ -12,7 +12,7 @@
   @param {boolean} [loop] - Whether videos should loop. Defaults to false.
   @param {boolean} [xr_button] - Whether to show the Shopify XR button for 3D models. Defaults to false.
   @param {boolean} [constrain_to_viewport] - Whether to constrain the media height to the viewport. Defaults to false.
-  @param {boolean} [lazy_load] - Whether to lazy-load the preview image. Defaults to true.
+  @param {boolean} [lazy_load] - Whether to lazy-load the preview image. Defaults to true. When false, the image is fetched at high priority (the page's largest image).
   @param {object} [section] - The current product section context, supplied implicitly when rendered from that section and used for its image zoom setting.
 
   @example
@@ -21,9 +21,12 @@
 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
 
 {%- liquid
-  unless lazy_load == false
+  assign fetch_priority = 'auto'
+  if lazy_load == false
+    assign fetch_priority = 'high'
+  else
     assign lazy = 'lazy'
-  endunless
+  endif
 
   assign desktop_columns = 1
   if desktop_layout == 'columns' and media_count > 1
@@ -79,6 +82,7 @@
         | image_tag:
           class: image_class,
           loading: lazy,
+          fetchpriority: fetch_priority,
           sizes: sizes,
           widths: '246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946'
       }}

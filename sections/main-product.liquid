@@ -127,6 +127,47 @@
             <li aria-current="page">{{ product.title | escape }}</li>
           </ol>
         </nav>
+        {%- comment -%} Breadcrumb markup for search engines, matching the links above. {%- endcomment -%}
+        {%- assign bs_crumb_position = 1 -%}
+        <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": {{ section.settings.breadcrumb_root | json }},
+                "item": {{ request.origin | append: routes.all_products_collection_url | json }}
+              },
+              {%- if bs_category != blank -%}
+                {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+                {
+                  "@type": "ListItem",
+                  "position": {{ bs_crumb_position }},
+                  "name": {{ bs_category | json }},
+                  "item": {{ request.origin | append: bs_category_url | json }}
+                },
+              {%- endif -%}
+              {%- if bs_brand_handle != blank -%}
+                {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+                {
+                  "@type": "ListItem",
+                  "position": {{ bs_crumb_position }},
+                  "name": {{ bs_brand.title | json }},
+                  "item": {{ request.origin | append: bs_brand.url | json }}
+                },
+              {%- endif -%}
+              {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+              {
+                "@type": "ListItem",
+                "position": {{ bs_crumb_position }},
+                "name": {{ product.title | json }},
+                "item": {{ request.origin | append: product.url | json }}
+              }
+            ]
+          }
+        </script>
       {%- endif -%}
       <div class="product bs-buy{% if bs_wholesale_only %} bs-buy--wholesale-only{% endif %} product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col grid--2-col-tablet">
         <div class="grid__item product__media-wrapper">

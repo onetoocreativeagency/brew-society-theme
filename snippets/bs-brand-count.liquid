@@ -1,0 +1,29 @@
+{%- doc -%}
+  Outputs the number of brand collections (template suffix `brand`). Used by the menu
+  counts and the Brands page meta description.
+
+  @example
+  {%- capture bs_count -%}{%- render 'bs-brand-count' -%}{%- endcapture -%}
+{%- enddoc -%}
+{%- liquid
+  assign bs_count = 0
+  # Every paginate tag follows the page number in the URL, so on page 2 of a
+  # product grid, paginating collections would return nothing. There the plain
+  # loop is used instead, which reads the first 50 collections.
+  if current_page == 1
+    paginate collections by 250
+      for bs_collection in collections
+        if bs_collection.template_suffix == 'brand'
+          assign bs_count = bs_count | plus: 1
+        endif
+      endfor
+    endpaginate
+  else
+    for bs_collection in collections
+      if bs_collection.template_suffix == 'brand'
+        assign bs_count = bs_count | plus: 1
+      endif
+    endfor
+  endif
+  echo bs_count
+-%}
