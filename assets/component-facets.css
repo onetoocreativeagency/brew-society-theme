@@ -920,7 +920,8 @@ a.active-facets__button.focused .active-facets__button-inner {
   right: 0px;
   bottom: 0px;
   display: block;
-  background-color: rgba(var(--color-foreground), 0.04);
+  /* Selected row tint: 8% black (Figma Filter Option, State=Selected 4294:3197). */
+  background-color: color-mix(in srgb, var(--bs-color-black) 8%, transparent);
   opacity: 0;
   visibility: hidden;
 }
@@ -1066,13 +1067,15 @@ a.active-facets__button.focused .active-facets__button-inner {
   flex-shrink: 0;
 }
 
+/* The tick fills the box: 32 x 24, centred in the 54px box (Figma icon/checkmark 4294:3199). */
 .mobile-facets__label .icon-checkmark {
   position: absolute;
-  top: calc(50% - 0.45rem);
-  left: calc(2.7rem - 5.5px);
+  top: calc(50% - 1.2rem);
+  left: calc(2.7rem - 1.6rem);
   visibility: hidden;
-  width: 11px;
-  height: 9px;
+  width: 3.2rem;
+  height: 2.4rem;
+  background: none;
 }
 
 .mobile-facets__label > input[type='checkbox']:checked ~ .icon-checkmark {
@@ -1335,11 +1338,16 @@ a.active-facets__button.focused .active-facets__button-inner {
 }
 
 .facets-container-drawer .active-facets {
-  margin: var(--bs-space-8) 0 0;
+  margin: var(--bs-space-24) 0 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--bs-space-8);
+}
+
+/* No filters applied: no row, so its margin doesn't push the grid down. */
+.facets-container-drawer .active-facets:not(:has(.active-facets__button)) {
+  display: none;
 }
 
 .facets-container-drawer .active-facets__button,
@@ -1349,14 +1357,33 @@ a.active-facets__button.focused .active-facets__button-inner {
   padding: 0;
 }
 
+/* Active filter pills and Remove all (Figma Active Filters 4294:3207): 16px blue type, a 1px blue
+   outline with 26px corners, 7px by 12px padding and the 12px cross 8px after the label. */
 .facets-container-drawer span.active-facets__button-inner,
 .facets-container-drawer .active-facets__button-wrapper * {
-  font-size: var(--bs-text-small);
+  font-size: var(--bs-text-paragraph);
   letter-spacing: 0;
 }
 
 .facets-container-drawer span.active-facets__button-inner {
-  padding: var(--bs-space-4) calc(var(--bs-space-8) + var(--bs-space-4));
+  padding: 0.7rem calc(var(--bs-space-8) + var(--bs-space-4));
+  line-height: 1.2;
+  box-shadow: 0 0 0 0.1rem rgb(var(--color-foreground));
+}
+
+.facets-container-drawer .active-facets__button:hover .active-facets__button-inner {
+  box-shadow: 0 0 0 0.2rem rgb(var(--color-foreground));
+}
+
+.facets-container-drawer .active-facets__button .svg-wrapper {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0 0 0 var(--bs-space-8);
+}
+
+.facets-container-drawer .active-facets__button-remove {
+  line-height: var(--bs-leading-body);
+  color: rgb(var(--color-foreground));
 }
 
 /* Drawer type: Medium, 16 on phones and 21 from 750px (Figma Shop - Filter Drawer 4282:2692). */
@@ -1429,6 +1456,10 @@ a.active-facets__button.focused .active-facets__button-inner {
 
   .mobile-facets__header {
     padding-bottom: 3rem;
+  }
+
+  .facets-container-drawer .active-facets {
+    margin-top: var(--bs-space-16);
   }
 
   .mobile-facets__arrow,
