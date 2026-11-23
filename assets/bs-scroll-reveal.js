@@ -3,8 +3,10 @@
 
   Splits the text into words here, not in the saved content, so the editor keeps
   plain text. Each word starts grey and turns to the text colour, one after the
-  other, as the statement scrolls up through the screen (GSAP ScrollTrigger,
-  scrubbed to the scroll position, so scrolling back greys them out again).
+  other, as the statement scrolls up the screen, and all are done by the time its
+  top reaches 40% of the screen height, so it reads finished in the upper third
+  (GSAP ScrollTrigger, scrubbed to the scroll position, so scrolling back greys
+  them out again).
 
   Needs gsap.min.js and ScrollTrigger.min.js loaded first. Without them, without
   JS or with reduced motion nothing is split and the text stays in its full colour.
@@ -37,7 +39,7 @@ if (!customElements.get('bs-scroll-reveal')) {
               scrollTrigger: {
                 trigger: this.text,
                 start: 'top 90%',
-                end: 'center 40%',
+                end: 'top 40%',
                 scrub: 0.5,
               },
             }
