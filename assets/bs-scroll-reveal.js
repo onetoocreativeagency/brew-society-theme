@@ -1,15 +1,20 @@
 /*
-  Scroll colour reveal ("Reveal text colour on scroll" on the Statement section).
+  Scroll colour reveal ("Reveal text colour on scroll" on the Statement and Steps sections).
 
   Splits the text into words here, not in the saved content, so the editor keeps
-  plain text. Each word starts grey and turns to the text colour, one after the
-  other, as the statement scrolls up the screen, and all are done by the time its
-  top reaches 40% of the screen height, so it reads finished in the upper third
-  (GSAP ScrollTrigger, scrubbed to the scroll position, so scrolling back greys
-  them out again).
+  plain text. Each word whose designed colour is stronger than the light colour
+  starts in the light colour and turns to its own designed colour, one after the
+  other, as the heading scrolls up the screen. In a two-tone heading that means
+  the bold words turn strong and the rest stay light; in a heading with no bold
+  every word turns strong (the section CSS sets that colour). All are done by the
+  time the heading's top reaches 40% of the screen height, so it reads finished in
+  the upper third (GSAP ScrollTrigger, scrubbed to the scroll position, so
+  scrolling back lightens them again).
+
+  The light colour is --bs-reveal-from on the text, or the grey token.
 
   Needs gsap.min.js and ScrollTrigger.min.js loaded first. Without them, without
-  JS or with reduced motion nothing is split and the text stays in its full colour.
+  JS or with reduced motion nothing is split and the text shows its designed colours.
 */
 if (!customElements.get('bs-scroll-reveal')) {
   customElements.define(
@@ -25,25 +30,33 @@ if (!customElements.get('bs-scroll-reveal')) {
 
         this.media = window.gsap.matchMedia();
         this.media.add('(prefers-reduced-motion: no-preference)', () => {
-          const words = this.split();
-          const styles = getComputedStyle(this.text);
-          const grey = styles.getPropertyValue('--bs-color-grey').trim();
+          const from = this.lightColour();
+          const words = [];
+          const colours = [];
+          this.split().forEach((word) => {
+            const colour = this.toRgb(getComputedStyle(word).color);
+            if (colour === from) return;
+            words.push(word);
+            colours.push(colour);
+          });
 
-          window.gsap.fromTo(
-            words,
-            { color: grey },
-            {
-              color: styles.color,
-              ease: 'none',
-              stagger: 0.1,
-              scrollTrigger: {
-                trigger: this.text,
-                start: 'top 90%',
-                end: 'top 40%',
-                scrub: 0.5,
-              },
-            }
-          );
+          if (words.length) {
+            window.gsap.fromTo(
+              words,
+              { color: from },
+              {
+                color: (index) => colours[index],
+                ease: 'none',
+                stagger: 0.1,
+                scrollTrigger: {
+                  trigger: this.text,
+                  start: 'top 90%',
+                  end: 'top 40%',
+                  scrub: 0.5,
+                },
+              }
+            );
+          }
 
           // Undone when reduced motion is switched on, or the section is removed.
           return () => {
@@ -54,6 +67,30 @@ if (!customElements.get('bs-scroll-reveal')) {
 
       disconnectedCallback() {
         if (this.media) this.media.revert();
+      }
+
+      lightColour() {
+        const probe = document.createElement('span');
+        probe.style.color = 'var(--bs-reveal-from, var(--bs-color-grey))';
+        this.text.append(probe);
+        const colour = getComputedStyle(probe).color;
+        probe.remove();
+        return this.toRgb(colour);
+      }
+
+      // Computed colours can come back as color(srgb …) from color-mix(), which GSAP
+      // can't tween, so read every colour back as rgb() through a 1px canvas.
+      toRgb(colour) {
+        if (!this.context) {
+          const canvas = document.createElement('canvas');
+          canvas.width = canvas.height = 1;
+          this.context = canvas.getContext('2d', { willReadFrequently: true });
+        }
+        this.context.clearRect(0, 0, 1, 1);
+        this.context.fillStyle = colour;
+        this.context.fillRect(0, 0, 1, 1);
+        const [r, g, b] = this.context.getImageData(0, 0, 1, 1).data;
+        return `rgb(${r}, ${g}, ${b})`;
       }
 
       // Wraps every word in a span, inside any links or bold text, and keeps the spaces.

@@ -69,15 +69,16 @@
 }
 
 /*
-  "Reveal text colour on scroll": the whole statement is in the strong colour.
-  bs-scroll-reveal.js splits it into words, turns them grey and scrubs them back
-  as the statement scrolls through the screen. Without JS, without GSAP or with
-  reduced motion the text simply stays strong.
+  "Reveal text colour on scroll": bs-scroll-reveal.js splits the statement into
+  words and scrubs the bold ones from grey to the strong colour as it scrolls
+  through the screen; the rest stays grey. A statement with no bold is all strong
+  (--reveal-plain), so every word reveals. Without JS, without GSAP or with
+  reduced motion the text simply shows these final colours.
 */
 .bs-statement__reveal {
   display: contents;
 }
 
-.bs-statement--reveal .bs-statement__text {
+.bs-statement--reveal-plain .bs-statement__text {
   color: rgb(var(--color-foreground));
 }

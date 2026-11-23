@@ -47,9 +47,15 @@
   line-height: var(--bs-leading-heading);
   letter-spacing: var(--bs-tracking-display);
   text-align: center;
-  color: color-mix(in srgb, rgb(var(--color-foreground)) 58%, rgb(var(--color-background)));
+  /* The lighter colour; bs-scroll-reveal.js also starts the bold words from it. */
+  --bs-reveal-from: color-mix(in srgb, rgb(var(--color-foreground)) 58%, rgb(var(--color-background)));
+  color: var(--bs-reveal-from);
   overflow-wrap: break-word;
   text-box: trim-both cap alphabetic;
+}
+
+.bs-steps__reveal {
+  display: contents;
 }
 
 .bs-steps__heading strong {

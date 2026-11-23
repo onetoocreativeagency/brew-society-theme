@@ -1,4 +1,9 @@
 {{ 'bs-steps.css' | asset_url | stylesheet_tag }}
+{%- if section.settings.scroll_reveal and section.settings.heading != blank -%}
+  <script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'ScrollTrigger.min.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'bs-scroll-reveal.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 {%- style -%}
   .section-{{ section.id }}-padding {
@@ -32,7 +37,9 @@
           </div>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
+          {%- if section.settings.scroll_reveal -%}<bs-scroll-reveal class="bs-steps__reveal">{%- endif -%}
           <h2 class="bs-steps__heading">{{ section.settings.heading }}</h2>
+          {%- if section.settings.scroll_reveal -%}</bs-scroll-reveal>{%- endif -%}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -144,6 +151,13 @@
       "label": "Heading",
       "info": "Bold text shows in the strong colour on its own line, the rest is lighter.",
       "default": "<strong>Wholesale ordering,</strong> made simple"
+    },
+    {
+      "type": "checkbox",
+      "id": "scroll_reveal",
+      "label": "Reveal heading colour on scroll",
+      "info": "The bold words of the heading turn from the lighter colour to the strong colour one by one as the visitor scrolls past. Visitors who prefer reduced motion see the finished colours.",
+      "default": false
     },
     {
       "type": "inline_richtext",

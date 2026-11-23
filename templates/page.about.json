@@ -104,6 +104,7 @@
         "text": "Finding, developing and distributing <strong>brands the world wants</strong>",
         "break_after_bold": true,
         "paragraph": false,
+        "scroll_reveal": true,
         "as_heading": true,
         "alignment": "center",
         "max_width": "narrow",
