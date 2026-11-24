@@ -5,7 +5,8 @@
   Accepts:
   - brand: {Object} a collection
   - item: {String} 'tally' (an x, for counting), 'category' (the category value and a separator),
-    'card' (a grid card) or 'row' (a list view row)
+    'card' (a Brands catalogue item, grid card and list row in one)
+    or 'row' (a list view row for snippets/bs-brand-list.liquid)
   - config: {Object} the section's settings (metafield namespace and keys, card options)
   - index: {Number} position in the loop, used to lazy-load later card images
 
@@ -42,6 +43,7 @@
         namespace: config.namespace,
         category_key: config.category_key,
         origin_key: config.origin_key,
+        relationship_key: config.relationship_key,
         exclusive_key: config.exclusive_key,
         new_key: config.new_key,
         logo_key: config.logo_key,

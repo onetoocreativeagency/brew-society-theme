@@ -1,17 +1,22 @@
 {% comment %}
-  Renders one brand card of the Brands catalogue (Figma Brands - All 4166:4283):
-  a panel with the brand's product shot, a New label or the Exclusive sticker,
-  the category, the range size and the origin, then the brand name.
+  Renders one brand of the Brands catalogue, shared by the grid and the list
+  (Figma Brands - All 4166:4283, List View 4166:4532). The view is set on
+  bs-brand-catalogue and animated by assets/bs-brands.js (GSAP Flip):
+  - the panel (data-list-grid-flip) is the grid card's image tile and the list row's thumbnail;
+  - data-list-grid-fade marks what fades between views: "" in both, "grid" or "list" in one only.
+  Grid: the panel with a New label or the Exclusive sticker, the category, the range size and the
+  origin, then the brand name. List: thumbnail and name, category, range size, origin and
+  relationship, a divider, and on desktop a logo square that follows the cursor.
 
   Accepts:
   - brand: {Object} a brand collection
   - image_source: {String} 'product' (collection image, then logo) or 'logo' (logo, then collection image)
   - panel_scheme: {String} colour scheme of the image panel
   - lazy_load: {Boolean} lazy-load the image
-  - namespace, category_key, origin_key, exclusive_key, new_key, logo_key, range_size_key: {String} metafield namespace and keys
+  - namespace, category_key, origin_key, relationship_key, exclusive_key, new_key, logo_key, range_size_key: {String} metafield namespace and keys
 
   Usage:
-  {% render 'bs-brand-card', brand: collection, image_source: 'product', panel_scheme: 'scheme-2', namespace: 'brand', category_key: 'category', origin_key: 'origin', exclusive_key: 'exclusive', new_key: 'new', logo_key: 'logo', range_size_key: 'range_size' %}
+  {% render 'bs-brand-card', brand: collection, image_source: 'product', panel_scheme: 'scheme-2', namespace: 'brand', category_key: 'category', origin_key: 'origin', relationship_key: 'relationship', exclusive_key: 'exclusive', new_key: 'new', logo_key: 'logo', range_size_key: 'range_size' %}
 {% endcomment %}
 {%- liquid
   assign bs_meta = brand.metafields[namespace]
@@ -28,9 +33,10 @@
       assign bs_image_is_logo = true
     endif
   endif
+  assign bs_preview = bs_logo | default: brand.image
 -%}
 <a href="{{ brand.url }}" class="bs-brand-card">
-  <div class="bs-brand-card__panel color-{{ panel_scheme }} gradient">
+  <div class="bs-brand-card__panel color-{{ panel_scheme }} gradient" data-list-grid-flip>
     {%- if bs_image != blank -%}
       <div class="bs-brand-card__media{% if bs_image_is_logo %} bs-brand-card__media--logo{% endif %}">
         {%- if lazy_load -%}
@@ -52,6 +58,8 @@
     {%- else -%}
       <div class="bs-brand-card__placeholder bs-placeholder"></div>
     {%- endif -%}
+  </div>
+  <div class="bs-brand-card__meta" data-list-grid-fade="grid">
     <div class="bs-brand-card__row">
       {%- if bs_meta[exclusive_key].value == true -%}
         <span class="bs-brand-sticker">
@@ -74,6 +82,45 @@
       {%- endif -%}
     </div>
   </div>
-  <h2 class="bs-brand-card__name">{{ brand.title | escape }}</h2>
+  <h2 class="bs-brand-card__name" data-list-grid-fade>{{ brand.title | escape }}</h2>
+  {%- comment -%}
+    List view columns, one fade target (a subgrid of the row) to keep Flip light.
+    The labels are read out; the column heads above the list are not.
+  {%- endcomment -%}
+  <span class="bs-brand-card__cells" data-list-grid-fade="list">
+    <span class="bs-brand-card__cell bs-brand-card__cell--category">
+      {%- if bs_category != blank -%}
+        <span class="visually-hidden">{{ 'sections.brands.category' | t }}: </span>{{ bs_category | escape }}
+      {%- endif -%}
+    </span>
+    <span class="bs-brand-card__cell bs-brand-card__cell--products">
+      {%- if bs_range > 0 -%}
+        <span class="visually-hidden">{{ 'sections.brands.products' | t }}: </span>{{ bs_range }}
+      {%- endif -%}
+    </span>
+    <span class="bs-brand-card__cell bs-brand-card__cell--origin">
+      {%- if bs_origin != blank -%}
+        <span class="visually-hidden">{{ 'sections.brands.origin' | t }}: </span>{{ bs_origin | escape }}
+      {%- endif -%}
+    </span>
+    <span class="bs-brand-card__cell bs-brand-card__cell--type">
+      {%- if bs_meta[relationship_key].value.size > 0 -%}
+        <span class="visually-hidden">{{ 'sections.brands.type' | t }}: </span>
+        {%- for bs_relationship in bs_meta[relationship_key].value -%}
+          {{- bs_relationship | escape -}}
+          {%- unless forloop.last %}, {% endunless -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </span>
+  </span>
+  <span class="bs-brand-card__line" data-list-grid-fade="list"></span>
+  {%- if bs_preview != blank -%}
+    <span class="bs-brand-list__preview color-{{ panel_scheme }} gradient">
+      {{-
+        bs_preview
+        | image_url: width: 600
+        | image_tag: loading: 'lazy', widths: '300, 600', sizes: '233px', alt: '', class: 'bs-brand-list__image'
+      -}}
+    </span>
+  {%- endif -%}
 </a>
-

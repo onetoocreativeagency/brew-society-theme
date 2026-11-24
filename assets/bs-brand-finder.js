@@ -23,7 +23,7 @@ if (!customElements.get('bs-brand-finder')) {
         this.frame = null;
 
         this.catalogue.querySelectorAll('[data-brand]').forEach((brand) => {
-          const name = brand.querySelector('.bs-brand-card__name, .bs-brand-list__link');
+          const name = brand.querySelector('.bs-brand-card__name');
           brand.dataset.letter = this.letterOf(name ? name.textContent : '');
         });
         this.querySelector('[data-letter="#"]').parentElement.hidden = !this.catalogue.querySelector(
@@ -69,10 +69,9 @@ if (!customElements.get('bs-brand-finder')) {
         return first >= 'A' && first <= 'Z' ? first : '#';
       }
 
-      // Brands shown in the current view and category, in page order.
+      // Brands shown in the current category, in page order (the grid and list share them).
       brands() {
-        const view = this.catalogue.dataset.view === 'list' ? '.bs-brands__list' : '.bs-brand-grid';
-        return Array.from(this.catalogue.querySelectorAll(`${view} [data-brand]:not([hidden])`));
+        return Array.from(this.catalogue.querySelectorAll('.bs-brand-grid [data-brand]:not([hidden])'));
       }
 
       update() {
@@ -95,7 +94,7 @@ if (!customElements.get('bs-brand-finder')) {
       track() {
         this.frame = null;
         const brands = this.brands();
-        const container = brands[0] && brands[0].closest('.bs-brand-grid, .bs-brands__list');
+        const container = brands[0] && brands[0].closest('.bs-brand-grid');
         if (!container) return;
 
         const rect = container.getBoundingClientRect();

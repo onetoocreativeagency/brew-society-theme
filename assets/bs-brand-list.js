@@ -1,15 +1,15 @@
 /*
   Brands list view: the hovered row's logo square eases after the mouse.
-  Sets --bs-follow-x/y (viewport pixels) on the table and .is-following while the
-  pointer is over it. Without this script, or with reduced motion, the square sits
-  over the row (assets/bs-brands.css).
+  Sets --bs-follow-x/y (viewport pixels) on the table (or the Brands catalogue's list,
+  .bs-brand-grid) and .is-following while the pointer is over it. Without this script,
+  or with reduced motion, the square sits over the row (assets/bs-brands.css).
 */
 if (!customElements.get('bs-brand-list')) {
   customElements.define(
     'bs-brand-list',
     class BsBrandList extends HTMLElement {
       connectedCallback() {
-        this.table = this.querySelector('.bs-brand-list');
+        this.table = this.querySelector('.bs-brand-list, .bs-brand-grid');
         if (!this.table || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         this.target = null;
         this.current = null;

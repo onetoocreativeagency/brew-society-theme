@@ -1,6 +1,9 @@
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
 {{ 'template-collection.css' | asset_url | stylesheet_tag }}
 {{ 'bs-brands.css' | asset_url | stylesheet_tag }}
+{%- comment -%} GSAP and Flip animate the grid/list switch; bs-brands.js snaps between views without them. {%- endcomment -%}
+<script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'Flip.min.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'bs-brands.js' | asset_url }}" defer="defer"></script>
 
 {%- style -%}
@@ -37,6 +40,7 @@
 -%}
 
 <bs-brand-catalogue
+  data-list-grid-init
   class="bs-brands color-{{ section.settings.color_scheme }} gradient"
   data-default-view="{{ section.settings.default_view }}"
   data-count-one="{{ 'sections.brands.count.one' | t: count: '[count]' | escape }}"
@@ -103,35 +107,52 @@
           </ul>
         </nav>
       {%- endif -%}
-      <nav class="bs-brands__views" aria-label="{{ 'sections.brands.view' | t }}">
-        <a
-          href="{{ routes.collections_url }}?view=grid"
+      {%- comment -%}
+        Pill toggle with a sliding indicator (Osmo Supply "List/Grid Toggle (Flip)"). Shown once the
+        script has set the view; without it the grid is shown.
+      {%- endcomment -%}
+      <div class="bs-brands__views" role="group" aria-label="{{ 'sections.brands.view' | t }}">
+        <span class="bs-brands__indicator" data-list-grid-flip></span>
+        <button
+          type="button"
           class="bs-brands__view bs-brands__view--grid"
-          data-brands-view="grid"
+          data-list-grid-toggle="grid"
+          aria-pressed="false"
         >
           {{- 'sections.brands.grid_view' | t -}}
-        </a>
-        <a
-          href="{{ routes.collections_url }}?view=list"
+        </button>
+        <button
+          type="button"
           class="bs-brands__view bs-brands__view--list"
-          data-brands-view="list"
+          data-list-grid-toggle="list"
+          aria-pressed="false"
         >
           {{- 'sections.brands.list_view' | t -}}
-        </a>
-      </nav>
+        </button>
+      </div>
     </div>
 
     <p class="visually-hidden" role="status" data-brands-status></p>
 
     {%- render 'bs-brand-finder' -%}
 
-    <ul class="bs-brand-grid list-unstyled" role="list">
-      {%- render 'bs-brand-each', item: 'card', config: section.settings -%}
-    </ul>
-
-    <div class="bs-brands__list">
-      {%- render 'bs-brand-list', config: section.settings -%}
-    </div>
+    {%- comment -%}
+      One set of brands for both views (snippets/bs-brand-card.liquid). The column heads show in
+      the list view only. bs-brand-list moves the list view's logo square after the cursor.
+    {%- endcomment -%}
+    <script src="{{ 'bs-brand-list.js' | asset_url }}" defer="defer"></script>
+    <bs-brand-list class="bs-brands__items">
+      <div class="bs-brands__head" aria-hidden="true" data-list-grid-fade="list">
+        <span class="bs-brands__head-name">{{ 'sections.brands.name' | t }}</span>
+        <span class="bs-brand-card__cell--category">{{ 'sections.brands.category' | t }}</span>
+        <span class="bs-brand-card__cell--products">{{ 'sections.brands.products' | t }}</span>
+        <span class="bs-brand-card__cell--origin">{{ 'sections.brands.origin' | t }}</span>
+        <span class="bs-brand-card__cell--type">{{ 'sections.brands.type' | t }}</span>
+      </div>
+      <ul class="bs-brand-grid list-unstyled" role="list">
+        {%- render 'bs-brand-each', item: 'card', config: section.settings -%}
+      </ul>
+    </bs-brand-list>
   </div>
 </bs-brand-catalogue>
 

@@ -5,38 +5,73 @@
   margin-top: var(--bs-space-24);
 }
 
+/* Pill toggle with a sliding indicator (Osmo "List/Grid Toggle (Flip)"). The indicator is a
+   Flip element, so it slides when the view changes (assets/bs-brands.js). */
 .bs-brands__views {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--bs-space-4) calc(var(--bs-space-16) + var(--bs-space-4));
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  justify-self: start;
+  padding: var(--bs-space-4);
+  border-radius: 999px;
+  background-color: var(--bs-color-white);
 }
 
-/* The switch needs the script; without it both views are shown one after the other. */
+.bs-brands__indicator {
+  position: absolute;
+  top: var(--bs-space-4);
+  bottom: var(--bs-space-4);
+  left: var(--bs-space-4);
+  width: calc(50% - var(--bs-space-4));
+  border-radius: 999px;
+  background-color: rgb(var(--color-button));
+}
+
+.bs-brands[data-view='list'] .bs-brands__indicator {
+  left: 50%;
+}
+
+/* The switch needs the script; without it the grid is shown. */
 .bs-brands:not([data-view]) .bs-brands__views,
-.bs-brands[data-view='grid'] .bs-brands__list,
-.bs-brands[data-view='list'] .bs-brand-grid,
 .bs-brands [data-brand][hidden] {
   display: none;
 }
 
-.bs-brands:not([data-view]) .bs-brands__list {
-  margin-top: var(--bs-space-64);
+/* What the current view does not show, until GSAP takes over (and without it). */
+.bs-brands:not([data-view='list']) [data-list-grid-fade='list'],
+.bs-brands[data-view='list'] [data-list-grid-fade='grid'] {
+  visibility: hidden;
+  opacity: 0;
 }
 
 .bs-brands__view {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--bs-space-8);
+  padding: var(--bs-space-8) var(--bs-space-16);
+  border: 0;
+  background-color: transparent;
+  font: inherit;
   font-size: var(--bs-text-paragraph);
-  line-height: var(--bs-leading-body);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-button);
   color: var(--bs-color-grey-text);
-  text-decoration: none;
-  transition: color var(--duration-short) ease;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--duration-medium) var(--duration-default);
 }
 
-.bs-brands__view:hover,
-.bs-brands__view[aria-current] {
+.bs-brands__view:hover {
   color: rgb(var(--color-foreground));
+}
+
+.bs-brands__view[aria-pressed='true'] {
+  color: rgb(var(--color-button-text));
+  cursor: default;
 }
 
 /* Two squares side by side for the grid, two dots stacked for the list. */
@@ -66,6 +101,7 @@
   }
 
   .bs-brands__view {
+    padding-inline: var(--bs-space-24);
     font-size: var(--bs-text-large);
   }
 }
@@ -85,19 +121,56 @@
   padding: 0;
 }
 
+/* One item per brand for both views. Grid: the panel, with the details laid over it, then the
+   name. What only the list shows sits out of the flow, faded out (snippets/bs-brand-card.liquid). */
 .bs-brand-card {
-  display: block;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   color: rgb(var(--color-foreground));
   text-decoration: none;
 }
 
 .bs-brand-card__panel {
   position: relative;
+  grid-row: 1;
+  grid-column: 1;
+  width: 100%;
+  /* Same shape in both views, so Flip scales it without stretching. */
+  aspect-ratio: 408 / 611;
+  overflow: hidden;
+}
+
+/* Out of the flow, these take their grid area as the box (both lines given: an auto end line
+   would reach the card's edge). */
+.bs-brand-card__meta {
+  position: absolute;
+  inset: 0;
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  aspect-ratio: 408 / 611;
   overflow: hidden;
+}
+
+.bs-brand-card__cells {
+  position: absolute;
+  top: 0;
+  left: 0;
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+}
+
+.bs-brand-card__line {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  height: 1px;
+  background-color: var(--bs-color-grey);
 }
 
 .bs-brand-card__media {
@@ -168,6 +241,8 @@
 }
 
 .bs-brand-card__name {
+  grid-row: 2;
+  grid-column: 1;
   margin: var(--bs-space-16) 0 0;
   font-size: var(--bs-text-paragraph);
   font-weight: var(--bs-weight-demibold);
@@ -248,6 +323,188 @@
   .bs-brand-card__name {
     font-size: var(--bs-text-x-large);
     line-height: var(--bs-leading-display);
+  }
+}
+
+/* Catalogue list view (Figma Brands - All [List View] 4166:4532): the same items as rows on the
+   12-column grid, each led by its panel as a thumbnail, with a divider under it. The column heads
+   sit out of the flow in the grid view. */
+.bs-brands__items {
+  position: relative;
+  display: block;
+  --bs-brand-thumb: 2.4rem;
+}
+
+.bs-brands__head,
+.bs-brands[data-view='list'] .bs-brand-card {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--bs-space-8);
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-medium);
+  line-height: var(--bs-leading-heading);
+  letter-spacing: var(--bs-tracking-display);
+}
+
+.bs-brands__head {
+  display: grid;
+  padding: calc(var(--bs-space-8) + var(--bs-space-4)) 0;
+  border-bottom: 1px solid rgb(var(--color-foreground));
+  color: rgb(var(--color-foreground));
+}
+
+.bs-brands:not([data-view='list']) .bs-brands__head {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+.bs-brands[data-view='list'] .bs-brand-grid {
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 0;
+}
+
+.bs-brands[data-view='list'] .bs-brand-card {
+  align-items: center;
+  row-gap: var(--bs-space-8);
+  padding-top: var(--bs-space-8);
+  color: var(--bs-color-grey-text);
+}
+
+.bs-brands__head > *,
+.bs-brands[data-view='list'] .bs-brand-card > * {
+  grid-row: 1 / 2;
+}
+
+/* Phones show name, category and origin. */
+.bs-brands__head-name,
+.bs-brands[data-view='list'] .bs-brand-card__panel,
+.bs-brands[data-view='list'] .bs-brand-card__meta,
+.bs-brands[data-view='list'] .bs-brand-card__name {
+  grid-column: 1 / span 5;
+}
+
+.bs-brands[data-view='list'] .bs-brand-card__panel,
+.bs-brands[data-view='list'] .bs-brand-card__meta {
+  justify-self: start;
+  width: var(--bs-brand-thumb);
+}
+
+.bs-brands[data-view='list'] .bs-brand-card__name {
+  margin: 0;
+  padding-left: calc(var(--bs-brand-thumb) + var(--bs-space-8) + var(--bs-space-4));
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-box: normal;
+}
+
+/* The columns are one subgrid across the row. */
+.bs-brands[data-view='list'] .bs-brand-card__cells {
+  position: static;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+.bs-brands[data-view='list'] .bs-brand-card__cell {
+  grid-row: 1;
+}
+
+.bs-brands__head .bs-brand-card__cell--category,
+.bs-brands[data-view='list'] .bs-brand-card__cell--category {
+  grid-column: 6 / span 4;
+}
+
+.bs-brands__head .bs-brand-card__cell--origin,
+.bs-brands[data-view='list'] .bs-brand-card__cell--origin {
+  grid-column: 10 / span 3;
+}
+
+.bs-brands__head .bs-brand-card__cell--products,
+.bs-brands__head .bs-brand-card__cell--type,
+.bs-brands[data-view='list'] .bs-brand-card__cell--products,
+.bs-brands[data-view='list'] .bs-brand-card__cell--type {
+  display: none;
+}
+
+.bs-brands[data-view='list'] .bs-brand-card__line {
+  position: static;
+  grid-row: 2;
+  grid-column: 1 / -1;
+}
+
+/* The highlighted row, as in the brand page list. */
+.bs-brands[data-view='list'] .bs-brand-card:hover,
+.bs-brands[data-view='list'] .bs-brand-card:focus-visible {
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
+.bs-brands[data-view='list'] .bs-brand-card__panel,
+.bs-brands[data-view='list'] .bs-brand-card__name {
+  transition: translate var(--duration-short) ease;
+}
+
+.bs-brands[data-view='list'] .bs-brand-card:hover :is(.bs-brand-card__panel, .bs-brand-card__name),
+.bs-brands[data-view='list'] .bs-brand-card:focus-visible :is(.bs-brand-card__panel, .bs-brand-card__name) {
+  translate: var(--bs-space-8) 0;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-brands__items {
+    --bs-brand-thumb: 3.2rem;
+  }
+
+  .bs-brands__head,
+  .bs-brands[data-view='list'] .bs-brand-card {
+    font-size: var(--bs-text-large);
+  }
+
+  .bs-brands__head .bs-brand-card__cell--products,
+  .bs-brands__head .bs-brand-card__cell--type,
+  .bs-brands[data-view='list'] .bs-brand-card__cell--products,
+  .bs-brands[data-view='list'] .bs-brand-card__cell--type {
+    display: block;
+  }
+
+  .bs-brands__head-name,
+  .bs-brands[data-view='list'] .bs-brand-card__panel,
+  .bs-brands[data-view='list'] .bs-brand-card__meta,
+  .bs-brands[data-view='list'] .bs-brand-card__name {
+    grid-column: 1 / span 3;
+  }
+
+  .bs-brands__head .bs-brand-card__cell--category,
+  .bs-brands[data-view='list'] .bs-brand-card__cell--category {
+    grid-column: 4 / span 3;
+  }
+
+  .bs-brands__head .bs-brand-card__cell--products,
+  .bs-brands[data-view='list'] .bs-brand-card__cell--products {
+    grid-column: 7 / span 2;
+  }
+
+  .bs-brands__head .bs-brand-card__cell--origin,
+  .bs-brands[data-view='list'] .bs-brand-card__cell--origin {
+    grid-column: 9 / span 2;
+  }
+
+  .bs-brands__head .bs-brand-card__cell--type,
+  .bs-brands[data-view='list'] .bs-brand-card__cell--type {
+    grid-column: 11 / span 2;
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .bs-brands__head .bs-brand-card__cell--origin,
+  .bs-brands[data-view='list'] .bs-brand-card__cell--origin {
+    grid-column: 11;
+  }
+
+  .bs-brands__head .bs-brand-card__cell--type,
+  .bs-brands[data-view='list'] .bs-brand-card__cell--type {
+    grid-column: 12;
   }
 }
 
@@ -385,12 +642,16 @@ bs-brand-list {
    keyboard it sits over the row. */
 @media screen and (min-width: 990px) and (hover: hover) {
   .bs-brand-list tbody .bs-brand-list__row:hover,
-  .bs-brand-list tbody .bs-brand-list__row:focus-within {
+  .bs-brand-list tbody .bs-brand-list__row:focus-within,
+  .bs-brands[data-view='list'] .bs-brand-card:hover,
+  .bs-brands[data-view='list'] .bs-brand-card:focus-visible {
     z-index: 1;
   }
 
   .bs-brand-list__row:hover .bs-brand-list__preview,
-  .bs-brand-list__row:focus-within .bs-brand-list__preview {
+  .bs-brand-list__row:focus-within .bs-brand-list__preview,
+  .bs-brands[data-view='list'] .bs-brand-card:hover .bs-brand-list__preview,
+  .bs-brands[data-view='list'] .bs-brand-card:focus-visible .bs-brand-list__preview {
     position: absolute;
     top: 50%;
     left: 42%;
@@ -405,7 +666,8 @@ bs-brand-list {
     pointer-events: none;
   }
 
-  .bs-brand-list.is-following .bs-brand-list__row:hover .bs-brand-list__preview {
+  .bs-brand-list.is-following .bs-brand-list__row:hover .bs-brand-list__preview,
+  .bs-brands[data-view='list'] .bs-brand-grid.is-following .bs-brand-card:hover .bs-brand-list__preview {
     position: fixed;
     top: 0;
     left: 0;
