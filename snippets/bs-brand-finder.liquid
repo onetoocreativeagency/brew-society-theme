@@ -1,0 +1,32 @@
+{% comment %}
+  A to Z brand finder of the Brands catalogue (Figma Brands - All [Logo] 4307:3695, bar 4307:3789).
+  A pill fixed to the bottom of the screen while the brand grid or list is in view.
+  A letter scrolls to the first brand starting with it; letters with no brand in the
+  current view are disabled (assets/bs-brand-finder.js). Render inside bs-brand-catalogue.
+
+  Usage:
+  {% render 'bs-brand-finder' %}
+{% endcomment %}
+{{ 'bs-brand-finder.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'bs-brand-finder.js' | asset_url }}" defer="defer"></script>
+{%- assign bs_letters = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z' | split: ',' -%}
+<bs-brand-finder>
+  <nav class="bs-brand-finder" aria-label="{{ 'sections.brands.finder' | t }}">
+    <ul class="bs-brand-finder__list list-unstyled" role="list">
+      {%- for bs_letter in bs_letters -%}
+        <li>
+          <button type="button" class="bs-brand-finder__letter" data-letter="{{ bs_letter }}">
+            {{- bs_letter -}}
+          </button>
+        </li>
+      {%- endfor -%}
+      {%- comment -%} Shown by the script only when a brand name starts with a number or symbol. {%- endcomment -%}
+      <li hidden>
+        <button type="button" class="bs-brand-finder__letter" data-letter="#">
+          <span aria-hidden="true">#</span>
+          <span class="visually-hidden">{{ 'sections.brands.finder_other' | t }}</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</bs-brand-finder>
