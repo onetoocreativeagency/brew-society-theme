@@ -6,14 +6,16 @@
   --button-071-click-scale: 0.955 0.925;
   --button-071-ease-click: cubic-bezier(0.4, 0, 0.2, 1);
   --button-071-ease-hover: cubic-bezier(0.35, 1.5, 0.6, 1);
-  /* Room above and below each line so descenders are not clipped by the word mask. */
-  --button-071-bleed: 0.2em;
 }
 
+/* As in Osmo, the letters are clipped by the button itself, not by a box around the text:
+   each letter travels the button's full height (--button-071-travel, set in px by
+   bs-button-071.js), so it leaves and enters at the pill's edge. */
 .button-071 {
   --button-071-speed: 0.35s;
   --button-071-stagger: 0.014s;
   -webkit-tap-highlight-color: transparent;
+  overflow: clip;
   transition: box-shadow var(--duration-short) ease, scale 0.15s var(--button-071-ease-click);
 }
 
@@ -31,24 +33,18 @@
   width: 100%;
 }
 
-/* Word masks: SplitText wraps each word in a clipping span (it rewrites the class name, so
-   target it by position). Words wrap normally, so long labels stay on several lines. */
-.button-071__text > * {
+/* Words stay whole so long labels wrap onto more lines. */
+.button-071__split-word {
   display: inline-block;
-  vertical-align: top;
-  padding-block: var(--button-071-bleed);
-  margin-block: calc(var(--button-071-bleed) * -1);
 }
 
 .button-071__split-char {
   display: inline-flex;
   align-items: center;
-  padding-block: var(--button-071-bleed);
-  margin-block: calc(var(--button-071-bleed) * -1);
 }
 
 .button-071__text.is--hover .button-071__split-char {
-  transform: translate3d(0, -100%, 0);
+  transform: translate3d(0, calc(var(--button-071-travel, 100%) * -1), 0);
 }
 
 @keyframes button-071-translate {
@@ -56,7 +52,7 @@
     translate: 0 0 0;
   }
   100% {
-    translate: 0 100% 0;
+    translate: 0 var(--button-071-travel, 100%) 0;
   }
 }
 

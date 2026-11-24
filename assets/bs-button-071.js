@@ -58,7 +58,6 @@
       const split = new SplitText(textEl, {
         type: 'words,chars',
         tag: 'span',
-        mask: 'words',
         aria: 'none',
         wordsClass: 'button-071__split-word',
         charsClass: 'button-071__split-char',
@@ -70,7 +69,13 @@
     return true;
   }
 
+  // Each letter travels the button's full height, so it leaves and enters at the button's edge.
+  const travel = new ResizeObserver((entries) => {
+    entries.forEach((entry) => entry.target.style.setProperty('--button-071-travel', entry.target.offsetHeight + 'px'));
+  });
+
   function bind(element) {
+    travel.observe(element);
     const hoverRoot = element.closest('[data-hover]') || element;
     const styles = getComputedStyle(element);
     const speedMs = parseTimeToMs(styles.getPropertyValue('--button-071-speed'));
