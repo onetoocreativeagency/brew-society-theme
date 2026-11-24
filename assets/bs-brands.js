@@ -67,6 +67,8 @@ if (!customElements.get('bs-brand-catalogue')) {
             : link.removeAttribute('aria-current');
         });
 
+        this.dispatchEvent(new CustomEvent('bs-brands:render'));
+
         if (!filter) return;
         const total = Number(filter.dataset.brandsTotal);
         this.label = filter.dataset.brandsLabel;

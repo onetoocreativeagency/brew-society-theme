@@ -123,6 +123,8 @@
 
     <p class="visually-hidden" role="status" data-brands-status></p>
 
+    {%- render 'bs-brand-finder' -%}
+
     <ul class="bs-brand-grid list-unstyled" role="list">
       {%- render 'bs-brand-each', item: 'card', config: section.settings -%}
     </ul>

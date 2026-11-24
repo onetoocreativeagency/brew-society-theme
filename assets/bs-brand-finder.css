@@ -1,0 +1,124 @@
+/* A to Z brand finder (Figma Brands - All [Logo] 4307:3695, bar 4307:3789). */
+
+/* Phones: all 26 letters fit the screen width in equal slots at 12px. */
+.bs-brand-finder {
+  position: fixed;
+  z-index: 2;
+  left: var(--bs-gutter);
+  right: var(--bs-gutter);
+  bottom: calc(var(--bs-space-8) + var(--bs-space-4) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(var(--bs-space-16));
+  transition: opacity var(--duration-default) ease, transform var(--duration-default) ease,
+    visibility 0s linear var(--duration-default);
+}
+
+/* In view while the brands fill the screen (assets/bs-brand-finder.js), or while a letter has focus. */
+bs-brand-finder[data-visible] .bs-brand-finder,
+.bs-brand-finder:focus-within {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.bs-brand-finder__list {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: var(--bs-space-8);
+  border-radius: var(--bs-space-32);
+  /* Figma: grey at 10% with a 9.65px background blur. */
+  background-color: color-mix(in srgb, var(--bs-color-grey) 10%, transparent);
+  -webkit-backdrop-filter: blur(9.65px);
+  backdrop-filter: blur(9.65px);
+  pointer-events: auto;
+}
+
+.bs-brand-finder__list > li {
+  display: flex;
+  flex: 1 1 0;
+  justify-content: center;
+  min-width: 0;
+}
+
+.bs-brand-finder__list > li[hidden] {
+  display: none;
+}
+
+.bs-brand-finder__letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100%;
+  margin: 0;
+  padding: var(--bs-space-4) 0;
+  border: 1px solid transparent;
+  border-radius: var(--bs-space-8);
+  background: none;
+  font-family: inherit;
+  font-size: var(--bs-text-small);
+  font-weight: var(--bs-weight-medium);
+  line-height: var(--bs-leading-display);
+  letter-spacing: var(--bs-tracking-display);
+  text-box: trim-both cap alphabetic;
+  /* The design grey fails contrast at this size, so live letters take the text grey. */
+  color: var(--bs-color-grey-text);
+  cursor: pointer;
+  transition: color var(--duration-short) ease, border-color var(--duration-short) ease;
+}
+
+.bs-brand-finder__letter:hover {
+  color: rgb(var(--color-foreground));
+}
+
+.bs-brand-finder__letter[aria-current] {
+  border-color: rgb(var(--color-button));
+  color: rgb(var(--color-button));
+}
+
+.bs-brand-finder__letter[aria-disabled='true'] {
+  color: var(--bs-color-grey);
+  cursor: default;
+}
+
+.bs-brand-finder__letter:focus-visible {
+  outline: 2px solid rgb(var(--color-foreground));
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* Tablet and up: the Figma pill, sized by its letters and centred. */
+@media screen and (min-width: 750px) {
+  .bs-brand-finder__list {
+    width: auto;
+    padding: var(--bs-space-16) var(--bs-space-32);
+  }
+
+  .bs-brand-finder__list > li {
+    flex: none;
+  }
+
+  .bs-brand-finder__letter {
+    min-width: 0;
+    /* Letters sit 10px apart: 4px padding and 1px border either side. */
+    padding: var(--bs-space-4);
+    font-size: var(--bs-text-paragraph);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-brand-finder {
+    transform: none;
+  }
+}
+
+/* The letters need the script. */
+bs-brand-finder:not(:defined) {
+  display: none;
+}
