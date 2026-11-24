@@ -6,10 +6,12 @@
   designed colour, one after the other through the whole heading, as it scrolls
   up the screen. So the whole title animates the same way and ends in its
   designed two tones (strong and light); in a heading with no bold every word
-  ends strong (the section CSS sets that colour). All are done by the
-  time the heading's top reaches 40% of the screen height, so it reads finished in
-  the upper third (GSAP ScrollTrigger, scrubbed to the scroll position, so
-  scrolling back lightens them again).
+  ends strong (the section CSS sets that colour). The reveal runs from the
+  heading's top reaching 85% of the screen to its bottom reaching 55%, so each
+  line turns while it is on screen, between about 85% and 55% of the screen height,
+  however many lines the heading wraps to (a long heading on a phone runs to eight).
+  GSAP ScrollTrigger, scrubbed to the scroll position, so scrolling back lightens
+  them again.
 
   The light colour is --bs-reveal-from on the text, or the grey token. The faint
   start is that light colour 35% of the way from the background.
@@ -47,8 +49,8 @@ if (!customElements.get('bs-scroll-reveal')) {
                 stagger: 0.1,
                 scrollTrigger: {
                   trigger: this.text,
-                  start: 'top 90%',
-                  end: 'top 40%',
+                  start: 'top 85%',
+                  end: 'bottom 55%',
                   scrub: 0.5,
                 },
               }
