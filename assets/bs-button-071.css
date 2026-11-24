@@ -1,0 +1,87 @@
+/* Button roll on hover (Osmo Supply "Button 071"), applied to text buttons by bs-button-071.js.
+   Only the behaviour comes from Osmo: each letter rolls down and the copy above rolls in.
+   Colour, radius, size and type stay with .button / .bs-pill / .bs-pill-xl. */
+
+:root {
+  --button-071-click-scale: 0.955 0.925;
+  --button-071-ease-click: cubic-bezier(0.4, 0, 0.2, 1);
+  --button-071-ease-hover: cubic-bezier(0.35, 1.5, 0.6, 1);
+  /* Room above and below each line so descenders are not clipped by the word mask. */
+  --button-071-bleed: 0.2em;
+}
+
+.button-071 {
+  --button-071-speed: 0.35s;
+  --button-071-stagger: 0.014s;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow var(--duration-short) ease, scale 0.15s var(--button-071-ease-click);
+}
+
+.button-071:not([disabled]):not([aria-disabled='true']):active {
+  scale: var(--button-071-click-scale);
+}
+
+.button-071__inner {
+  display: grid;
+  max-width: 100%;
+}
+
+.button-071__text {
+  grid-area: 1 / 1;
+  width: 100%;
+}
+
+/* Word masks: SplitText wraps each word in a clipping span (it rewrites the class name, so
+   target it by position). Words wrap normally, so long labels stay on several lines. */
+.button-071__text > * {
+  display: inline-block;
+  vertical-align: top;
+  padding-block: var(--button-071-bleed);
+  margin-block: calc(var(--button-071-bleed) * -1);
+}
+
+.button-071__split-char {
+  display: inline-flex;
+  align-items: center;
+  padding-block: var(--button-071-bleed);
+  margin-block: calc(var(--button-071-bleed) * -1);
+}
+
+.button-071__text.is--hover .button-071__split-char {
+  transform: translate3d(0, -100%, 0);
+}
+
+@keyframes button-071-translate {
+  0% {
+    translate: 0 0 0;
+  }
+  100% {
+    translate: 0 100% 0;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .button-071__text.is--default .button-071__split-char.is--animating,
+  .button-071__text.is--hover .button-071__split-char.is--animating {
+    animation-name: button-071-translate;
+    animation-play-state: running;
+    animation-iteration-count: infinite;
+    animation-duration: var(--button-071-speed);
+    animation-timing-function: var(--button-071-ease-hover);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button-071:active {
+    scale: none;
+  }
+}
+
+/* Focus ring in the button's own fill colour with a gap: it contrasts with the backdrop as
+   much as the button does, on every scheme. Dawn's 50% ring disappears where a button's
+   scheme differs from what is behind it (footer Order Wholesale). */
+.button.button-071:focus-visible {
+  outline: 0.2rem solid rgb(var(--color-button));
+  outline-offset: 0.3rem;
+  box-shadow: none;
+}
