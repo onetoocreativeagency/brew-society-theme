@@ -134,7 +134,9 @@
     <script src="{{ 'details-modal.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'search-form.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'standard-actions-override.js' | asset_url }}" defer="defer"></script>
+    {%- comment -%} GSAP once for every page: buttons and the footer parallax run site-wide, and sections that animate rely on it. {%- endcomment -%}
     <script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'ScrollTrigger.min.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'SplitText.min.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'bs-button-071.js' | asset_url }}" defer="defer"></script>
 
