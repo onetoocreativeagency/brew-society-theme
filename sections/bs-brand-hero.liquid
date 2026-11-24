@@ -23,6 +23,7 @@
 {%- liquid
   assign bs_meta = collection.metafields[section.settings.namespace]
   assign bs_category = bs_meta[section.settings.category_key].value
+  assign bs_category_handle = bs_category | handleize
   assign bs_origin = bs_meta[section.settings.origin_key].value
   assign bs_relationships = bs_meta[section.settings.relationship_key].value
   assign bs_range = bs_meta[section.settings.range_size_key].value | default: collection.all_products_count
@@ -48,67 +49,12 @@
 
 <div class="bs-brand-hero color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width">
-    <nav class="bs-brand-hero__breadcrumb" aria-label="{{ 'sections.brands.breadcrumb' | t }}">
-      <ol class="list-unstyled" role="list">
-        {%- if section.settings.catalogue_label != blank -%}
-          <li>
-            <a href="{{ routes.collections_url }}">{{ section.settings.catalogue_label | escape }}</a>
-          </li>
-        {%- endif -%}
-        {%- if bs_category != blank -%}
-          <li>
-            <a href="{{ routes.collections_url }}?category={{ bs_category | handleize }}">
-              {{- bs_category | escape -}}
-            </a>
-          </li>
-        {%- endif -%}
-        <li aria-current="page">
-          {{ collection.title | escape }}
-          {%- if collection.all_products_count > 0 -%}
-            <span class="bs-brand-hero__count" aria-hidden="true">{{ collection.all_products_count }}</span>
-            <span class="visually-hidden">
-              , {{ 'products.facets.product_count_simple' | t: count: collection.all_products_count -}}
-            </span>
-          {%- endif -%}
-        </li>
-      </ol>
-    </nav>
-    {%- comment -%} Breadcrumb markup for search engines, matching the links above. {%- endcomment -%}
-    {%- assign bs_crumb_position = 0 -%}
-    {%- assign bs_category_handle = bs_category | handleize -%}
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {%- if section.settings.catalogue_label != blank -%}
-            {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
-            {
-              "@type": "ListItem",
-              "position": {{ bs_crumb_position }},
-              "name": {{ section.settings.catalogue_label | json }},
-              "item": {{ request.origin | append: routes.collections_url | json }}
-            },
-          {%- endif -%}
-          {%- if bs_category != blank -%}
-            {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
-            {
-              "@type": "ListItem",
-              "position": {{ bs_crumb_position }},
-              "name": {{ bs_category | json }},
-              "item": {{ request.origin | append: routes.collections_url | append: '?category=' | append: bs_category_handle | json }}
-            },
-          {%- endif -%}
-          {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
-          {
-            "@type": "ListItem",
-            "position": {{ bs_crumb_position }},
-            "name": {{ collection.title | json }},
-            "item": {{ request.origin | append: collection.url | json }}
-          }
-        ]
-      }
-    </script>
+    {%- liquid
+      assign bs_crumb_label = 'sections.brands.breadcrumb' | t
+      assign bs_category_url = routes.collections_url | append: '?category=' | append: bs_category_handle
+      assign bs_count_text = 'products.facets.product_count_simple' | t: count: collection.all_products_count
+      render 'bs-breadcrumbs', label: bs_crumb_label, link_1_title: section.settings.catalogue_label, link_1_url: routes.collections_url, link_2_title: bs_category, link_2_url: bs_category_url, current_title: collection.title, current_url: collection.url, count: collection.all_products_count, count_text: bs_count_text
+    -%}
 
     <div class="bs-brand-hero__grid section-{{ section.id }}-padding">
       <div class="bs-brand-hero__heading">

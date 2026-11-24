@@ -1,0 +1,78 @@
+/* Breadcrumbs, the same on every page (snippets/bs-breadcrumbs.liquid).
+   Figma "Shop - Product" 4244:2036 and Brand Item 4166:4170: 21px, commas. Mobile 4245:2128: 16px,
+   slashes with 8px either side. Figma sets the links in #B4B4B4; they use the text grey for
+   readability. The current page takes the scheme's text colour. */
+.bs-breadcrumbs {
+  padding-top: var(--bs-space-4);
+  color: var(--bs-color-grey-text);
+  font-size: var(--bs-text-paragraph);
+  line-height: var(--bs-leading-body);
+  letter-spacing: 0;
+}
+
+.bs-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--bs-space-8);
+  margin: 0;
+  padding: 0;
+}
+
+.bs-breadcrumbs__item {
+  display: flex;
+  align-items: center;
+  gap: var(--bs-space-8);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.bs-breadcrumbs__item:not(:last-child)::after {
+  content: '/';
+}
+
+.bs-breadcrumbs__item[aria-current] {
+  gap: var(--bs-space-4);
+  color: rgb(var(--color-foreground));
+}
+
+.bs-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-short) ease;
+}
+
+.bs-breadcrumbs a:hover {
+  color: rgb(var(--color-foreground));
+}
+
+/* A count after the current page, e.g. the brand's products. */
+.bs-breadcrumbs__count {
+  flex: none;
+  padding: var(--bs-space-8);
+  border-radius: calc(var(--bs-space-8) + var(--bs-space-4));
+  background-color: var(--bs-color-white);
+  font-size: var(--bs-text-small);
+  line-height: var(--bs-leading-display);
+  letter-spacing: var(--bs-tracking-display);
+  text-box: trim-both cap alphabetic;
+}
+
+@media screen and (min-width: 750px) {
+  .bs-breadcrumbs {
+    padding-top: 0;
+    font-size: var(--bs-text-large);
+  }
+
+  .bs-breadcrumbs ol {
+    column-gap: 0.25em;
+  }
+
+  .bs-breadcrumbs__item:not(:last-child) {
+    gap: 0;
+  }
+
+  .bs-breadcrumbs__item:not(:last-child)::after {
+    content: ',';
+  }
+}

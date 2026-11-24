@@ -1,0 +1,90 @@
+{%- doc -%}
+  The one breadcrumb trail used across the site (Figma "Shop - Product" 4244:2036, mobile 4245:2128,
+  and Brand Item 4166:4170): up to three links, then the current page. Renders the matching
+  BreadcrumbList structured data, so the visible trail and the search markup never drift apart.
+  A link with a blank title is left out.
+
+  @param {string} label - Accessible name of the trail (a translated string).
+  @param {string} [link_1_title] - First link text.
+  @param {string} [link_1_url] - First link URL (relative).
+  @param {string} [link_2_title] - Second link text.
+  @param {string} [link_2_url] - Second link URL (relative).
+  @param {string} [link_3_title] - Third link text.
+  @param {string} [link_3_url] - Third link URL (relative).
+  @param {string} current_title - The current page.
+  @param {string} current_url - The current page URL (relative).
+  @param {number} [count] - A number shown in a pill after the current page, e.g. a brand's products.
+  @param {string} [count_text] - What the count means, read by screen readers instead of the pill.
+
+  @example
+  {% render 'bs-breadcrumbs', label: crumb_label, link_1_title: 'Shop', link_1_url: routes.all_products_collection_url, current_title: product.title, current_url: product.url %}
+{%- enddoc -%}
+
+{{ 'bs-breadcrumbs.css' | asset_url | stylesheet_tag }}
+
+<nav class="bs-breadcrumbs" aria-label="{{ label | escape }}">
+  <ol class="list-unstyled" role="list">
+    {%- if link_1_title != blank -%}
+      <li class="bs-breadcrumbs__item"><a href="{{ link_1_url }}">{{ link_1_title | escape }}</a></li>
+    {%- endif -%}
+    {%- if link_2_title != blank -%}
+      <li class="bs-breadcrumbs__item"><a href="{{ link_2_url }}">{{ link_2_title | escape }}</a></li>
+    {%- endif -%}
+    {%- if link_3_title != blank -%}
+      <li class="bs-breadcrumbs__item"><a href="{{ link_3_url }}">{{ link_3_title | escape }}</a></li>
+    {%- endif -%}
+    <li class="bs-breadcrumbs__item" aria-current="page">
+      {{- current_title | escape -}}
+      {%- if count > 0 -%}
+        <span class="bs-breadcrumbs__count" aria-hidden="true">{{ count }}</span>
+        {%- if count_text != blank -%}
+          <span class="visually-hidden">, {{ count_text | escape }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </li>
+  </ol>
+</nav>
+
+{%- assign bs_crumb_position = 0 -%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {%- if link_1_title != blank -%}
+        {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+        {
+          "@type": "ListItem",
+          "position": {{ bs_crumb_position }},
+          "name": {{ link_1_title | json }},
+          "item": {{ request.origin | append: link_1_url | json }}
+        },
+      {%- endif -%}
+      {%- if link_2_title != blank -%}
+        {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+        {
+          "@type": "ListItem",
+          "position": {{ bs_crumb_position }},
+          "name": {{ link_2_title | json }},
+          "item": {{ request.origin | append: link_2_url | json }}
+        },
+      {%- endif -%}
+      {%- if link_3_title != blank -%}
+        {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+        {
+          "@type": "ListItem",
+          "position": {{ bs_crumb_position }},
+          "name": {{ link_3_title | json }},
+          "item": {{ request.origin | append: link_3_url | json }}
+        },
+      {%- endif -%}
+      {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+      {
+        "@type": "ListItem",
+        "position": {{ bs_crumb_position }},
+        "name": {{ current_title | json }},
+        "item": {{ request.origin | append: current_url | json }}
+      }
+    ]
+  }
+</script>

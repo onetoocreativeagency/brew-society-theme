@@ -2,66 +2,13 @@
    Loaded by sections/main-product.liquid after Dawn's section-main-product.css, which it
    overrides. */
 
-/* Breadcrumbs: Shop, category, brand, product. Commas on desktop, slashes on phones. */
-.bs-breadcrumbs {
-  padding-top: var(--bs-space-4);
-  font-size: var(--bs-text-paragraph);
-  line-height: var(--bs-leading-body);
-}
-
-.bs-breadcrumbs ol {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 var(--bs-space-8);
-  margin: 0;
-}
-
-.bs-breadcrumbs li {
-  color: rgb(var(--color-foreground));
-}
-
-.bs-breadcrumbs li:not(:last-child) {
-  display: flex;
-  gap: var(--bs-space-8);
-  color: var(--bs-color-grey);
-}
-
-.bs-breadcrumbs li:not(:last-child)::after {
-  content: '/';
-}
-
-.bs-breadcrumbs a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.bs-breadcrumbs a:hover {
-  color: rgb(var(--color-foreground));
-}
-
-.bs-breadcrumbs + .product.bs-buy.grid {
+/* Space below the breadcrumbs (snippets/bs-breadcrumbs.liquid, followed by its structured data). */
+.bs-breadcrumbs ~ .product.bs-buy.grid {
   margin-top: var(--bs-space-32);
 }
 
 @media screen and (min-width: 750px) {
-  .bs-breadcrumbs {
-    padding-top: 0;
-    font-size: var(--bs-text-large);
-  }
-
-  .bs-breadcrumbs ol {
-    column-gap: 0.25em;
-  }
-
-  .bs-breadcrumbs li:not(:last-child) {
-    gap: 0;
-  }
-
-  .bs-breadcrumbs li:not(:last-child)::after {
-    content: ',';
-  }
-
-  .bs-breadcrumbs + .product.bs-buy.grid {
+  .bs-breadcrumbs ~ .product.bs-buy.grid {
     margin-top: var(--bs-space-64);
   }
 }
