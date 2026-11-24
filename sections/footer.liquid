@@ -234,6 +234,83 @@
   </div>
 </footer>
 
+{%- liquid
+  comment
+    Organization markup for search engines. Name, contact details and social links come from
+    the store and this footer's blocks, so they stay editable. The address is split into its
+    parts when it reads "street, suburb STATE postcode"; otherwise it is given as one line.
+  endcomment
+  assign bs_shop_name = shop.name | strip
+  assign bs_shop_name_last = bs_shop_name | slice: -1
+  if bs_shop_name_last == '.'
+    assign bs_shop_name = bs_shop_name | remove_last: '.'
+  endif
+
+  assign bs_contact = section.blocks | where: 'type', 'contact' | first
+  assign bs_social = section.blocks | where: 'type', 'social_links' | first
+
+  assign bs_same_as = ''
+  assign bs_networks = 'facebook,instagram,youtube,tiktok,twitter,pinterest,snapchat,tumblr,vimeo' | split: ','
+  for bs_network in bs_networks
+    assign bs_setting = 'social_' | append: bs_network | append: '_link'
+    if settings[bs_setting] != blank
+      assign bs_same_as = bs_same_as | append: '|' | append: settings[bs_setting]
+    endif
+  endfor
+  if bs_social.settings.linkedin_url != blank
+    assign bs_same_as = bs_same_as | append: '|' | append: bs_social.settings.linkedin_url
+  endif
+  assign bs_same_as = bs_same_as | remove_first: '|' | split: '|'
+
+  assign bs_street = blank
+  assign bs_locality = blank
+  assign bs_region = blank
+  assign bs_postcode = blank
+  if bs_contact.settings.address != blank
+    assign bs_address_parts = bs_contact.settings.address | split: ','
+    assign bs_street = bs_contact.settings.address | strip
+    if bs_address_parts.size == 2
+      assign bs_place = bs_address_parts.last | strip | split: ' '
+      assign bs_place_last = bs_place.last
+      if bs_place.size >= 3 and bs_place_last.size == 4
+        assign bs_street = bs_address_parts.first | strip
+        assign bs_postcode = bs_place_last
+        assign bs_region_index = bs_place.size | minus: 2
+        assign bs_region = bs_place[bs_region_index]
+        assign bs_locality = bs_place | slice: 0, bs_region_index | join: ' '
+      endif
+    endif
+  endif
+-%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": {{ bs_shop_name | json }},
+    "url": {{ request.origin | append: routes.root_url | json }},
+    "logo": {{ 'bs-logo-schema.png' | asset_url | prepend: 'https:' | json }},
+    {%- if bs_contact.settings.email != blank %}
+      "email": {{ bs_contact.settings.email | strip | json }},
+    {%- endif -%}
+    {%- if bs_contact.settings.phone != blank %}
+      "telephone": {{ bs_contact.settings.phone | strip | json }},
+    {%- endif -%}
+    {%- if bs_street != blank %}
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": {{ bs_street | json }},
+        {%- if bs_postcode != blank %}
+          "addressLocality": {{ bs_locality | json }},
+          "addressRegion": {{ bs_region | json }},
+          "postalCode": {{ bs_postcode | json }},
+        {%- endif %}
+        "addressCountry": "AU"
+      },
+    {%- endif %}
+    "sameAs": {{ bs_same_as | json }}
+  }
+</script>
+
 {% schema %}
 {
   "name": "t:sections.footer.name",

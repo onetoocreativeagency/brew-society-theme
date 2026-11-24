@@ -149,9 +149,6 @@
     endif
   -%}
   <header class="header page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if country_selector or language_selector %} header--has-localizations{% endif %}">
-    {%- if request.page_type == 'index' -%}
-      <h1 class="header__heading">
-    {%- endif -%}
     <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
       {%- if settings.logo != blank -%}
         <div class="header__heading-logo-wrapper">
@@ -176,9 +173,6 @@
         <span class="header__wordmark">{{ shop.name }}</span>
       {%- endif -%}
     </a>
-    {%- if request.page_type == 'index' -%}
-      </h1>
-    {%- endif -%}
 
     {%- liquid
       if section.settings.menu != blank
@@ -379,36 +373,22 @@
   customElements.define('sticky-header', StickyHeader);
 {% endjavascript %}
 
-<script type="application/ld+json">
-  {
-    "@context": "http://schema.org",
-    "@type": "Organization",
-    "name": {{ shop.name | json }},
-    {% if settings.logo %}
-      "logo": {{ settings.logo | image_url: width: 500 | prepend: "https:" | json }},
-    {% endif %}
-    "sameAs": [
-      {{ settings.social_twitter_link | json }},
-      {{ settings.social_facebook_link | json }},
-      {{ settings.social_pinterest_link | json }},
-      {{ settings.social_instagram_link | json }},
-      {{ settings.social_tiktok_link | json }},
-      {{ settings.social_tumblr_link | json }},
-      {{ settings.social_snapchat_link | json }},
-      {{ settings.social_youtube_link | json }},
-      {{ settings.social_vimeo_link | json }}
-    ],
-    "url": {{ request.origin | append: page.url | json }}
-  }
-</script>
+{%- comment -%} The Organization markup is in sections/footer.liquid, which holds the contact details. {%- endcomment -%}
 
 {%- if request.page_type == 'index' -%}
+  {%- liquid
+    assign bs_shop_name = shop.name | strip
+    assign bs_shop_name_last = bs_shop_name | slice: -1
+    if bs_shop_name_last == '.'
+      assign bs_shop_name = bs_shop_name | remove_last: '.'
+    endif
+  -%}
   {% assign potential_action_target = request.origin | append: routes.search_url | append: '?q={search_term_string}' %}
   <script type="application/ld+json">
     {
       "@context": "http://schema.org",
       "@type": "WebSite",
-      "name": {{ shop.name | json }},
+      "name": {{ bs_shop_name | json }},
       "potentialAction": {
         "@type": "SearchAction",
         "target": {{ potential_action_target | json }},

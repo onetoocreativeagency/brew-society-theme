@@ -73,6 +73,42 @@
         </li>
       </ol>
     </nav>
+    {%- comment -%} Breadcrumb markup for search engines, matching the links above. {%- endcomment -%}
+    {%- assign bs_crumb_position = 0 -%}
+    {%- assign bs_category_handle = bs_category | handleize -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {%- if section.settings.catalogue_label != blank -%}
+            {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+            {
+              "@type": "ListItem",
+              "position": {{ bs_crumb_position }},
+              "name": {{ section.settings.catalogue_label | json }},
+              "item": {{ request.origin | append: routes.collections_url | json }}
+            },
+          {%- endif -%}
+          {%- if bs_category != blank -%}
+            {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+            {
+              "@type": "ListItem",
+              "position": {{ bs_crumb_position }},
+              "name": {{ bs_category | json }},
+              "item": {{ request.origin | append: routes.collections_url | append: '?category=' | append: bs_category_handle | json }}
+            },
+          {%- endif -%}
+          {%- assign bs_crumb_position = bs_crumb_position | plus: 1 -%}
+          {
+            "@type": "ListItem",
+            "position": {{ bs_crumb_position }},
+            "name": {{ collection.title | json }},
+            "item": {{ request.origin | append: collection.url | json }}
+          }
+        ]
+      }
+    </script>
 
     <div class="bs-brand-hero__grid section-{{ section.id }}-padding">
       <div class="bs-brand-hero__heading">
