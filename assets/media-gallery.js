@@ -1,4 +1,20 @@
 if (!customElements.get('media-gallery')) {
+  // Brew Society: Splide is fetched only when a phone-width gallery needs it.
+  let splideLoading;
+  const loadSplide = (src) => {
+    if (window.Splide) return Promise.resolve();
+    splideLoading =
+      splideLoading ||
+      new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.append(script);
+      });
+    return splideLoading;
+  };
+
   customElements.define(
     'media-gallery',
     class MediaGallery extends HTMLElement {
@@ -10,6 +26,10 @@ if (!customElements.get('media-gallery')) {
           thumbnails: this.querySelector('[id^="GalleryThumbnails"]'),
         };
         this.mql = window.matchMedia('(min-width: 750px)');
+        if (this.dataset.phoneCarousel) {
+          this.mql.addEventListener('change', this.togglePhoneCarousel.bind(this));
+          this.togglePhoneCarousel();
+        }
         if (!this.elements.thumbnails) return;
 
         this.elements.viewer.addEventListener('slideChanged', debounce(this.onSlideChanged.bind(this), 500));
@@ -19,6 +39,64 @@ if (!customElements.get('media-gallery')) {
             .addEventListener('click', this.setActiveMedia.bind(this, mediaToSwitch.dataset.target, false));
         });
         if (this.dataset.desktopLayout.includes('thumbnail') && this.mql.matches) this.removeListSemantic();
+      }
+
+      // Brew Society: below 750px the main images are a swipeable Splide carousel, one image per
+      // slide. The thumbnails under it show the position. Desktop keeps Dawn's gallery.
+      togglePhoneCarousel() {
+        if (this.mql.matches) {
+          this.destroyPhoneCarousel(null);
+        } else {
+          this.mountPhoneCarousel();
+        }
+      }
+
+      getCarouselSlides() {
+        return Array.from(this.elements.viewer.querySelectorAll('.splide__list > [data-media-id]'));
+      }
+
+      async mountPhoneCarousel() {
+        if (this.splide) return;
+        try {
+          await loadSplide(this.dataset.splideSrc);
+        } catch (error) {
+          return;
+        }
+        if (this.splide || this.mql.matches) return;
+
+        const slides = this.getCarouselSlides();
+        const ids = slides.map((slide) => slide.id);
+        const start = Math.max(
+          0,
+          slides.findIndex((slide) => slide.classList.contains('is-active'))
+        );
+        // Splide needs the root class; it is added only now so the gallery shows before Splide loads.
+        this.classList.add('splide');
+        this.splide = new Splide(this, { ...JSON.parse(this.dataset.phoneCarousel), start });
+        this.splide.on('moved', this.onCarouselMoved.bind(this));
+        this.splide.mount();
+        // Splide renames the slides; Dawn's slider and variant code find them by their own ids.
+        slides.forEach((slide, index) => (slide.id = ids[index]));
+      }
+
+      destroyPhoneCarousel(activeSlide) {
+        if (!this.splide) return;
+        const slides = this.getCarouselSlides();
+        const ids = slides.map((slide) => slide.id);
+        activeSlide = activeSlide || slides[this.splide.index];
+        this.splide.destroy(true);
+        this.splide = null;
+        this.classList.remove('splide');
+        slides.forEach((slide, index) => (slide.id = ids[index]));
+        if (activeSlide) activeSlide.classList.add('is-active');
+      }
+
+      onCarouselMoved(index) {
+        const slide = this.getCarouselSlides()[index];
+        if (!slide) return;
+        window.pauseAllMedia();
+        if (!this.elements.thumbnails) return;
+        this.setActiveThumbnail(this.elements.thumbnails.querySelector(`[data-target="${slide.dataset.mediaId}"]`));
       }
 
       onSlideChanged(event) {
@@ -49,6 +127,16 @@ if (!customElements.get('media-gallery')) {
           }
 
           if (this.elements.viewer.slider) this.elements.viewer.resetPages();
+        }
+
+        if (this.splide) {
+          if (prepend) {
+            // Variant change: the slides were reordered, so rebuild the carousel on the new order.
+            this.destroyPhoneCarousel(activeMedia);
+            this.mountPhoneCarousel();
+          } else {
+            this.splide.go(this.getCarouselSlides().indexOf(activeMedia));
+          }
         }
 
         this.preventStickyHeader();

@@ -197,6 +197,23 @@
   box-shadow: inset 0 0 0 0.1rem rgb(var(--color-foreground));
 }
 
+/* Phones: the images are a swipeable carousel (Splide, mounted by media-gallery.js), one per slide. */
+@media screen and (max-width: 749px) {
+  .bs-buy media-gallery.is-initialized .product__media-list.product__media-list {
+    display: flex;
+    /* Splide spaces the slides itself; Dawn's .grid gap would throw its positions off. */
+    gap: 0;
+  }
+
+  .bs-buy media-gallery.is-initialized .product__media-list .product__media-item:not(.is-active) {
+    display: block;
+  }
+
+  .bs-buy media-gallery .splide__track {
+    touch-action: pan-y;
+  }
+}
+
 @media screen and (min-width: 750px) {
   .bs-buy media-gallery {
     flex-direction: row-reverse;
