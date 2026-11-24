@@ -50,9 +50,10 @@
   --buttons-radius: 999px;
   --buttons-radius-outset: 999px;
   width: 100%;
-  min-height: 14rem;
-  padding: 0 var(--bs-space-8);
-  font-size: var(--bs-text-3x-large);
+  /* Phones: same size as the hero's Order Wholesale pill. */
+  min-height: 13.1rem;
+  padding: var(--bs-space-16) min(1.167em, 4.525vw);
+  font-size: var(--bs-text-2x-large);
   font-weight: var(--bs-weight-medium);
   line-height: var(--bs-leading-heading);
   letter-spacing: var(--bs-tracking-button);
@@ -69,6 +70,12 @@
   line-height: var(--bs-leading-body);
   /* Contact details and social links are black in Figma (Footer 4166:3489), not the scheme's blue. */
   color: var(--bs-color-black);
+}
+
+/* Social links and contact details stack as one list at every width, 24px apart
+   (the column's 64px gap is for the larger blocks). */
+.footer__details + .footer__details {
+  margin-top: calc(var(--bs-space-24) - var(--bs-space-64));
 }
 
 .footer__details a,
@@ -124,18 +131,10 @@
     gap: var(--bs-space-192);
   }
 
-  /* Social links and contact details sit side by side; everything else spans the column. */
-  .footer__main {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .footer__block,
-  .footer__details:last-child:not(.footer__details ~ .footer__details) {
-    grid-column: 1 / -1;
-  }
 
   .footer__wholesale.button {
     min-height: 15.2rem;
+    padding: 0 var(--bs-space-8);
     font-size: var(--bs-text-4x-large);
   }
 

@@ -945,9 +945,7 @@ a.active-facets__button.focused .active-facets__button-inner {
   cursor: pointer;
 }
 
-.mobile-facets__details[open] > .mobile-facets__summary {
-  min-height: 0;
-}
+/* The title row keeps the same height open or closed, so the title doesn't move. */
 
 .mobile-facets__summary > div {
   flex: 1;

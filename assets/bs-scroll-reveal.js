@@ -2,18 +2,17 @@
   Scroll colour reveal ("Reveal text colour on scroll" on the Statement and Steps sections).
 
   Splits the text into words here, not in the saved content, so the editor keeps
-  plain text. Every word starts lighter than its designed colour and turns to it,
-  one after the other through the whole heading, as it scrolls up the screen:
-  strong words start in the light colour, and words whose designed colour is the
-  light colour (the second line of a two-tone heading) start fainter still, so
-  the whole title animates and ends in its designed two tones. In a heading with
-  no bold every word turns strong (the section CSS sets that colour). All are done by the
+  plain text. Every word starts in the same faint colour and turns to its own
+  designed colour, one after the other through the whole heading, as it scrolls
+  up the screen. So the whole title animates the same way and ends in its
+  designed two tones (strong and light); in a heading with no bold every word
+  ends strong (the section CSS sets that colour). All are done by the
   time the heading's top reaches 40% of the screen height, so it reads finished in
   the upper third (GSAP ScrollTrigger, scrubbed to the scroll position, so
   scrolling back lightens them again).
 
-  The light colour is --bs-reveal-from on the text, or the grey token. The fainter
-  start is that colour 35% of the way from the background.
+  The light colour is --bs-reveal-from on the text, or the grey token. The faint
+  start is that light colour 35% of the way from the background.
 
   Needs gsap.min.js and ScrollTrigger.min.js loaded first. Without them, without
   JS or with reduced motion nothing is split and the text shows its designed colours.
@@ -36,7 +35,7 @@ if (!customElements.get('bs-scroll-reveal')) {
           const faint = this.mix(this.backgroundColour(), from, 0.35);
           const words = this.split();
           const ends = words.map((word) => this.toRgb(getComputedStyle(word).color));
-          const starts = ends.map((colour) => (colour === from ? faint : from));
+          const starts = ends.map(() => faint);
 
           if (words.length) {
             window.gsap.fromTo(

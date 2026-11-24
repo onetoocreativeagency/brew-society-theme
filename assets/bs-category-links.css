@@ -16,8 +16,30 @@
   content: ', ';
 }
 
+.bs-category-links__item {
+  transition: color var(--duration-short) ease;
+}
+
 .bs-category-links__item--strong {
   color: rgb(var(--color-foreground));
+}
+
+/* The strong colour follows the pointer: the item under it (or with keyboard focus) turns
+   strong, and "Explore All" goes back to the grey until the pointer leaves. */
+.bs-category-links__item:has(> a:hover),
+.bs-category-links__item:has(> a:focus-visible) {
+  color: rgb(var(--color-foreground));
+}
+
+.bs-category-links:has(a:hover, a:focus-visible)
+  .bs-category-links__item--strong:not(:has(> a:hover)):not(:has(> a:focus-visible)) {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-category-links__item {
+    transition: none;
+  }
 }
 
 .bs-category-links a:hover,

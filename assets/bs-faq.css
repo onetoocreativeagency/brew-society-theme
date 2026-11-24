@@ -60,6 +60,13 @@
 .bs-faq__icon {
   box-sizing: border-box;
   flex: none;
+  width: 2.4rem;
+  height: 2.4rem;
+  /* A drawn 24px plus (two 2px bars), the same size on every accordion whatever the font. */
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% 0.2rem no-repeat,
+    linear-gradient(currentColor, currentColor) center / 0.2rem 100% no-repeat;
+  font-size: 0;
   transition: transform var(--duration-short) ease;
 }
 
