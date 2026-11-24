@@ -1,8 +1,10 @@
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
 {{ 'template-collection.css' | asset_url | stylesheet_tag }}
 {{ 'bs-brands.css' | asset_url | stylesheet_tag }}
-{%- comment -%} GSAP and Flip animate the grid/list switch; bs-brands.js snaps between views without them. {%- endcomment -%}
-<script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
+{%- comment -%}
+  Flip animates the grid/list switch. GSAP itself is loaded by layout/theme.liquid (a second copy
+  would replace window.gsap and its registered plugins). bs-brands.js snaps between views without them.
+{%- endcomment -%}
 <script src="{{ 'Flip.min.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'bs-brands.js' | asset_url }}" defer="defer"></script>
 
