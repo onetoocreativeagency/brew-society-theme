@@ -60,7 +60,7 @@
             capture bs_brand_count
               render 'bs-brand-count'
             endcapture
-            assign bs_description = 'general.seo.brands_description' | t: count: bs_brand_count
+            assign bs_description = 'general.seo.brands_description' | t: total: bs_brand_count
           endif
         when 'product'
           if bs_description_missing
@@ -95,7 +95,7 @@
     </title>
 
     {% if bs_description != blank %}
-      <meta name="description" content="{{ bs_description | escape }}">
+      <meta name="description" content="{{ bs_description | escape_once }}">
     {% endif %}
 
     {%- if bs_noindex -%}

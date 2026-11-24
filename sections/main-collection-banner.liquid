@@ -25,11 +25,19 @@
 <div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
   <div class="collection-hero__inner page-width section-{{ section.id }}-padding{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="collection-hero__text-wrapper">
-      <h1 class="collection-hero__title hxxl">
-        {%- if collection.handle == 'all' -%}
-          {%- comment -%} The Shop reads "Shop" to search engines and screen readers; the visible title is hidden from assistive tech. {%- endcomment -%}
-          <span class="visually-hidden">{{ 'general.seo.shop_title' | t }}</span>
-          {%- comment -%} No whitespace here, so nothing sits before the visible title. {%- endcomment -%}
+      {%- liquid
+        # The Shop's heading reads "Shop" to search engines and screen readers. Its visible
+        # title and count sit in a paragraph styled as the title.
+        assign bs_title_tag = 'h1'
+        if collection.handle == 'all'
+          assign bs_title_tag = 'p'
+        endif
+      -%}
+      {%- if bs_title_tag == 'p' -%}
+        <h1 class="visually-hidden">{{ 'general.seo.shop_title' | t }}</h1>
+      {%- endif %}
+      <{{ bs_title_tag }} class="collection-hero__title hxxl">
+        {%- if bs_title_tag == 'p' -%}
           <span aria-hidden="true">{{- bs_title | escape -}}</span>
         {%- else -%}
           <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
@@ -47,7 +55,7 @@
             </span>
           </span>
         {%- endif -%}
-      </h1>
+      </{{ bs_title_tag }}>
 
       {%- if section.settings.show_collection_description and collection.description != blank -%}
         <div class="collection-hero__description rte">{{ collection.description }}</div>

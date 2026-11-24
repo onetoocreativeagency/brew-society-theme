@@ -52,15 +52,13 @@
   </script>
   <div class="page-width section-{{ section.id }}-padding">
     {%- comment -%}
-      The heading reads "Brands" to search engines and screen readers; the visible title and
-      count (which change with the category tabs) are hidden from assistive tech, and the count
-      is announced from the line after the heading.
+      The heading reads "Brands" to search engines and screen readers. The visible title and
+      count (which change with the category tabs) sit in a paragraph styled as the title, hidden
+      from assistive tech; the count is announced from the line after it.
     {%- endcomment -%}
-    <h1 class="collection-hero__title hxxl">
-      <span class="visually-hidden">{{ 'general.seo.brands_title' | t }}</span>
-      {%- comment -%} No whitespace before the number: the count sits tight against the title. {%- endcomment -%}
-      <span aria-hidden="true"><span data-brands-title>{{ bs_title | escape }}</span><span class="collection-hero__count"><span data-brands-count>{{ bs_total }}</span></span></span>
-    </h1>
+    <h1 class="visually-hidden">{{ 'general.seo.brands_title' | t }}</h1>
+    {%- comment -%} No whitespace before the number: the count sits tight against the title. {%- endcomment -%}
+    <p class="collection-hero__title hxxl" aria-hidden="true"><span data-brands-title>{{ bs_title | escape }}</span><span class="collection-hero__count"><span data-brands-count>{{ bs_total }}</span></span></p>
     <p class="visually-hidden" data-brands-count-text>{{ 'sections.brands.count' | t: count: bs_total }}</p>
 
     <div class="bs-collection-bar bs-brands__bar">

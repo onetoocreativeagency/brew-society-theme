@@ -73,7 +73,7 @@
       "brand_description": "Order {{ brand }} wholesale from Brew Society, Melbourne's distributor of exclusive food and drink brands in Victoria and NSW.",
       "category_description": "{{ collection }} from Brew Society's exclusive food and drink brands, delivered to cafés and retailers across Victoria and NSW.",
       "shop_description": "Shop the Brew Society range of exclusive food and drink brands, from tea and chai to chocolate, snacks and drinks.",
-      "brands_description": "Browse the {{ count }} exclusive food and drink brands Brew Society imports and distributes to cafés, grocers and hospitality in Victoria and NSW.",
+      "brands_description": "Browse the {{ total }} exclusive food and drink brands Brew Society imports and distributes to cafés, grocers and hospitality in Victoria and NSW.",
       "product_description": "{{ product }}, from Brew Society, Melbourne's distributor of exclusive food and drink brands in Victoria and NSW.",
       "product_description_with_brand": "{{ product }} by {{ brand }}, from Brew Society, Melbourne's distributor of exclusive food and drink brands in Victoria and NSW."
     }

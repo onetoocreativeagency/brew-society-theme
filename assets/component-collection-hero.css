@@ -43,6 +43,17 @@
   padding-bottom: 0.04em;
 }
 
+/* Where the H1 holds a different word for search (Brands, Shop), the visible title is a
+   paragraph: it takes the heading type that h1 gets from base.css. */
+p.collection-hero__title {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  letter-spacing: var(--bs-tracking-display);
+  color: rgb(var(--color-foreground));
+  word-break: break-word;
+}
+
 .collection-hero__count {
   color: var(--bs-color-grey);
 }
