@@ -243,8 +243,7 @@
 
     {%- render 'header-drawer',
       show_country_selector: country_selector,
-      show_language_selector: language_selector,
-      show_social_links: social_links
+      show_language_selector: language_selector
     -%}
   </header>
 </{{ header_tag }}>
@@ -311,7 +310,14 @@
       observer.observe(this.header);
     }
 
+    // While the mobile menu is open the header holds still: the scroll lock can fire scroll events
+    // (mobile Safari moves its toolbars), which would otherwise hide, reveal or unstick the header.
+    menuIsOpen() {
+      return this.header.classList.contains('menu-open');
+    }
+
     onScroll() {
+      if (this.menuIsOpen()) return;
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
       if ([...this.predictiveSearches].some((predictiveSearch) => predictiveSearch.isOpen)) return;
@@ -342,7 +348,7 @@
     }
 
     hide() {
-      if (this.headerIsAlwaysSticky) return;
+      if (this.headerIsAlwaysSticky || this.menuIsOpen()) return;
       this.header.classList.add('shopify-section-header-hidden', 'shopify-section-header-sticky');
       this.closeMenuDisclosure();
       this.closeSearchModal();
@@ -355,7 +361,7 @@
     }
 
     reset() {
-      if (this.headerIsAlwaysSticky) return;
+      if (this.headerIsAlwaysSticky || this.menuIsOpen()) return;
       this.header.classList.remove('shopify-section-header-hidden', 'shopify-section-header-sticky', 'animate');
     }
 

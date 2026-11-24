@@ -29,7 +29,8 @@ menu-drawer > details[open] > summary::before {
 
 /* Full-screen menu (Figma 4264:4957). It covers the whole viewport, announcement bar included;
    the header bar's logo, Cart and close button stay on top of it, and the links start below them.
-   dvh keeps the Order Wholesale pill above mobile browser toolbars. */
+   dvh keeps the Order Wholesale pill above mobile browser toolbars. It shows and hides at once,
+   with no fade, so the page never shows through it. */
 .menu-drawer {
   position: fixed;
   top: 0;
@@ -38,16 +39,10 @@ menu-drawer > details[open] > summary::before {
   height: 100vh;
   height: 100dvh;
   padding: var(--header-bottom-position, 0) 0 0;
-  opacity: 0;
   visibility: hidden;
   z-index: 1;
   background-color: rgb(var(--color-background));
   overflow-x: hidden;
-}
-
-/* Visible at once on open, so focus can move into the menu straight away; hidden after the fade on close. */
-.js details[open] > .menu-drawer {
-  transition: opacity var(--duration-default) ease, visibility 0s linear var(--duration-default);
 }
 
 .js details[open] > .menu-drawer__submenu {
@@ -55,9 +50,7 @@ menu-drawer > details[open] > summary::before {
 }
 
 .js details[open].menu-opening > .menu-drawer {
-  opacity: 1;
   visibility: visible;
-  transition: opacity var(--duration-default) ease, visibility 0s;
 }
 
 details[open].menu-opening > .menu-drawer__submenu {
@@ -183,19 +176,6 @@ details[open].menu-opening > .menu-drawer__submenu {
   width: 100%;
   min-height: 12.8rem;
   font-size: var(--bs-text-2x-large);
-}
-
-.menu-drawer .list-social {
-  justify-content: flex-start;
-  margin-left: -1.25rem;
-}
-
-.menu-drawer .list-social:empty {
-  display: none;
-}
-
-.menu-drawer .list-social__link {
-  padding: 1.1rem 1.1rem;
 }
 
 @media screen and (max-width: 749px) {
