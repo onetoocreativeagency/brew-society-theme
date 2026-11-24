@@ -7,7 +7,8 @@
 (function () {
   if (!window.gsap || !window.SplitText) return;
 
-  const BUTTONS = '.button';
+  // Dawn text buttons and pills, plus the Steps cards' buttons (their own class, same pill).
+  const BUTTONS = '.button, .bs-steps__button';
   const SKIP = '.skip-to-content-link, .button--icon-only, .bs-pill--close, .slider-button, .quantity__button, [data-button-071-off]';
   // Elements that may sit beside a label without making the button "not text-only".
   const ALLOWED_SIBLINGS = '.visually-hidden, .loading__spinner';
