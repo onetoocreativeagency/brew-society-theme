@@ -1,7 +1,7 @@
 /* Breadcrumbs, the same on every page (snippets/bs-breadcrumbs.liquid).
-   Figma "Shop - Product" 4244:2036 and Brand Item 4166:4170: 21px, commas. Mobile 4245:2128: 16px,
-   slashes with 8px either side. Figma sets the links in #B4B4B4; they use the text grey for
-   readability. The current page takes the scheme's text colour. */
+   Figma "Shop - Product" 4244:2036 and Brand Item 4166:4170: 21px, commas; mobile 4245:2128: 16px.
+   Commas at every width (Marcel's call; the mobile frame shows slashes). Figma sets the links in
+   #B4B4B4; they use the text grey for readability. The current page takes the scheme's text colour. */
 .bs-breadcrumbs {
   padding-top: var(--bs-space-4);
   color: var(--bs-color-grey-text);
@@ -14,7 +14,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0 var(--bs-space-8);
+  gap: 0 0.25em;
   margin: 0;
   padding: 0;
 }
@@ -22,13 +22,12 @@
 .bs-breadcrumbs__item {
   display: flex;
   align-items: center;
-  gap: var(--bs-space-8);
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
 .bs-breadcrumbs__item:not(:last-child)::after {
-  content: '/';
+  content: ',';
 }
 
 .bs-breadcrumbs__item[aria-current] {
@@ -62,17 +61,5 @@
   .bs-breadcrumbs {
     padding-top: 0;
     font-size: var(--bs-text-large);
-  }
-
-  .bs-breadcrumbs ol {
-    column-gap: 0.25em;
-  }
-
-  .bs-breadcrumbs__item:not(:last-child) {
-    gap: 0;
-  }
-
-  .bs-breadcrumbs__item:not(:last-child)::after {
-    content: ',';
   }
 }
