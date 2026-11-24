@@ -763,7 +763,7 @@
 
       {% assign popups = section.blocks | where: 'type', 'popup' %}
       {%- for block in popups -%}
-        <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
+        <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" data-lenis-prevent {{ block.shopify_attributes }}>
           <div
             role="dialog"
             aria-label="{{ block.settings.text }}"

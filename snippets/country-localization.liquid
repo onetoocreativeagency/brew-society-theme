@@ -88,6 +88,7 @@
     <div
       class="disclosure__list country-selector__list{% if show_currencies %} country-selector__list--with-multiple-currencies{% endif %}"
       id="{{ localPosition }}-country-results"
+      data-lenis-prevent
     >
       {% if show_popular_countries %}
         <ul
