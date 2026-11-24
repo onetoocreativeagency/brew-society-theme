@@ -144,6 +144,13 @@
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
+    {%- unless request.design_mode -%}
+      {%- comment -%} Smooth scrolling (Locomotive Scroll 5.0.1, pinned), started in bs-smooth-scroll.js. {%- endcomment -%}
+      {{ 'locomotive-scroll.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'locomotive-scroll.min.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'bs-smooth-scroll.js' | asset_url }}" defer="defer"></script>
+    {%- endunless -%}
+
     {{ content_for_header }}
 
     {% style %}
