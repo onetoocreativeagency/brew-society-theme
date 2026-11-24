@@ -1,6 +1,8 @@
 /* A to Z brand finder (Figma Brands - All [Logo] 4307:3695, bar 4307:3789). */
 
-/* Phones: all 26 letters fit the screen width in equal slots at 12px. */
+/* Every letter sits centred in the same square slot, so the rhythm is even whatever the
+   glyph width, and the active outline is the same rounded square for every letter.
+   Phones: 26 equal slots across the screen width at 11px. Tablet up: 22px slots at 15px. */
 .bs-brand-finder {
   position: fixed;
   z-index: 2;
@@ -31,7 +33,7 @@ bs-brand-finder[data-visible] .bs-brand-finder,
   align-items: center;
   width: 100%;
   margin: 0;
-  padding: var(--bs-space-8);
+  padding: 0 var(--bs-space-8);
   border-radius: var(--bs-space-32);
   /* Figma: grey at 10% with a 9.65px background blur. */
   background-color: color-mix(in srgb, var(--bs-color-grey) 10%, transparent);
@@ -52,20 +54,22 @@ bs-brand-finder[data-visible] .bs-brand-finder,
 }
 
 .bs-brand-finder__letter {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 100%;
+  width: 100%;
+  /* The tap area is the full height of the pill; the outline is a square drawn inside it. */
+  height: 3.2rem;
   margin: 0;
-  padding: var(--bs-space-4) 0;
-  border: 1px solid transparent;
-  border-radius: var(--bs-space-8);
+  padding: 0;
+  border: 0;
   background: none;
   font-family: inherit;
-  font-size: var(--bs-text-small);
+  font-size: 1.1rem;
   font-weight: var(--bs-weight-medium);
-  line-height: var(--bs-leading-display);
-  letter-spacing: var(--bs-tracking-display);
+  line-height: 1;
+  letter-spacing: 0;
   text-box: trim-both cap alphabetic;
   /* The design grey fails contrast at this size, so live letters take the text grey. */
   color: var(--bs-color-grey-text);
@@ -77,9 +81,25 @@ bs-brand-finder[data-visible] .bs-brand-finder,
   color: rgb(var(--color-foreground));
 }
 
+.bs-brand-finder__letter::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100%, 2.2rem);
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: 0.4rem;
+  translate: -50% -50%;
+  transition: border-color var(--duration-short) ease;
+}
+
 .bs-brand-finder__letter[aria-current] {
-  border-color: rgb(var(--color-button));
   color: rgb(var(--color-button));
+}
+
+.bs-brand-finder__letter[aria-current]::before {
+  border-color: rgb(var(--color-button));
 }
 
 .bs-brand-finder__letter[aria-disabled='true'] {
@@ -97,18 +117,25 @@ bs-brand-finder[data-visible] .bs-brand-finder,
 @media screen and (min-width: 750px) {
   .bs-brand-finder__list {
     width: auto;
-    padding: var(--bs-space-16) var(--bs-space-32);
+    padding: var(--bs-space-16) var(--bs-space-24);
   }
 
   .bs-brand-finder__list > li {
     flex: none;
   }
 
+  .bs-brand-finder__list {
+    padding: var(--bs-space-8) var(--bs-space-24);
+  }
+
   .bs-brand-finder__letter {
-    min-width: 0;
-    /* Letters sit 10px apart: 4px padding and 1px border either side. */
-    padding: var(--bs-space-4);
-    font-size: var(--bs-text-paragraph);
+    width: 2.2rem;
+    height: 3.6rem;
+    font-size: 1.5rem;
+  }
+
+  .bs-brand-finder__letter::before {
+    border-radius: 0.6rem;
   }
 }
 
