@@ -67,6 +67,8 @@
   font-size: var(--bs-text-paragraph);
   font-weight: var(--bs-weight-medium);
   line-height: var(--bs-leading-body);
+  /* Contact details and social links are black in Figma (Footer 4166:3489), not the scheme's blue. */
+  color: var(--bs-color-black);
 }
 
 .footer__details a,
