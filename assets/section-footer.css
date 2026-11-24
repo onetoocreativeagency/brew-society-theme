@@ -252,3 +252,22 @@
     font-size: var(--bs-text-4x-large);
   }
 }
+
+/* Footer parallax (Osmo Footer Parallax Effect, assets/bs-footer-parallax.js). The wrapper clips the
+   footer while it rises into place; the veil starts half dark and fades out as the footer arrives.
+   clip rather than hidden where supported, so the wrapper never becomes a scroll container.
+   The veil is an empty div, so it needs the parent selector to beat base.css's div:empty rule. */
+.footer-parallax {
+  position: relative;
+  overflow: hidden;
+  overflow: clip;
+}
+
+.footer-parallax > .footer-parallax__dark {
+  display: block;
+  position: absolute;
+  inset: 0;
+  background-color: var(--bs-color-black);
+  opacity: 0;
+  pointer-events: none;
+}

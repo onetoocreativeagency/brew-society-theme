@@ -1,7 +1,5 @@
 {{ 'bs-steps.css' | asset_url | stylesheet_tag }}
 {%- if section.settings.scroll_reveal and section.settings.heading != blank -%}
-  <script src="{{ 'gsap.min.js' | asset_url }}" defer="defer"></script>
-  <script src="{{ 'ScrollTrigger.min.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'bs-scroll-reveal.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
 

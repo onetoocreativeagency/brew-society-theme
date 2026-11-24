@@ -1,7 +1,7 @@
 {{ 'section-footer.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
-  .footer {
+  .footer-parallax {
     margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
   }
 
@@ -12,7 +12,7 @@
   }
 
   @media screen and (min-width: 750px) {
-    .footer {
+    .footer-parallax {
       margin-top: {{ section.settings.margin_top }}px;
     }
 
@@ -25,7 +25,15 @@
 {%- comment -%} The footer takes the page background, as the header does (snippets/bs-page-scheme.liquid). {%- endcomment -%}
 {%- capture bs_page_scheme -%}{%- render 'bs-page-scheme' -%}{%- endcapture -%}
 {%- assign bs_page_scheme = bs_page_scheme | strip -%}
-<footer class="footer color-{{ bs_page_scheme | default: section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+{%- comment -%}
+  Footer parallax (Osmo): the footer rises out from under the page while a dark veil over it fades
+  out (assets/bs-footer-parallax.js). The veil never takes clicks.
+{%- endcomment -%}
+<div class="footer-parallax" data-footer-parallax>
+<footer
+  class="footer color-{{ bs_page_scheme | default: section.settings.color_scheme }} gradient section-{{ section.id }}-padding"
+  data-footer-parallax-inner
+>
   <div class="footer__inner page-width">
     {%- assign cta_block = section.blocks | where: 'type', 'call_to_action' | first -%}
     {%- if cta_block -%}
@@ -233,6 +241,9 @@
     </div>
   </div>
 </footer>
+<div class="footer-parallax__dark" data-footer-parallax-dark aria-hidden="true"></div>
+</div>
+<script src="{{ 'bs-footer-parallax.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
   comment
