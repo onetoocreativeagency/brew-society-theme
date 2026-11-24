@@ -573,6 +573,8 @@ class HeaderDrawer extends MenuDrawer {
 
   openMenuDrawer(summaryElement) {
     this.header = this.header || document.querySelector('.section-header');
+    // Remembered so the page is exactly where it was on close, whatever the scroll lock did meanwhile.
+    this.scrollY = window.scrollY;
     this.borderOffset =
       this.borderOffset || this.closest('.header-wrapper').classList.contains('header-wrapper--border-bottom') ? 1 : 0;
     document.documentElement.style.setProperty(
@@ -599,6 +601,7 @@ class HeaderDrawer extends MenuDrawer {
     if (!elementToFocus) return;
     super.closeMenuDrawer(event, elementToFocus);
     this.mainDetailsToggle.querySelector('summary').setAttribute('aria-expanded', false);
+    if (window.scrollY !== this.scrollY) window.scrollTo({ top: this.scrollY, behavior: 'instant' });
     this.header.classList.remove('menu-open');
     this.setHeaderScheme(false);
     window.removeEventListener('resize', this.onResize);
