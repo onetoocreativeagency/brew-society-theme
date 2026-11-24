@@ -186,3 +186,18 @@
     transition: none;
   }
 }
+
+/* The effects open with the pop-in cycle, so the resting arc waits hidden until
+   they start rather than flash first. If the script never runs it appears. */
+@media (prefers-reduced-motion: no-preference) {
+  .bs-hero-trail[data-trail]:not(.is-enhanced) .bs-hero-trail__item {
+    opacity: 0;
+    animation: bs-hero-trail-fallback 0.4s 2.5s forwards;
+  }
+}
+
+@keyframes bs-hero-trail-fallback {
+  to {
+    opacity: 1;
+  }
+}

@@ -2,16 +2,18 @@
   Scroll colour reveal ("Reveal text colour on scroll" on the Statement and Steps sections).
 
   Splits the text into words here, not in the saved content, so the editor keeps
-  plain text. Each word whose designed colour is stronger than the light colour
-  starts in the light colour and turns to its own designed colour, one after the
-  other, as the heading scrolls up the screen. In a two-tone heading that means
-  the bold words turn strong and the rest stay light; in a heading with no bold
-  every word turns strong (the section CSS sets that colour). All are done by the
+  plain text. Every word starts lighter than its designed colour and turns to it,
+  one after the other through the whole heading, as it scrolls up the screen:
+  strong words start in the light colour, and words whose designed colour is the
+  light colour (the second line of a two-tone heading) start fainter still, so
+  the whole title animates and ends in its designed two tones. In a heading with
+  no bold every word turns strong (the section CSS sets that colour). All are done by the
   time the heading's top reaches 40% of the screen height, so it reads finished in
   the upper third (GSAP ScrollTrigger, scrubbed to the scroll position, so
   scrolling back lightens them again).
 
-  The light colour is --bs-reveal-from on the text, or the grey token.
+  The light colour is --bs-reveal-from on the text, or the grey token. The fainter
+  start is that colour 35% of the way from the background.
 
   Needs gsap.min.js and ScrollTrigger.min.js loaded first. Without them, without
   JS or with reduced motion nothing is split and the text shows its designed colours.
@@ -31,21 +33,17 @@ if (!customElements.get('bs-scroll-reveal')) {
         this.media = window.gsap.matchMedia();
         this.media.add('(prefers-reduced-motion: no-preference)', () => {
           const from = this.lightColour();
-          const words = [];
-          const colours = [];
-          this.split().forEach((word) => {
-            const colour = this.toRgb(getComputedStyle(word).color);
-            if (colour === from) return;
-            words.push(word);
-            colours.push(colour);
-          });
+          const faint = this.mix(this.backgroundColour(), from, 0.35);
+          const words = this.split();
+          const ends = words.map((word) => this.toRgb(getComputedStyle(word).color));
+          const starts = ends.map((colour) => (colour === from ? faint : from));
 
           if (words.length) {
             window.gsap.fromTo(
               words,
-              { color: from },
+              { color: (index) => starts[index] },
               {
-                color: (index) => colours[index],
+                color: (index) => ends[index],
                 ease: 'none',
                 stagger: 0.1,
                 scrollTrigger: {
@@ -76,6 +74,23 @@ if (!customElements.get('bs-scroll-reveal')) {
         const colour = getComputedStyle(probe).color;
         probe.remove();
         return this.toRgb(colour);
+      }
+
+      backgroundColour() {
+        const probe = document.createElement('span');
+        probe.style.color = 'rgb(var(--color-background))';
+        this.text.append(probe);
+        const colour = getComputedStyle(probe).color;
+        probe.remove();
+        return this.toRgb(colour);
+      }
+
+      // `amount` of the way from colour a to colour b, both rgb() strings.
+      mix(a, b, amount) {
+        const [ra, ga, ba] = a.match(/\d+/g).map(Number);
+        const [rb, gb, bb] = b.match(/\d+/g).map(Number);
+        const at = (x, y) => Math.round(x + (y - x) * amount);
+        return `rgb(${at(ra, rb)}, ${at(ga, gb)}, ${at(ba, bb)})`;
       }
 
       // Computed colours can come back as color(srgb …) from color-mix(), which GSAP

@@ -5,14 +5,16 @@
   image elements, so no elements are created, and animate transform and
   opacity only:
 
-  - Trail (mouse): once the pointer moves over the hero the resting arc fades
-    out. Every time the pointer has travelled far enough, the next image eases
-    in at the pointer, lingers, then shrinks away. When the pointer leaves or
-    stops, the last images finish and the arc fades back in.
-  - Cycle (phones): three or four images at a time pop in at loosely random
-    spots, hold, and pop out, working through the list in order.
+  - Cycle (every device, and the opening state): a few images at a time pop in
+    at loosely random spots, hold, and pop out, working through the list in
+    order. Phones use set spots from Figma; wider screens pick random spots
+    clear of the images still showing.
+  - Trail (mouse): the first pointer move over the hero hurries the cycle's
+    images away. Every time the pointer has travelled far enough, the next
+    image eases in at the pointer, lingers, then shrinks away. When the pointer
+    stops or leaves and the last trail image has gone, the cycle starts again.
 
-  Visitors who prefer reduced motion get neither.
+  Visitors who prefer reduced motion get neither and see the resting arc.
 */
 if (!customElements.get('bs-hero-trail')) {
   // Where images pop on phones: centre x and y, percent of the image area.
@@ -23,7 +25,8 @@ if (!customElements.get('bs-hero-trail')) {
     [84.61, 63.11],
     [20, 20],
   ];
-  const CYCLE_INTERVAL = 1000;
+  const CYCLE_INTERVAL = 1000; // phones
+  const CYCLE_INTERVAL_WIDE = 700; // more room, so a few more at once
 
   customElements.define(
     'bs-hero-trail',
@@ -52,10 +55,7 @@ if (!customElements.get('bs-hero-trail')) {
 
       toggle() {
         let mode = null;
-        if (this.motion.matches) {
-          if (this.mouse.matches) mode = 'trail';
-          else if (this.narrow.matches) mode = 'cycle';
-        }
+        if (this.motion.matches) mode = this.mouse.matches ? 'trail' : 'cycle';
         if (mode === this.mode) return;
         this.disable();
         if (mode) this.enable(mode);
@@ -81,11 +81,12 @@ if (!customElements.get('bs-hero-trail')) {
           // How long one image lives. Shorter when there are few images, so one
           // is rarely needed again while it is still on screen.
           this.life = Math.min(1100, Math.max(500, this.items.length * 70));
+          this.trailing = false;
           this.addEventListener('pointermove', this.onPointerMove, { passive: true });
-        } else {
-          this.spot = 0;
-          this.cycling = false;
         }
+        this.spot = 0;
+        this.recent = [];
+        this.cycling = false;
       }
 
       disable() {
@@ -97,6 +98,7 @@ if (!customElements.get('bs-hero-trail')) {
         cancelAnimationFrame(this.frame);
         this.frame = 0;
         clearInterval(this.cycleTimer);
+        this.cycling = false;
         this.animations.forEach((animation) => animation.cancel());
         this.rest();
         this.classList.remove('is-enhanced');
@@ -107,15 +109,28 @@ if (!customElements.get('bs-hero-trail')) {
       measure() {
         this.origins = this.items.map((item) => [item.offsetLeft, item.offsetTop]);
         this.distance = Math.max(60, this.items[0].offsetWidth * 0.55);
-        if (this.mode === 'cycle' && !this.cycling) this.startCycle();
+        if (!this.cycling && !this.trailing) this.startCycle();
       }
 
       // Opens with three images at once, timed to leave one by one as the
       // regular rhythm brings in their replacements.
       startCycle() {
+        if (this.cycling) return;
         this.cycling = true;
-        for (let count = 1; count <= 3; count += 1) this.pop(CYCLE_INTERVAL * count + 400);
-        this.cycleTimer = setInterval(() => this.pop(), CYCLE_INTERVAL);
+        this.classList.add('is-active');
+        this.interval = this.narrow.matches ? CYCLE_INTERVAL : CYCLE_INTERVAL_WIDE;
+        for (let count = 1; count <= 3; count += 1) this.pop(this.interval * count + 400);
+        this.cycleTimer = setInterval(() => this.pop(), this.interval);
+      }
+
+      // The cursor takes over: no new pops, and the ones showing leave quickly.
+      stopCycle() {
+        if (!this.cycling) return;
+        this.cycling = false;
+        clearInterval(this.cycleTimer);
+        this.animations.forEach((animation) => {
+          if (animation.playState === 'running') animation.playbackRate = 4;
+        });
       }
 
       // Plays one appearance of the next image in the list. `keyframes` receives
@@ -139,6 +154,8 @@ if (!customElements.get('bs-hero-trail')) {
 
       onPointerMove(event) {
         if (event.pointerType === 'touch' || !this.onScreen) return;
+        this.trailing = true;
+        this.stopCycle();
         this.pointer = [event.clientX, event.clientY];
         if (!this.anchor) {
           this.lag = [...this.pointer];
@@ -185,21 +202,22 @@ if (!customElements.get('bs-hero-trail')) {
           this.life
         );
 
-        // Back to the resting arc once the last image of the trail has gone.
+        // Back to the cycle once the last image of the trail has gone.
         clearTimeout(this.restTimer);
-        this.restTimer = setTimeout(() => this.rest(), this.life + 50);
+        this.restTimer = setTimeout(() => {
+          this.trailing = false;
+          this.anchor = null;
+          this.startCycle();
+        }, this.life + 50);
       }
 
-      pop(duration = CYCLE_INTERVAL * 3 + 400) {
+      pop(duration = this.interval * 3 + 400) {
         if (document.hidden || this.onScreen === false || !this.origins) return;
         // Wait for the next image rather than pop an empty box.
         const next = this.items[this.index % this.items.length];
         if (!next.complete || !next.naturalWidth) return;
 
-        const [spotX, spotY] = CYCLE_SPOTS[this.spot % CYCLE_SPOTS.length];
-        const x = ((spotX + Math.random() * 6 - 3) / 100) * this.stage.offsetWidth;
-        const y = ((spotY + Math.random() * 6 - 3) / 100) * this.stage.offsetHeight;
-        this.spot += 1;
+        const [x, y] = this.nextSpot();
 
         // Each image outlives three intervals, so three are up, four as they swap.
         this.show(
@@ -211,6 +229,30 @@ if (!customElements.get('bs-hero-trail')) {
           ],
           duration
         );
+      }
+
+      // Where the next pop goes, in px within the stage. Phones use the set spots;
+      // wider screens take a random spot clear of the last few.
+      nextSpot() {
+        const width = this.stage.offsetWidth;
+        const height = this.stage.offsetHeight;
+        if (this.narrow.matches) {
+          const [spotX, spotY] = CYCLE_SPOTS[this.spot % CYCLE_SPOTS.length];
+          this.spot += 1;
+          return [((spotX + Math.random() * 6 - 3) / 100) * width, ((spotY + Math.random() * 6 - 3) / 100) * height];
+        }
+        const size = this.items[0].offsetWidth;
+        const clear = size * 1.3;
+        let spot;
+        for (let tries = 0; tries < 16; tries += 1) {
+          spot = [
+            size / 2 + Math.random() * Math.max(0, width - size),
+            (size * 0.7) + Math.random() * Math.max(0, height - size * 1.4),
+          ];
+          if (this.recent.every(([x, y]) => Math.hypot(spot[0] - x, spot[1] - y) > clear)) break;
+        }
+        this.recent = [spot, ...this.recent].slice(0, 4);
+        return spot;
       }
 
       rest() {

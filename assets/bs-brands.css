@@ -114,7 +114,8 @@
 }
 
 .bs-brand-card__media--logo {
-  inset: 25% 12%;
+  /* 57% by 37.5% of the panel, centred (25% smaller than the first build). */
+  inset: 31.25% 21.5%;
 }
 
 .bs-brand-card__image {

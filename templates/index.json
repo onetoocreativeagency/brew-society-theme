@@ -223,16 +223,16 @@
           "type": "card",
           "settings": {
             "title": "Importer",
-            "image_fit": "contain",
-            "text": ""
+            "image_fit": "cover",
+            "text": "We bring exclusive food and drink brands from around the world to Australian cafés, grocers and venues."
           }
         },
         "card_2": {
           "type": "card",
           "settings": {
             "title": "Developer",
-            "image_fit": "contain",
-            "text": ""
+            "image_fit": "cover",
+            "text": "We grow brands with their makers, from a first listing to a regular place on shelves and menus."
           }
         },
         "card_3": {
@@ -240,7 +240,7 @@
           "settings": {
             "title": "Distributor",
             "image_fit": "cover",
-            "text": ""
+            "text": "We deliver across Victoria and NSW from Melbourne, with online ordering and a $300 minimum order."
           }
         }
       },
