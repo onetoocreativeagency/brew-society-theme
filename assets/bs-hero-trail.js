@@ -5,10 +5,11 @@
   image elements, so no elements are created, and animate transform and
   opacity only:
 
-  - Cycle (every device, and the opening state): a few images at a time pop in
-    at loosely random spots, hold, and pop out, working through the list in
-    order. Phones use set spots from Figma; wider screens pick random spots
-    clear of the images still showing.
+  - Cycle (every device, and the opening state): images arrive in bursts of
+    two or three, popping in one after another as a loose cluster, hold, and
+    pop out as the next cluster arrives somewhere else, working through the
+    list in order. Phones place clusters around set spots from Figma; wider
+    screens pick a random place clear of the last clusters.
   - Trail (mouse): the first pointer move over the hero hurries the cycle's
     images away. Every time the pointer has travelled far enough, the next
     image eases in at the pointer, lingers, then shrinks away. When the pointer
@@ -25,8 +26,10 @@ if (!customElements.get('bs-hero-trail')) {
     [84.61, 63.11],
     [20, 20],
   ];
-  const CYCLE_INTERVAL = 1000; // phones
-  const CYCLE_INTERVAL_WIDE = 700; // more room, so a few more at once
+  const BURST_INTERVAL = 1900; // phones: time between clusters
+  const BURST_INTERVAL_WIDE = 1700;
+  const BURST_GAP = 140; // between the images of one cluster
+  const BURST_OVERLAP = 700; // a cluster is still leaving as the next arrives
 
   customElements.define(
     'bs-hero-trail',
@@ -97,7 +100,7 @@ if (!customElements.get('bs-hero-trail')) {
         this.intersectionObserver.disconnect();
         cancelAnimationFrame(this.frame);
         this.frame = 0;
-        clearInterval(this.cycleTimer);
+        this.clearBursts();
         this.cycling = false;
         this.animations.forEach((animation) => animation.cancel());
         this.rest();
@@ -112,22 +115,41 @@ if (!customElements.get('bs-hero-trail')) {
         if (!this.cycling && !this.trailing) this.startCycle();
       }
 
-      // Opens with three images at once, timed to leave one by one as the
-      // regular rhythm brings in their replacements.
+      // Opens with a cluster straight away, then one every interval.
       startCycle() {
         if (this.cycling) return;
         this.cycling = true;
         this.classList.add('is-active');
-        this.interval = this.narrow.matches ? CYCLE_INTERVAL : CYCLE_INTERVAL_WIDE;
-        for (let count = 1; count <= 3; count += 1) this.pop(this.interval * count + 400);
-        this.cycleTimer = setInterval(() => this.pop(), this.interval);
+        this.interval = this.narrow.matches ? BURST_INTERVAL : BURST_INTERVAL_WIDE;
+        this.burstTimers = [];
+        this.burst();
+        this.cycleTimer = setInterval(() => this.burst(), this.interval);
+      }
+
+      clearBursts() {
+        clearInterval(this.cycleTimer);
+        (this.burstTimers || []).forEach((timer) => clearTimeout(timer));
+        this.burstTimers = [];
+      }
+
+      // Two or three images pop in one after another around one place.
+      burst() {
+        if (document.hidden || this.onScreen === false || !this.origins) return;
+        const count = 2 + (Math.random() < 0.55 ? 1 : 0);
+        const centre = this.clusterCentre(count);
+        const life = this.interval + BURST_OVERLAP;
+        this.burstTimers = [];
+        for (let i = 0; i < count; i += 1) {
+          const spot = this.spotNear(centre, i, count);
+          this.burstTimers.push(setTimeout(() => this.pop(life, spot), i * BURST_GAP));
+        }
       }
 
       // The cursor takes over: no new pops, and the ones showing leave quickly.
       stopCycle() {
         if (!this.cycling) return;
         this.cycling = false;
-        clearInterval(this.cycleTimer);
+        this.clearBursts();
         this.animations.forEach((animation) => {
           if (animation.playState === 'running') animation.playbackRate = 4;
         });
@@ -211,15 +233,14 @@ if (!customElements.get('bs-hero-trail')) {
         }, this.life + 50);
       }
 
-      pop(duration = this.interval * 3 + 400) {
+      pop(duration, spot) {
         if (document.hidden || this.onScreen === false || !this.origins) return;
         // Wait for the next image rather than pop an empty box.
         const next = this.items[this.index % this.items.length];
         if (!next.complete || !next.naturalWidth) return;
 
-        const [x, y] = this.nextSpot();
+        const [x, y] = spot;
 
-        // Each image outlives three intervals, so three are up, four as they swap.
         this.show(
           (at) => [
             { opacity: 0, transform: at(x, y, 0.6), easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
@@ -231,9 +252,9 @@ if (!customElements.get('bs-hero-trail')) {
         );
       }
 
-      // Where the next pop goes, in px within the stage. Phones use the set spots;
-      // wider screens take a random spot clear of the last few.
-      nextSpot() {
+      // Where a cluster goes, in px within the stage. Phones take the set spots in
+      // turn; wider screens a random place clear of the last two clusters.
+      clusterCentre(count) {
         const width = this.stage.offsetWidth;
         const height = this.stage.offsetHeight;
         if (this.narrow.matches) {
@@ -242,17 +263,31 @@ if (!customElements.get('bs-hero-trail')) {
           return [((spotX + Math.random() * 6 - 3) / 100) * width, ((spotY + Math.random() * 6 - 3) / 100) * height];
         }
         const size = this.items[0].offsetWidth;
-        const clear = size * 1.3;
-        let spot;
+        const half = (size * (1 + 0.7 * (count - 1))) / 2;
+        let centre;
         for (let tries = 0; tries < 16; tries += 1) {
-          spot = [
-            size / 2 + Math.random() * Math.max(0, width - size),
-            (size * 0.7) + Math.random() * Math.max(0, height - size * 1.4),
+          centre = [
+            half + Math.random() * Math.max(0, width - half * 2),
+            size * 0.8 + Math.random() * Math.max(0, height - size * 1.6),
           ];
-          if (this.recent.every(([x, y]) => Math.hypot(spot[0] - x, spot[1] - y) > clear)) break;
+          if (this.recent.every(([x, y]) => Math.hypot(centre[0] - x, centre[1] - y) > size * 2.2)) break;
         }
-        this.recent = [spot, ...this.recent].slice(0, 4);
-        return spot;
+        this.recent = [centre, ...this.recent].slice(0, 2);
+        return centre;
+      }
+
+      // The i-th of `count` images in a cluster: side by side and slightly
+      // overlapping, loosely staggered up and down, kept inside the stage.
+      spotNear([cx, cy], i, count) {
+        const size = this.items[0].offsetWidth;
+        const step = size * (this.narrow.matches ? 0.5 : 0.7);
+        const x = cx + (i - (count - 1) / 2) * step + (Math.random() - 0.5) * size * 0.2;
+        const y = cy + (Math.random() - 0.5) * size * 0.6;
+        const clamp = (value, low, high) => Math.min(Math.max(value, low), Math.max(low, high));
+        return [
+          clamp(x, size / 2, this.stage.offsetWidth - size / 2),
+          clamp(y, size * 0.6, this.stage.offsetHeight - size * 0.6),
+        ];
       }
 
       rest() {
