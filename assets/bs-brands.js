@@ -161,14 +161,36 @@ if (!customElements.get('bs-brand-catalogue')) {
         gsap.killTweensOf(fadeTargets, 'opacity,visibility');
         gsap.killTweensOf(flipElements);
         const startRadii = flipElements.map((el) => cornerRadius(el) * gsap.getProperty(el, 'scaleX'));
+        const panels = flipElements.filter((el) => el.querySelector('.bs-brand-card__media'));
+        gsap.killTweensOf(panels.map((el) => el.querySelector('.bs-brand-card__media')));
+        const startLooks = panels.map((el) => this.panelLook(el));
         const state = Flip.getState(flipElements);
-        gsap.set(flipElements, { clearProps: 'borderRadius' });
-        return { fadeTargets, flipElements, startRadii, state, cornerRadius };
+        gsap.set(flipElements, { clearProps: 'borderRadius,backgroundColor' });
+        gsap.set(panels.map((el) => el.querySelector('.bs-brand-card__media')), { clearProps: 'top,right,bottom,left' });
+        return { fadeTargets, flipElements, startRadii, state, cornerRadius, panels, startLooks };
+      }
+
+      // A brand panel's colour and where its image sits in it (as % of the panel, so the same
+      // while Flip scales it): the list view drops the colour and widens the logo.
+      panelLook(panel) {
+        const media = panel.querySelector('.bs-brand-card__media');
+        const box = panel.getBoundingClientRect();
+        const rect = media.getBoundingClientRect();
+        const pct = (value, size) => `${((value / size) * 100).toFixed(3)}%`;
+        return {
+          backgroundColor: getComputedStyle(panel).backgroundColor,
+          inset: {
+            top: pct(rect.top - box.top, box.height),
+            right: pct(box.right - rect.right, box.width),
+            bottom: pct(box.bottom - rect.bottom, box.height),
+            left: pct(rect.left - box.left, box.width),
+          },
+        };
       }
 
       playView(view, before) {
         if (!before) return;
-        const { fadeTargets, flipElements, startRadii, state, cornerRadius } = before;
+        const { fadeTargets, flipElements, startRadii, state, cornerRadius, panels, startLooks } = before;
         const fadeIn = fadeTargets.filter((el) => this.shownIn(el, view));
         // Brands hidden by the filter take the new view's fades without animating.
         const skipped = [...this.querySelectorAll('[data-list-grid-fade]')].filter((el) => !fadeTargets.includes(el));
@@ -182,6 +204,7 @@ if (!customElements.get('bs-brand-catalogue')) {
         // Normally already faded out by fadeOut(); after the back button they go at once.
         gsap.set(fadeTargets, { autoAlpha: 0 });
         const endRadii = flipElements.map(cornerRadius);
+        const endLooks = panels.map((el) => this.panelLook(el));
         const timeline = gsap.timeline();
         timeline.add(Flip.from(state, { duration: 0.8, ease: 'expo.inOut', scale: true }), 0);
         flipElements.forEach((el, index) => {
@@ -189,6 +212,27 @@ if (!customElements.get('bs-brand-catalogue')) {
             el,
             { borderRadius: startRadii[index] / gsap.getProperty(el, 'scaleX') },
             { borderRadius: endRadii[index], duration: 0.8, ease: 'expo.inOut', clearProps: 'borderRadius' },
+            0
+          );
+        });
+        const morph = { duration: 0.8, ease: 'expo.inOut' };
+        panels.forEach((el, index) => {
+          const [from, to] = [startLooks[index], endLooks[index]];
+          // Fade the panel colour itself: 'transparent' is black at 0, which greys the panel on the way.
+          const clear = (color) => color.replace(/rgba?\(([^,]+),([^,]+),([^,)]+).*\)/, 'rgba($1,$2,$3,0)');
+          const isClear = (color) => gsap.utils.splitColor(color, false)[3] === 0;
+          const fromColor = isClear(from.backgroundColor) ? clear(to.backgroundColor) : from.backgroundColor;
+          const toColor = isClear(to.backgroundColor) ? clear(from.backgroundColor) : to.backgroundColor;
+          timeline.fromTo(
+            el,
+            { backgroundColor: fromColor },
+            { ...morph, backgroundColor: toColor, clearProps: 'backgroundColor' },
+            0
+          );
+          timeline.fromTo(
+            el.querySelector('.bs-brand-card__media'),
+            from.inset,
+            { ...morph, ...to.inset, clearProps: 'top,right,bottom,left' },
             0
           );
         });

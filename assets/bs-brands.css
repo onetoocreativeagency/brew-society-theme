@@ -393,6 +393,16 @@
   width: var(--bs-brand-thumb);
 }
 
+/* The thumbnail is the logo alone: no panel colour, the logo across the thumbnail's width.
+   bs-brands.js animates both between the views. */
+.bs-brands[data-view='list'] .bs-brand-card__panel {
+  background: transparent;
+}
+
+.bs-brands[data-view='list'] .bs-brand-card__media {
+  inset: 0;
+}
+
 .bs-brands[data-view='list'] .bs-brand-card__name {
   margin: 0;
   padding-left: calc(var(--bs-brand-thumb) + var(--bs-space-8) + var(--bs-space-4));
