@@ -1,9 +1,10 @@
 /*
   A to Z brand finder on the Brands catalogue (snippets/bs-brand-finder.liquid).
-  - Shown from when the grid or list reaches the bar until its end rises above
-    the middle of the screen.
-  - A letter scrolls to the first brand starting with it in the current view,
-    clear of the sticky header (an instant jump with reduced motion).
+  - Shown from when the grid or list reaches the bar until its last brand goes under the
+    header, so it stays after a jump to a late letter (T, W...).
+  - A letter scrolls to the first brand starting with it in the current view, clear of the
+    sticky header (an instant jump with reduced motion). The first letter scrolls to the start
+    of the list, with the list view's column heads.
   - The current letter (aria-current) follows the brand at the top of the screen.
   - Letters with no brand in the current view are disabled; this follows the
     category links and the grid/list switch (the 'bs-brands:render' event).
@@ -98,9 +99,11 @@ if (!customElements.get('bs-brand-finder')) {
         if (!container) return;
 
         const rect = container.getBoundingClientRect();
-        // In from when the brands reach the bar, out once their end rises above the middle of the screen.
+        // In from when the brands reach the bar, out once the last one has gone under the header.
         const zone = window.innerHeight - this.firstElementChild.offsetHeight;
-        this.toggleAttribute('data-visible', rect.top < zone && rect.bottom > window.innerHeight / 2);
+        const lastBrand = brands[brands.length - 1].getBoundingClientRect();
+        const lastMiddle = lastBrand.top + lastBrand.height / 2;
+        this.toggleAttribute('data-visible', rect.top < zone && lastMiddle > this.headerBottom());
 
         let letter = this.pinned;
         if (!letter) {
@@ -118,12 +121,15 @@ if (!customElements.get('bs-brand-finder')) {
       onClick(event) {
         const button = event.target.closest('[data-letter]');
         if (!button || button.getAttribute('aria-disabled') === 'true') return;
-        const target = this.brands().find((brand) => brand.dataset.letter === button.dataset.letter);
+        const brands = this.brands();
+        const target = brands.find((brand) => brand.dataset.letter === button.dataset.letter);
         if (!target) return;
 
-        const targetTop = target.getBoundingClientRect().top;
-        // The header hides on the way down and comes back on the way up.
-        const offset = (targetTop < 0 && this.header ? this.header.offsetHeight : 0) + 16;
+        // The first letter shows the start of the list (the list view's column heads too).
+        const start = target === brands[0] ? target.closest('.bs-brands__items') : null;
+        const targetTop = (start || target).getBoundingClientRect().top;
+        // Always clear of the header: it does not always hide on the way down, and covered the start.
+        const offset = (this.header ? this.header.offsetHeight : 0) + 16;
         const top = Math.max(0, window.scrollY + targetTop - offset);
 
         this.pinned = button.dataset.letter;
