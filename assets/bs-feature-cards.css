@@ -24,7 +24,8 @@
 .bs-feature-cards__media,
 .bs-feature-cards__media:empty {
   display: block;
-  height: 37.3rem;
+  /* Figma card proportion (549 × 373), so the panel keeps its shape at every width. */
+  aspect-ratio: 549 / 373;
   overflow: hidden;
   border-radius: var(--bs-space-32);
   background: color-mix(in srgb, var(--bs-color-grey) 16%, rgb(var(--color-background)));

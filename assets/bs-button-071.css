@@ -5,7 +5,9 @@
 :root {
   --button-071-click-scale: 0.955 0.925;
   --button-071-ease-click: cubic-bezier(0.4, 0, 0.2, 1);
-  --button-071-ease-hover: cubic-bezier(0.35, 1.5, 0.6, 1);
+  /* A clean ease-out: Osmo's overshoot (0.35, 1.5, 0.6, 1) pushed letters past their line and
+     made them wobble as they settled. */
+  --button-071-ease-hover: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* As in Osmo, the letters are clipped by the button itself, not by a box around the text:
@@ -61,7 +63,9 @@
   .button-071__text.is--hover .button-071__split-char.is--animating {
     animation-name: button-071-translate;
     animation-play-state: running;
-    animation-iteration-count: infinite;
+    /* One pass. Osmo loops it and relies on a timer to stop it; a late timer (Safari on a busy
+       page) let a second roll start, which read as a glitch. */
+    animation-iteration-count: 1;
     animation-duration: var(--button-071-speed);
     animation-timing-function: var(--button-071-ease-hover);
   }
