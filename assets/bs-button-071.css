@@ -14,8 +14,8 @@
    each letter travels the button's full height (--button-071-travel, set in px by
    bs-button-071.js), so it leaves and enters at the pill's edge. */
 .button-071 {
-  --button-071-speed: 0.35s;
-  --button-071-stagger: 0.014s;
+  --button-071-speed: 0.6s;
+  --button-071-stagger: 0.022s;
   -webkit-tap-highlight-color: transparent;
   overflow: clip;
   transition: box-shadow var(--duration-short) ease, scale 0.15s var(--button-071-ease-click);
