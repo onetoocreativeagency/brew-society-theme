@@ -163,34 +163,38 @@ if (!customElements.get('bs-brand-catalogue')) {
         const startRadii = flipElements.map((el) => cornerRadius(el) * gsap.getProperty(el, 'scaleX'));
         const panels = flipElements.filter((el) => el.querySelector('.bs-brand-card__media'));
         gsap.killTweensOf(panels.map((el) => el.querySelector('.bs-brand-card__media')));
-        const startLooks = panels.map((el) => this.panelLook(el));
+        // The view this captures is left, so the next one is the other.
+        const unit = this.dataset.view === 'list' ? '%' : 'px';
+        const startLooks = panels.map((el) => this.panelLook(el, unit));
         const state = Flip.getState(flipElements);
         gsap.set(flipElements, { clearProps: 'borderRadius,backgroundColor' });
         gsap.set(panels.map((el) => el.querySelector('.bs-brand-card__media')), { clearProps: 'top,right,bottom,left' });
-        return { fadeTargets, flipElements, startRadii, state, cornerRadius, panels, startLooks };
+        return { fadeTargets, flipElements, startRadii, state, cornerRadius, panels, startLooks, unit };
       }
 
-      // A brand panel's colour and where its image sits in it (as % of the panel, so the same
-      // while Flip scales it): the list view drops the colour and widens the logo.
-      panelLook(panel) {
+      // A brand panel's colour and where its image sits in it: the list view drops the colour and
+      // widens the logo. The inset is in % of the panel while Flip scales it (to the grid), and in
+      // px while Flip resizes it (to the list): with the panel's size and the px insets eased
+      // together, the image shrinks steadily with it, where % made it grow first.
+      panelLook(panel, unit) {
         const media = panel.querySelector('.bs-brand-card__media');
         const box = panel.getBoundingClientRect();
         const rect = media.getBoundingClientRect();
-        const pct = (value, size) => `${((value / size) * 100).toFixed(3)}%`;
+        const edge = (value, size) => (unit === '%' ? `${((value / size) * 100).toFixed(3)}%` : `${value.toFixed(2)}px`);
         return {
           backgroundColor: getComputedStyle(panel).backgroundColor,
           inset: {
-            top: pct(rect.top - box.top, box.height),
-            right: pct(box.right - rect.right, box.width),
-            bottom: pct(box.bottom - rect.bottom, box.height),
-            left: pct(rect.left - box.left, box.width),
+            top: edge(rect.top - box.top, box.height),
+            right: edge(box.right - rect.right, box.width),
+            bottom: edge(box.bottom - rect.bottom, box.height),
+            left: edge(rect.left - box.left, box.width),
           },
         };
       }
 
       playView(view, before) {
         if (!before) return;
-        const { fadeTargets, flipElements, startRadii, state, cornerRadius, panels, startLooks } = before;
+        const { fadeTargets, flipElements, startRadii, state, cornerRadius, panels, startLooks, unit } = before;
         const fadeIn = fadeTargets.filter((el) => this.shownIn(el, view));
         // Brands hidden by the filter take the new view's fades without animating.
         const skipped = [...this.querySelectorAll('[data-list-grid-fade]')].filter((el) => !fadeTargets.includes(el));
@@ -204,7 +208,7 @@ if (!customElements.get('bs-brand-catalogue')) {
         // Normally already faded out by fadeOut(); after the back button they go at once.
         gsap.set(fadeTargets, { autoAlpha: 0 });
         const endRadii = flipElements.map(cornerRadius);
-        const endLooks = panels.map((el) => this.panelLook(el));
+        const endLooks = panels.map((el) => this.panelLook(el, unit));
         const timeline = gsap.timeline();
         // Scaling from a smaller box up pixelates (the logo is drawn at the small size), so going to
         // the list the panels animate their real size; they are out of the flow there (CSS).
