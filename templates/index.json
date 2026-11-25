@@ -106,7 +106,7 @@
         "primary_label": "Order Wholesale",
         "secondary_label": "Shop for Home",
         "secondary_link": "shopify://collections/all",
-        "collection": "sodas",
+        "collection": "ordinary-beverage-co",
         "image_scale": 100,
         "blend_images": false,
         "enable_trail": true,
