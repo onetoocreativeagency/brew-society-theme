@@ -1018,206 +1018,52 @@
     },
     "footer": {
       "name": "Footer",
-      "blocks": {
-        "call_to_action": {
-          "name": "Call to action",
-          "settings": {
-            "paragraph": {
-              "content": "A large band that always sits at the top of the footer. Clear a button label to remove that button."
-            },
-            "eyebrow": {
-              "label": "Eyebrow",
-              "default": "Elevate Your Brand"
-            },
-            "heading": {
-              "label": "Heading",
-              "default": "Ready to Grow?"
-            },
-            "button_label_1": {
-              "label": "First button label",
-              "default": "Buy",
-              "info": "Leave blank to hide this button."
-            },
-            "button_link_1": {
-              "label": "First button link"
-            },
-            "button_label_2": {
-              "label": "Second button label",
-              "info": "Leave blank to hide this button. Off by default."
-            },
-            "button_link_2": {
-              "label": "Second button link"
-            }
-          }
-        },
-        "pricing_signup": {
-          "name": "Pricing sign-up",
-          "settings": {
-            "paragraph": {
-              "content": "Adds the email to [customers](/admin/customers) with the tag below and subscribes it to marketing. Sending the pricing document is an automation set up outside the theme."
-            },
-            "heading": {
-              "label": "Heading",
-              "default": "Curious? Download our Pricing"
-            },
-            "placeholder": {
-              "label": "Email field placeholder",
-              "default": "Email Address"
-            },
-            "button_label": {
-              "label": "Button label",
-              "default": "Download"
-            },
-            "small_print": {
-              "label": "Small print",
-              "default": "By submitting your email, you’ll be the first to know about upcoming launches"
-            },
-            "success_message": {
-              "label": "Message after sign-up",
-              "default": "Thanks. Our pricing is on its way to your inbox."
-            },
-            "customer_tag": {
-              "label": "Customer tag",
-              "info": "Added to the customer so an automation can send the pricing."
-            }
-          }
-        },
-        "menu": {
-          "name": "Big menu",
-          "settings": {
-            "menu": {
-              "label": "Menu",
-              "info": "Links to all collections, all products or a collection show a grey count after the label."
-            }
-          }
-        },
-        "wholesale_button": {
-          "name": "Order Wholesale button",
-          "settings": {
-            "paragraph": {
-              "content": "Links to the ordering portal set in [theme settings](/editor?context=theme&category=wholesale). The button is hidden while that link is blank."
-            },
-            "label": {
-              "label": "Button label",
-              "default": "Order Wholesale"
-            }
-          }
-        },
-        "social_links": {
-          "name": "Social links",
-          "settings": {
-            "paragraph": {
-              "content": "Shows a text link for every account set in [theme settings](/editor?context=theme&category=social%20media), plus LinkedIn below."
-            },
-            "linkedin_url": {
-              "label": "LinkedIn link"
-            }
-          }
-        },
-        "contact": {
-          "name": "Contact details",
-          "settings": {
-            "address": {
-              "label": "Address"
-            },
-            "email": {
-              "label": "Email"
-            },
-            "phone": {
-              "label": "Phone"
-            }
-          }
-        },
-        "link_list": {
-          "name": "Menu",
-          "settings": {
-            "heading": {
-              "label": "Heading",
-              "default": "Quick links"
-            },
-            "menu": {
-              "label": "Menu"
-            }
-          }
-        },
-        "brand_information": {
-          "name": "Brand information",
-          "settings": {
-            "paragraph": {
-              "content": "Manage brand info in [theme settings](/editor?context=theme&category=brand%20information)"
-            },
-            "show_social": {
-              "label": "Social media icons",
-              "info": "[Manage social accounts](/editor?context=theme&category=social%20media)"
-            }
-          }
-        },
-        "text": {
-          "name": "Text",
-          "settings": {
-            "heading": {
-              "label": "Heading",
-              "default": "Heading"
-            },
-            "subtext": {
-              "label": "Subtext",
-              "default": "<p>Share contact information, store details, and brand content with your customers.</p>"
-            }
-          }
-        }
-      },
       "settings": {
         "color_scheme": {
           "label": "Color scheme on shop pages",
           "info": "Match the shop page background. On the home page, content pages, policies and the 404 page the footer follows Theme settings > Layout."
         },
-        "image": {
-          "label": "Image",
-          "info": "Shown above the legal links, for example a product line-up."
+        "header_wholesale": {
+          "content": "Order Wholesale button"
         },
-        "policy_menu": {
-          "label": "Legal links menu",
-          "info": "Small links at the bottom left, for example Legal and Shipping."
+        "wholesale_paragraph": {
+          "content": "Links to the ordering portal set in [theme settings](/editor?context=theme&category=wholesale). The button is hidden while that link is blank."
         },
-        "newsletter_enable": {
-          "label": "Email signup"
+        "wholesale_label": {
+          "label": "Button label",
+          "default": "Order Wholesale"
         },
-        "newsletter_heading": {
-          "label": "Heading",
-          "default": "Subscribe to our emails"
+        "header_navigation": {
+          "content": "Navigation"
         },
-        "header__1": {
-          "content": "Email signup",
-          "info": "Signups add [customer profiles](https://help.shopify.com/manual/customers/manage-customers)"
+        "menu": {
+          "label": "Menu",
+          "info": "Links to all collections, all products or a collection show a grey count after the label."
         },
-        "show_social": {
-          "label": "Social media icons",
-          "info": "[Manage social accounts](/editor?context=theme&category=social%20media)"
+        "header_contact": {
+          "content": "Contact details"
         },
-        "enable_country_selector": {
-          "label": "Country/region selector",
-          "info": "[Manage countries/regions](/admin/settings/markets)"
+        "address": {
+          "label": "Address",
+          "info": "Line breaks are kept."
         },
-        "enable_language_selector": {
-          "label": "Language selector",
-          "info": "[Manage languages](/admin/settings/languages)"
+        "email": {
+          "label": "Email"
         },
-        "payment_enable": {
-          "label": "Payment method icons"
+        "phone": {
+          "label": "Phone"
         },
-        "show_policy": {
-          "label": "Policy links",
-          "info": "[Manage policies](/admin/settings/legal)"
+        "social_paragraph": {
+          "content": "Social links show every account set in [theme settings](/editor?context=theme&category=social%20media), plus LinkedIn below."
+        },
+        "linkedin_url": {
+          "label": "LinkedIn link"
+        },
+        "legal_paragraph": {
+          "content": "The small links at the bottom are your [policies](/admin/settings/legal). A blank policy is hidden. The year updates itself."
         },
         "margin_top": {
           "label": "Top margin"
-        },
-        "header__9": {
-          "content": "Utilities"
-        },
-        "enable_follow_on_shop": {
-          "label": "Follow on Shop",
-          "info": "Shop Pay must be enabled. [Learn more](https://help.shopify.com/manual/online-store/themes/customizing-themes/follow-on-shop)"
         }
       }
     },

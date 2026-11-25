@@ -1,14 +1,15 @@
 {{ 'section-footer.css' | asset_url | stylesheet_tag }}
+{{ 'bs-pill-xl.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
   .footer-parallax {
     margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
   }
 
-  {%- comment -%} Figma: 192px top on desktop is 128px on mobile (two thirds); the bottom padding does not scale. {%- endcomment -%}
+  {%- comment -%} Figma Footer V2: 24px bottom on desktop is 16px on mobile (two thirds); the top does not scale. {%- endcomment -%}
   .section-{{ section.id }}-padding {
-    padding-top: {{ section.settings.padding_top | times: 0.667 | round: 0 }}px;
-    padding-bottom: {{ section.settings.padding_bottom }}px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.667 | round: 0 }}px;
   }
 
   @media screen and (min-width: 750px) {
@@ -17,10 +18,19 @@
     }
 
     .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
 {%- endstyle -%}
+
+{%- liquid
+  comment
+    Social links: every account in Theme settings > Social media, with LinkedIn (not a Dawn
+    social setting) from this section. Instagram and LinkedIn first, as in Figma.
+  endcomment
+  assign bs_networks = 'instagram,linkedin,facebook,youtube,tiktok,twitter,pinterest,snapchat,tumblr,vimeo' | split: ','
+  assign bs_year = 'now' | date: '%Y'
+-%}
 
 {%- comment -%} The footer takes the page background, as the header does (snippets/bs-page-scheme.liquid). {%- endcomment -%}
 {%- capture bs_page_scheme -%}{%- render 'bs-page-scheme' -%}{%- endcapture -%}
@@ -30,226 +40,134 @@
   out (assets/bs-footer-parallax.js). The veil never takes clicks.
 {%- endcomment -%}
 <div class="footer-parallax" data-footer-parallax>
-<footer
-  class="footer color-{{ bs_page_scheme | default: section.settings.color_scheme }} gradient section-{{ section.id }}-padding"
-  data-footer-parallax-inner
->
-  <div class="footer__inner page-width">
-    {%- assign cta_block = section.blocks | where: 'type', 'call_to_action' | first -%}
-    {%- if cta_block -%}
-      <div class="footer__cta" {{ cta_block.shopify_attributes }}>
-        {%- if cta_block.settings.eyebrow != blank -%}
-          <p class="footer__cta-eyebrow">{{ cta_block.settings.eyebrow | escape }}</p>
-        {%- endif -%}
-        {%- if cta_block.settings.heading != blank -%}
-          <h2 class="footer__cta-heading hxxl">{{ cta_block.settings.heading | escape }}</h2>
-        {%- endif -%}
-        {%- if cta_block.settings.button_label_1 != blank or cta_block.settings.button_label_2 != blank -%}
-          <div class="footer__cta-buttons">
-            {%- if cta_block.settings.button_label_1 != blank -%}
-              <a
-                {% if cta_block.settings.button_link_1 != blank %}
-                  href="{{ cta_block.settings.button_link_1 }}"
-                {% else %}
-                  role="link" aria-disabled="true"
-                {% endif %}
-                class="footer__pill button"
-              >
-                {{- cta_block.settings.button_label_1 | escape -}}
-              </a>
-            {%- endif -%}
-            {%- if cta_block.settings.button_label_2 != blank -%}
-              <a
-                {% if cta_block.settings.button_link_2 != blank %}
-                  href="{{ cta_block.settings.button_link_2 }}"
-                {% else %}
-                  role="link" aria-disabled="true"
-                {% endif %}
-                class="footer__pill footer__pill--tint button"
-              >
-                {{- cta_block.settings.button_label_2 | escape -}}
-              </a>
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-
-    {%- if section.blocks.size > 0 -%}
-      <div class="footer__main">
-        {%- for block in section.blocks -%}
-          {%- case block.type -%}
-            {%- when '@app' -%}
-              <div class="footer__block" {{ block.shopify_attributes }}>
-                {% render block %}
-              </div>
-            {%- when 'pricing_signup' -%}
-              <div class="footer__block footer__signup" {{ block.shopify_attributes }}>
-                {%- if block.settings.heading != blank -%}
-                  <h2 class="footer__signup-heading">{{ block.settings.heading | escape }}</h2>
-                {%- endif -%}
-                {%- form 'customer', id: 'FooterPricingForm', class: 'footer__signup-form' -%}
-                  <input type="hidden" name="contact[tags]" value="{{ block.settings.customer_tag | escape }}">
-                  <div class="footer__signup-field">
-                    <label class="visually-hidden" for="FooterPricingEmail">{{ 'newsletter.label' | t }}</label>
-                    <input
-                      id="FooterPricingEmail"
-                      type="email"
-                      name="contact[email]"
-                      value="{{ form.email }}"
-                      placeholder="{{ block.settings.placeholder | escape }}"
-                      autocorrect="off"
-                      autocapitalize="off"
-                      autocomplete="email"
-                      {% if form.errors %}
-                        autofocus
-                        aria-invalid="true"
-                        aria-describedby="FooterPricingMessage"
-                      {% elsif form.posted_successfully? %}
-                        aria-describedby="FooterPricingMessage"
-                      {% endif %}
-                      required
-                    >
-                    <button type="submit" name="commit">{{ block.settings.button_label | escape }}</button>
-                  </div>
-                  {%- if form.errors -%}
-                    <p class="footer__signup-note" id="FooterPricingMessage" role="alert">
-                      {{- form.errors.translated_fields.email | capitalize }}
-                      {{ form.errors.messages.email -}}
-                    </p>
-                  {%- elsif form.posted_successfully? -%}
-                    <p class="footer__signup-note" id="FooterPricingMessage" tabindex="-1" autofocus>
-                      {{- block.settings.success_message | escape -}}
-                    </p>
-                  {%- elsif block.settings.small_print != blank -%}
-                    <p class="footer__signup-note">{{ block.settings.small_print | escape }}</p>
-                  {%- endif -%}
-                {%- endform -%}
-              </div>
-            {%- when 'menu' -%}
-              {%- if block.settings.menu.links.size > 0 -%}
-                <ul class="footer__block footer__menu list-unstyled" role="list" {{ block.shopify_attributes }}>
-                  {%- for link in block.settings.menu.links -%}
-                    <li>
-                      <a
-                        href="{{ link.url }}"
-                        class="footer__menu-link"
-                        {% if link.current %}
-                          aria-current="page"
-                        {% endif %}
-                      >
-                        <span>{{ link.title | escape }}</span>
-                        {%- render 'bs-menu-count', link: link -%}
-                      </a>
-                    </li>
-                  {%- endfor -%}
-                </ul>
-              {%- endif -%}
-            {%- when 'wholesale_button' -%}
-              {%- if settings.wholesale_portal_url != blank and block.settings.label != blank -%}
-                <a
-                  href="{{ settings.wholesale_portal_url }}"
-                  class="footer__block footer__wholesale button"
-                  target="_blank"
-                  rel="noopener"
-                  {{ block.shopify_attributes }}
-                >
-                  {{ block.settings.label | escape }}
-                  <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
-                </a>
-              {%- endif -%}
-            {%- when 'social_links' -%}
-              {%- liquid
-                assign social_networks = 'instagram,linkedin,facebook,youtube,tiktok,twitter,pinterest,snapchat,tumblr,vimeo' | split: ','
-              -%}
-              {%- capture social_items -%}
-                {%- for network in social_networks -%}
-                  {%- liquid
-                    if network == 'linkedin'
-                      assign social_url = block.settings.linkedin_url
-                    else
-                      assign social_setting = 'social_' | append: network | append: '_link'
-                      assign social_url = settings[social_setting]
-                    endif
-                    assign social_label = 'general.social.links.' | append: network
-                  -%}
-                  {%- if social_url != blank -%}
-                    <li>
-                      <a href="{{ social_url }}" target="_blank" rel="noopener">
-                        {{- social_label | t -}}
-                        <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
-                      </a>
-                    </li>
-                  {%- endif -%}
-                {%- endfor -%}
-              {%- endcapture -%}
-              {%- if social_items != blank -%}
-                <ul class="footer__details list-unstyled" role="list" {{ block.shopify_attributes }}>
-                  {{ social_items }}
-                </ul>
-              {%- endif -%}
-            {%- when 'contact' -%}
-              {%- if block.settings.address != blank or block.settings.email != blank or block.settings.phone != blank -%}
-                <ul class="footer__details list-unstyled" role="list" {{ block.shopify_attributes }}>
-                  {%- if block.settings.address != blank -%}
-                    <li>{{ block.settings.address | escape }}</li>
-                  {%- endif -%}
-                  {%- if block.settings.email != blank -%}
-                    <li>
-                      <a href="mailto:{{ block.settings.email | escape }}">{{ block.settings.email | escape }}</a>
-                    </li>
-                  {%- endif -%}
-                  {%- if block.settings.phone != blank -%}
-                    <li>
-                      <a href="tel:{{ block.settings.phone | remove: ' ' | escape }}">
-                        {{- block.settings.phone | escape -}}
-                      </a>
-                    </li>
-                  {%- endif -%}
-                </ul>
-              {%- endif -%}
-          {%- endcase -%}
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
-
-    <div class="footer__bottom">
-      {%- if section.settings.image != blank -%}
-        <div class="footer__image">
-          {{
-            section.settings.image
-            | image_url: width: 2008
-            | image_tag:
-              loading: 'lazy',
-              widths: '375, 750, 1004, 1500, 2008',
-              sizes: '(min-width: 750px) 1004px, 100vw'
-          }}
-        </div>
+  <footer
+    class="footer color-{{ bs_page_scheme | default: section.settings.color_scheme }} gradient section-{{ section.id }}-padding"
+    data-footer-parallax-inner
+  >
+    <div class="footer__inner page-width">
+      {%- if settings.wholesale_portal_url != blank and section.settings.wholesale_label != blank -%}
+        <a
+          href="{{ settings.wholesale_portal_url }}"
+          class="footer__wholesale button bs-pill-xl"
+          target="_blank"
+          rel="noopener"
+        >
+          {{- section.settings.wholesale_label | escape -}}
+          <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
+        </a>
       {%- endif -%}
-      <div class="footer__legal">
-        {%- if section.settings.policy_menu.links.size > 0 -%}
+
+      <div class="footer__main">
+        {%- render 'bs-display-figures', text: '©', class: 'footer__figure footer__figure--copyright' -%}
+
+        <div class="footer__columns">
+          {%- if section.settings.menu.links.size > 0 -%}
+            <nav class="footer__nav" aria-label="{{ 'sections.footer.navigation' | t }}">
+              <ul class="footer__list list-unstyled" role="list">
+                {%- for link in section.settings.menu.links -%}
+                  <li>
+                    <a
+                      href="{{ link.url }}"
+                      class="footer__link"
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      <span>{{ link.title | escape }}</span>
+                      {%- render 'bs-menu-count', link: link -%}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </nav>
+          {%- endif -%}
+
+          <address class="footer__contact">
+            <ul class="footer__list list-unstyled" role="list" aria-label="{{ 'sections.footer.contact' | t }}">
+              {%- if section.settings.address != blank -%}
+                <li>{{ section.settings.address | escape | newline_to_br }}</li>
+              {%- endif -%}
+              {%- if section.settings.email != blank -%}
+                <li>
+                  <a href="mailto:{{ section.settings.email | strip | escape }}">{{ section.settings.email | escape }}</a>
+                </li>
+              {%- endif -%}
+              {%- if section.settings.phone != blank -%}
+                <li>
+                  <a href="tel:{{ section.settings.phone | remove: ' ' | escape }}">{{ section.settings.phone | escape }}</a>
+                </li>
+              {%- endif -%}
+              {%- for network in bs_networks -%}
+                {%- liquid
+                  if network == 'linkedin'
+                    assign social_url = section.settings.linkedin_url
+                  else
+                    assign social_setting = 'social_' | append: network | append: '_link'
+                    assign social_url = settings[social_setting]
+                  endif
+                  assign social_label = 'general.social.links.' | append: network
+                -%}
+                {%- if social_url != blank -%}
+                  <li>
+                    <a href="{{ social_url }}" target="_blank" rel="noopener">
+                      {{- social_label | t -}}
+                      <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
+                    </a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </address>
+        </div>
+
+        {%- render 'bs-display-figures', text: bs_year, class: 'footer__figure footer__figure--year' -%}
+      </div>
+
+      <div class="footer__end">
+        {%- render 'bs-wordmark', label: shop.name, class: 'footer__wordmark' -%}
+
+        <div class="footer__legal">
           <ul class="footer__policies list-unstyled" role="list">
-            {%- for link in section.settings.policy_menu.links -%}
+            {%- if shop.privacy_policy != blank -%}
               <li>
-                <a href="{{ link.url }}">{{ link.title | escape }}</a>
+                <a href="{{ shop.privacy_policy.url }}">{{ 'sections.footer.legal' | t }}</a>
               </li>
-            {%- endfor -%}
+            {%- endif -%}
+            {%- if shop.shipping_policy != blank -%}
+              <li>
+                <a href="{{ shop.shipping_policy.url }}">{{ 'sections.footer.shipping' | t }}</a>
+              </li>
+            {%- endif -%}
+            {%- if shop.refund_policy != blank -%}
+              <li>
+                <a href="{{ shop.refund_policy.url }}">{{ 'sections.footer.returns' | t }}</a>
+              </li>
+            {%- endif -%}
+            {%- if shop.terms_of_service != blank -%}
+              <li>
+                <a href="{{ shop.terms_of_service.url }}">{{ 'sections.footer.terms' | t }}</a>
+              </li>
+            {%- endif -%}
           </ul>
-        {%- endif -%}
-        <span class="footer__copyright">{{ shop.name | escape }} {{ 'now' | date: '%Y' }}</span>
+          <p class="visually-hidden">{{ 'sections.footer.copyright' | t: year: bs_year, name: shop.name }}</p>
+          <a class="footer__credit" href="https://www.onetoo.com.au" target="_blank" rel="noopener">
+            {{- 'sections.footer.site_by' | t -}}
+            <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-</footer>
-<div class="footer-parallax__dark" data-footer-parallax-dark aria-hidden="true"></div>
+  </footer>
+  <div class="footer-parallax__dark" data-footer-parallax-dark aria-hidden="true"></div>
 </div>
 <script src="{{ 'bs-footer-parallax.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
   comment
     Organization markup for search engines. Name, contact details and social links come from
-    the store and this footer's blocks, so they stay editable. The address is split into its
-    parts when it reads "street, suburb STATE postcode"; otherwise it is given as one line.
+    the store and this footer's settings, so they stay editable. The address (line breaks
+    joined with spaces) is split into its parts when it reads "street, suburb STATE postcode";
+    otherwise it is given as one line.
   endcomment
   assign bs_shop_name = shop.name | strip
   assign bs_shop_name_last = bs_shop_name | slice: -1
@@ -257,29 +175,28 @@
     assign bs_shop_name = bs_shop_name | remove_last: '.'
   endif
 
-  assign bs_contact = section.blocks | where: 'type', 'contact' | first
-  assign bs_social = section.blocks | where: 'type', 'social_links' | first
-
   assign bs_same_as = ''
-  assign bs_networks = 'facebook,instagram,youtube,tiktok,twitter,pinterest,snapchat,tumblr,vimeo' | split: ','
   for bs_network in bs_networks
-    assign bs_setting = 'social_' | append: bs_network | append: '_link'
-    if settings[bs_setting] != blank
-      assign bs_same_as = bs_same_as | append: '|' | append: settings[bs_setting]
+    if bs_network == 'linkedin'
+      assign bs_url = section.settings.linkedin_url
+    else
+      assign bs_setting = 'social_' | append: bs_network | append: '_link'
+      assign bs_url = settings[bs_setting]
+    endif
+    if bs_url != blank
+      assign bs_same_as = bs_same_as | append: '|' | append: bs_url
     endif
   endfor
-  if bs_social.settings.linkedin_url != blank
-    assign bs_same_as = bs_same_as | append: '|' | append: bs_social.settings.linkedin_url
-  endif
   assign bs_same_as = bs_same_as | remove_first: '|' | split: '|'
 
+  assign bs_address = section.settings.address | newline_to_br | replace: '<br />', ' ' | strip_newlines | split: ' ' | join: ' '
   assign bs_street = blank
   assign bs_locality = blank
   assign bs_region = blank
   assign bs_postcode = blank
-  if bs_contact.settings.address != blank
-    assign bs_address_parts = bs_contact.settings.address | split: ','
-    assign bs_street = bs_contact.settings.address | strip
+  if bs_address != blank
+    assign bs_address_parts = bs_address | split: ','
+    assign bs_street = bs_address
     if bs_address_parts.size == 2
       assign bs_place = bs_address_parts.last | strip | split: ' '
       assign bs_place_last = bs_place.last
@@ -300,11 +217,11 @@
     "name": {{ bs_shop_name | json }},
     "url": {{ request.origin | append: routes.root_url | json }},
     "logo": {{ 'bs-logo-schema.png' | asset_url | prepend: 'https:' | json }},
-    {%- if bs_contact.settings.email != blank %}
-      "email": {{ bs_contact.settings.email | strip | json }},
+    {%- if section.settings.email != blank %}
+      "email": {{ section.settings.email | strip | json }},
     {%- endif -%}
-    {%- if bs_contact.settings.phone != blank %}
-      "telephone": {{ bs_contact.settings.phone | strip | json }},
+    {%- if section.settings.phone != blank %}
+      "telephone": {{ section.settings.phone | strip | json }},
     {%- endif -%}
     {%- if bs_street != blank %}
       "address": {
@@ -325,173 +242,6 @@
 {% schema %}
 {
   "name": "t:sections.footer.name",
-  "blocks": [
-    {
-      "type": "@app"
-    },
-    {
-      "type": "call_to_action",
-      "name": "t:sections.footer.blocks.call_to_action.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "t:sections.footer.blocks.call_to_action.settings.paragraph.content"
-        },
-        {
-          "type": "text",
-          "id": "eyebrow",
-          "default": "t:sections.footer.blocks.call_to_action.settings.eyebrow.default",
-          "label": "t:sections.footer.blocks.call_to_action.settings.eyebrow.label"
-        },
-        {
-          "type": "text",
-          "id": "heading",
-          "default": "t:sections.footer.blocks.call_to_action.settings.heading.default",
-          "label": "t:sections.footer.blocks.call_to_action.settings.heading.label"
-        },
-        {
-          "type": "text",
-          "id": "button_label_1",
-          "default": "t:sections.footer.blocks.call_to_action.settings.button_label_1.default",
-          "label": "t:sections.footer.blocks.call_to_action.settings.button_label_1.label",
-          "info": "t:sections.footer.blocks.call_to_action.settings.button_label_1.info"
-        },
-        {
-          "type": "url",
-          "id": "button_link_1",
-          "label": "t:sections.footer.blocks.call_to_action.settings.button_link_1.label"
-        },
-        {
-          "type": "text",
-          "id": "button_label_2",
-          "label": "t:sections.footer.blocks.call_to_action.settings.button_label_2.label",
-          "info": "t:sections.footer.blocks.call_to_action.settings.button_label_2.info"
-        },
-        {
-          "type": "url",
-          "id": "button_link_2",
-          "label": "t:sections.footer.blocks.call_to_action.settings.button_link_2.label"
-        }
-      ]
-    },
-    {
-      "type": "pricing_signup",
-      "name": "t:sections.footer.blocks.pricing_signup.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "t:sections.footer.blocks.pricing_signup.settings.paragraph.content"
-        },
-        {
-          "type": "text",
-          "id": "heading",
-          "default": "t:sections.footer.blocks.pricing_signup.settings.heading.default",
-          "label": "t:sections.footer.blocks.pricing_signup.settings.heading.label"
-        },
-        {
-          "type": "text",
-          "id": "placeholder",
-          "default": "t:sections.footer.blocks.pricing_signup.settings.placeholder.default",
-          "label": "t:sections.footer.blocks.pricing_signup.settings.placeholder.label"
-        },
-        {
-          "type": "text",
-          "id": "button_label",
-          "default": "t:sections.footer.blocks.pricing_signup.settings.button_label.default",
-          "label": "t:sections.footer.blocks.pricing_signup.settings.button_label.label"
-        },
-        {
-          "type": "text",
-          "id": "small_print",
-          "default": "t:sections.footer.blocks.pricing_signup.settings.small_print.default",
-          "label": "t:sections.footer.blocks.pricing_signup.settings.small_print.label"
-        },
-        {
-          "type": "text",
-          "id": "success_message",
-          "default": "t:sections.footer.blocks.pricing_signup.settings.success_message.default",
-          "label": "t:sections.footer.blocks.pricing_signup.settings.success_message.label"
-        },
-        {
-          "type": "text",
-          "id": "customer_tag",
-          "default": "pricing-request",
-          "label": "t:sections.footer.blocks.pricing_signup.settings.customer_tag.label",
-          "info": "t:sections.footer.blocks.pricing_signup.settings.customer_tag.info"
-        }
-      ]
-    },
-    {
-      "type": "menu",
-      "name": "t:sections.footer.blocks.menu.name",
-      "settings": [
-        {
-          "type": "link_list",
-          "id": "menu",
-          "default": "main-menu",
-          "label": "t:sections.footer.blocks.menu.settings.menu.label",
-          "info": "t:sections.footer.blocks.menu.settings.menu.info"
-        }
-      ]
-    },
-    {
-      "type": "wholesale_button",
-      "name": "t:sections.footer.blocks.wholesale_button.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "t:sections.footer.blocks.wholesale_button.settings.paragraph.content"
-        },
-        {
-          "type": "text",
-          "id": "label",
-          "default": "t:sections.footer.blocks.wholesale_button.settings.label.default",
-          "label": "t:sections.footer.blocks.wholesale_button.settings.label.label"
-        }
-      ]
-    },
-    {
-      "type": "social_links",
-      "name": "t:sections.footer.blocks.social_links.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "t:sections.footer.blocks.social_links.settings.paragraph.content"
-        },
-        {
-          "type": "url",
-          "id": "linkedin_url",
-          "label": "t:sections.footer.blocks.social_links.settings.linkedin_url.label"
-        }
-      ]
-    },
-    {
-      "type": "contact",
-      "name": "t:sections.footer.blocks.contact.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "address",
-          "label": "t:sections.footer.blocks.contact.settings.address.label"
-        },
-        {
-          "type": "text",
-          "id": "email",
-          "label": "t:sections.footer.blocks.contact.settings.email.label"
-        },
-        {
-          "type": "text",
-          "id": "phone",
-          "label": "t:sections.footer.blocks.contact.settings.phone.label"
-        }
-      ]
-    }
-  ],
   "settings": [
     {
       "type": "color_scheme",
@@ -501,17 +251,62 @@
       "default": "scheme-1"
     },
     {
-      "type": "image_picker",
-      "id": "image",
-      "label": "t:sections.footer.settings.image.label",
-      "info": "t:sections.footer.settings.image.info"
+      "type": "header",
+      "content": "t:sections.footer.settings.header_wholesale.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.footer.settings.wholesale_paragraph.content"
+    },
+    {
+      "type": "text",
+      "id": "wholesale_label",
+      "default": "t:sections.footer.settings.wholesale_label.default",
+      "label": "t:sections.footer.settings.wholesale_label.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.settings.header_navigation.content"
     },
     {
       "type": "link_list",
-      "id": "policy_menu",
-      "default": "footer",
-      "label": "t:sections.footer.settings.policy_menu.label",
-      "info": "t:sections.footer.settings.policy_menu.info"
+      "id": "menu",
+      "default": "main-menu",
+      "label": "t:sections.footer.settings.menu.label",
+      "info": "t:sections.footer.settings.menu.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.settings.header_contact.content"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "t:sections.footer.settings.address.label",
+      "info": "t:sections.footer.settings.address.info"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "t:sections.footer.settings.email.label"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "t:sections.footer.settings.phone.label"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.footer.settings.social_paragraph.content"
+    },
+    {
+      "type": "url",
+      "id": "linkedin_url",
+      "label": "t:sections.footer.settings.linkedin_url.label"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.footer.settings.legal_paragraph.content"
     },
     {
       "type": "header",
@@ -539,7 +334,7 @@
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_top",
-      "default": 192
+      "default": 32
     },
     {
       "type": "range",
@@ -549,25 +344,8 @@
       "step": 4,
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
-      "default": 32
+      "default": 24
     }
-  ],
-  "default": {
-    "blocks": [
-      {
-        "type": "menu"
-      },
-      {
-        "type": "wholesale_button"
-      },
-      {
-        "type": "social_links"
-      },
-      {
-        "type": "contact"
-      }
-    ]
-  }
+  ]
 }
 {% endschema %}
-

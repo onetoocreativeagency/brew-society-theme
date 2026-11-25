@@ -1,0 +1,123 @@
+{%- doc -%}
+  Draws digits and "©" as one shape whose viewBox is fitted to the glyph edges, so the figures
+  can run exactly edge to edge (footer "©" and year). Any other character is skipped.
+  Fill is currentColor. Size it with CSS by height; the width follows.
+
+  Glyphs: TT Commons Pro DemiBold outlines in font units (1000 per em), top of the box at the
+  digits' overshoot (712) and 724 tall. Pair kerning is the font's; tracking (-9 units) is
+  measured from Figma Footer V2 (4317:3884).
+
+  @param {string} text - The figures to draw, e.g. '2026' or '©'
+  @param {string} [class] - Class on the svg
+
+  @example
+  {% render 'bs-display-figures', text: '2026', class: 'footer__figure' %}
+{%- enddoc -%}
+{%- liquid
+  assign bs_kern_20 = ',07,26,27,37,41,42,43,47,49,51,52,59,61,62,69,70,75,78,87,93,96,97,'
+  assign bs_kern_40 = ',24,57,67,74,76,94,'
+  assign bs_chars = text | split: ''
+  assign bs_x = 0
+  assign bs_start = 0
+  assign bs_end = 0
+  assign bs_prev = ''
+  assign bs_paths = ''
+
+  for bs_char in bs_chars
+    assign bs_d = ''
+    case bs_char
+      when '©'
+        assign bs_advance = 785
+        assign bs_min = 40
+        assign bs_max = 746
+        assign bs_d = 'M40 362Q40 261 87 178Q134 95 215 47.5Q296 0 393 0Q490 0 571 47.5Q652 95 699 178Q746 261 746 362Q746 463 699 546Q652 629 571 676.5Q490 724 393 724Q296 724 215 676.5Q134 629 87 546Q40 463 40 362ZM666 362Q666 280 630 214.5Q594 149 531.5 112Q469 75 393 75Q317 75 254.5 112Q192 149 156 214.5Q120 280 120 362Q120 444 156 509.5Q192 575 254.5 612Q317 649 393 649Q469 649 531.5 612Q594 575 630 509.5Q666 444 666 362ZM218 362Q218 309 242 266.5Q266 224 306.5 199.5Q347 175 393 175Q460 175 505 215.5Q550 256 561 310H484Q475 284 453 265Q431 246 393 246Q353 246 324 278Q295 310 295 362Q295 414 324 446Q353 478 393 478Q431 478 453 459Q475 440 484 414H561Q550 468 505 508.5Q460 549 393 549Q347 549 306.5 524.5Q266 500 242 457.5Q218 415 218 362Z'
+      when '0'
+        assign bs_advance = 612
+        assign bs_min = 37
+        assign bs_max = 575
+        assign bs_d = 'M37 362Q37 247 73 165Q109 83 170.5 41.5Q232 0 306 0Q380 0 441.5 41.5Q503 83 539 165Q575 247 575 362Q575 477 539 559Q503 641 441.5 682.5Q380 724 306 724Q232 724 170.5 682.5Q109 641 73 559Q37 477 37 362ZM459 362Q459 277 438 220.5Q417 164 382.5 137.5Q348 111 306 111Q264 111 229.5 137.5Q195 164 174 220.5Q153 277 153 362Q153 447 174 503.5Q195 560 229.5 586.5Q264 613 306 613Q348 613 382.5 586.5Q417 560 438 503.5Q459 447 459 362Z'
+      when '1'
+        assign bs_advance = 361
+        assign bs_min = 17
+        assign bs_max = 284
+        assign bs_d = 'M17 138 196 12H284V712H168V158L71 226Z'
+      when '2'
+        assign bs_advance = 540
+        assign bs_min = 27
+        assign bs_max = 497
+        assign bs_d = 'M207 601H495V712H36V623L279 375Q336 318 358.5 284.5Q381 251 381 209Q381 164 348.5 135.5Q316 107 263 107Q209 107 175 139.5Q141 172 140 224H27Q28 162 58.5 110.5Q89 59 142.5 29.5Q196 0 263 0Q332 0 385.5 27Q439 54 468 101Q497 148 497 205Q497 270 463.5 323Q430 376 363 444Z'
+      when '3'
+        assign bs_advance = 546
+        assign bs_min = 21
+        assign bs_max = 509
+        assign bs_d = 'M509 520Q509 574 479 621Q449 668 394.5 696Q340 724 269 724Q197 724 142.5 696Q88 668 57.5 621.5Q27 575 21 520H137Q142 557 177 587Q212 617 268 617Q326 617 359.5 587.5Q393 558 393 511Q393 463 359 433.5Q325 404 264 404H214V307H259Q314 307 345.5 279.5Q377 252 377 208Q377 164 346.5 135.5Q316 107 265 107Q215 107 183 134.5Q151 162 147 200H31Q35 147 65.5 101Q96 55 148 27.5Q200 0 264 0Q331 0 383 27.5Q435 55 464 100.5Q493 146 493 200Q493 250 465 287Q437 324 393 348Q443 368 476 410.5Q509 453 509 520Z'
+      when '4'
+        assign bs_advance = 556
+        assign bs_min = 19
+        assign bs_max = 521
+        assign bs_d = 'M447 468H521V575H447V712H334V575H19V476L311 12H447ZM334 468V168L145 468Z'
+      when '5'
+        assign bs_advance = 566
+        assign bs_min = 41
+        assign bs_max = 530
+        assign bs_d = 'M530 483Q530 550 498 605.5Q466 661 409.5 692.5Q353 724 281 724Q214 724 161.5 696Q109 668 78 622Q47 576 41 522H157Q160 544 176.5 566Q193 588 220 602.5Q247 617 281 617Q339 617 376.5 579Q414 541 414 483Q414 424 376.5 386Q339 348 281 348Q197 348 160 425H56L101 12H480V119H197L179 286Q201 269 232 258Q263 247 300 247Q365 247 417.5 277.5Q470 308 500 362Q530 416 530 483Z'
+      when '6'
+        assign bs_advance = 573
+        assign bs_min = 38
+        assign bs_max = 538
+        assign bs_d = 'M538 480Q538 547 505.5 603Q473 659 416 691.5Q359 724 288 724Q217 724 160 691.5Q103 659 70.5 603Q38 547 38 480Q38 426 58.5 379.5Q79 333 111 285L294 12H418L264 240Q282 236 298 236Q366 236 420.5 268Q475 300 506.5 355.5Q538 411 538 480ZM422 479Q422 418 383.5 379.5Q345 341 288 341Q230 341 192 379.5Q154 418 154 479Q154 540 192 578.5Q230 617 288 617Q345 617 383.5 578.5Q422 540 422 479Z'
+      when '7'
+        assign bs_advance = 508
+        assign bs_min = 23
+        assign bs_max = 479
+        assign bs_d = 'M23 123V12H479V103L220 712H96L348 123Z'
+      when '8'
+        assign bs_advance = 576
+        assign bs_min = 37
+        assign bs_max = 539
+        assign bs_d = 'M539 511Q539 568 508 617Q477 666 420 695Q363 724 288 724Q213 724 156 695Q99 666 68 617Q37 568 37 511Q37 447 71 403Q105 359 150 335Q115 312 90 276.5Q65 241 65 191Q65 140 93 96Q121 52 171.5 26Q222 0 288 0Q354 0 404.5 26Q455 52 483 96Q511 140 511 191Q511 241 486 276.5Q461 312 427 335Q472 359 505.5 403Q539 447 539 511ZM178 199Q178 240 208.5 267Q239 294 288 294Q337 294 367.5 267Q398 240 398 199Q398 157 368 130.5Q338 104 288 104Q238 104 208 130.5Q178 157 178 199ZM426 507Q426 458 389 426Q352 394 288 394Q224 394 187 426Q150 458 150 507Q150 556 187 588Q224 620 288 620Q352 620 389 588Q426 556 426 507Z'
+      when '9'
+        assign bs_advance = 573
+        assign bs_min = 35
+        assign bs_max = 535
+        assign bs_d = 'M535 244Q535 298 514 345Q493 392 461 439L279 712H155L309 484Q291 488 275 488Q207 488 152.5 456Q98 424 66.5 368.5Q35 313 35 244Q35 177 67.5 121Q100 65 157 32.5Q214 0 285 0Q356 0 413 32.5Q470 65 502.5 121Q535 177 535 244ZM419 245Q419 184 381 145.5Q343 107 285 107Q228 107 189.5 145.5Q151 184 151 245Q151 306 189.5 344.5Q228 383 285 383Q343 383 381 344.5Q419 306 419 245Z'
+    endcase
+    if bs_d == ''
+      continue
+    endif
+
+    if bs_prev == ''
+      assign bs_start = bs_min
+    else
+      assign bs_pair = ',' | append: bs_prev | append: bs_char | append: ','
+      assign bs_x = bs_x | minus: 9
+      if bs_kern_20 contains bs_pair
+        assign bs_x = bs_x | minus: 20
+      elsif bs_kern_40 contains bs_pair
+        assign bs_x = bs_x | minus: 40
+      endif
+    endif
+
+    capture bs_path
+      echo '<path transform="translate(' | append: bs_x | append: ' 0)" d="' | append: bs_d | append: '"/>'
+    endcapture
+    assign bs_paths = bs_paths | append: bs_path
+    assign bs_end = bs_x | plus: bs_max
+    assign bs_x = bs_x | plus: bs_advance
+    assign bs_prev = bs_char
+  endfor
+
+  assign bs_width = bs_end | minus: bs_start
+-%}
+{%- if bs_paths != '' -%}
+  <svg
+    class="{{ class }}"
+    viewBox="{{ bs_start }} 0 {{ bs_width }} 724"
+    aria-hidden="true"
+    focusable="false"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {{- bs_paths -}}
+  </svg>
+{%- endif -%}

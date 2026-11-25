@@ -355,7 +355,15 @@
       }
     },
     "footer": {
-      "payment": "Payment methods"
+      "payment": "Payment methods",
+      "navigation": "Navigation",
+      "contact": "Contact",
+      "legal": "Legal",
+      "shipping": "Shipping",
+      "returns": "Returns",
+      "terms": "Terms",
+      "copyright": "© {{ year }} {{ name }}",
+      "site_by": "Site by ONETOO"
     },
     "featured_blog": {
       "view_all": "View all",

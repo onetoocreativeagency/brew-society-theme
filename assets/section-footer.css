@@ -1,113 +1,142 @@
-/* Brew Society footer (Figma: Footer 4203:5353). */
+/* Brew Society footer (Figma: Footer V2, desktop 4317:3884, mobile 4317:4075).
+   The footer is at least the height of the screen. The pill, "©", year and wordmark scale with
+   the footer's width (cqi: 1% of the content width between the gutters), as in Figma, so they
+   always run edge to edge. Below 990px the layout is the mobile frame; from 990px the desktop. */
+
+.footer {
+  --footer-gap: var(--bs-space-24);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Short phones: tighter gaps keep the wordmark on screen. */
+@media screen and (max-width: 989px) and (max-height: 700px) {
+  .footer {
+    --footer-gap: var(--bs-space-8);
+  }
+}
 
 .footer__inner {
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--bs-space-128);
+  gap: var(--footer-gap);
+  width: 100%;
+  container-type: inline-size;
 }
 
-/* One centred column: the middle third of the page on wide screens, never narrower than the design's 555px. */
+/* Order Wholesale: the pill fills the width and its label scales with it. Figma: a 209px label
+   and 160px above and below the cap height on a 1696px pill (mobile is the same proportions).
+   Sized on the cap height, so the text box is set to 1em and nudged up 0.025em to centre the
+   caps (TT Commons Pro sits its caps 0.05em low in a 1em line). */
+.footer__wholesale.button.bs-pill-xl {
+  min-height: 0;
+  height: calc(2 * 9.41cqi + 0.7 * 12.35cqi);
+  padding: 0 0 0.05em;
+  font-size: 12.35cqi;
+}
+
 .footer__main {
+  flex: 1 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--bs-space-64) var(--bs-grid-gap);
-  width: max(55.5rem, calc((100% - 2 * var(--bs-grid-gap)) / 3));
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'columns columns columns'
+    'copyright . year';
+  align-content: space-between;
+  row-gap: var(--footer-gap);
 }
 
-.footer__menu {
+.footer__columns {
+  grid-area: columns;
+  display: grid;
+  /* Two equal columns, as in Figma; the contact column never squeezes the email address. */
+  grid-template-columns: minmax(0, 1fr) minmax(min-content, 1fr);
+  column-gap: var(--bs-gutter);
+  font-size: var(--bs-text-paragraph);
+  font-weight: var(--bs-weight-medium);
+  line-height: var(--bs-leading-body);
+}
+
+.footer__list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--bs-space-8);
-  font-size: var(--bs-text-4x-large);
-  font-weight: var(--bs-weight-medium);
-  line-height: var(--bs-leading-heading);
+  gap: var(--bs-space-4);
 }
 
-/* Flex keeps the count exactly 4px from the label (no stray inline space). */
-.footer__menu-link {
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+.footer__link {
   color: rgb(var(--color-foreground));
   text-decoration: none;
 }
 
-.footer__menu-link:hover span:first-child,
-.footer__details a:hover,
-.footer__policies a:hover {
+/* Figma sets the count right after the label ("Brands37"). */
+.footer__link .bs-menu-count {
+  margin-left: 0;
+}
+
+.footer__contact {
+  font-style: normal;
+  color: var(--bs-color-grey-text);
+}
+
+.footer__contact a,
+.footer__policies a,
+.footer__credit {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer__link:hover span:first-child,
+.footer__contact a:hover,
+.footer__policies a:hover,
+.footer__credit:hover {
   text-decoration: underline;
   text-decoration-thickness: 0.06em;
   text-underline-offset: 0.12em;
 }
 
-/* Oversized pill: 51px label and 140px tall on mobile, 67px and 152px on desktop. */
-.footer__wholesale.button {
-  --buttons-radius: 999px;
-  --buttons-radius-outset: 999px;
-  width: 100%;
-  /* Phones: same size as the hero's Order Wholesale pill. */
-  min-height: 13.1rem;
-  padding: var(--bs-space-16) min(1.167em, 4.525vw);
-  font-size: var(--bs-text-2x-large);
-  font-weight: var(--bs-weight-medium);
-  line-height: var(--bs-leading-heading);
-  letter-spacing: var(--bs-tracking-button);
-  text-align: center;
+/* "©" and the year, drawn as shapes fitted to the glyphs (snippets/bs-display-figures.liquid).
+   Figma: 64px tall on a 369px content width (mobile), 254px on 1680px (desktop). The tint is
+   the scheme's text colour at 17%, the blue tint (#DBDDFF) on white in Figma. */
+.footer__figure {
+  display: block;
+  width: auto;
+  height: 17.34cqi;
+  color: rgba(var(--color-foreground), 0.17);
 }
 
-.footer__details {
+.footer__figure--copyright {
+  grid-area: copyright;
+}
+
+.footer__figure--year {
+  grid-area: year;
+  justify-self: end;
+}
+
+.footer__end {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--bs-space-4);
-  font-size: var(--bs-text-paragraph);
-  font-weight: var(--bs-weight-medium);
-  line-height: var(--bs-leading-body);
-  /* Contact details and social links are black in Figma (Footer 4166:3489), not the scheme's blue. */
-  color: var(--bs-color-black);
+  gap: var(--footer-gap);
 }
 
-/* Social links and contact details stack as one list at every width, 24px apart
-   (the column's 64px gap is for the larger blocks). */
-.footer__details + .footer__details {
-  margin-top: calc(var(--bs-space-24) - var(--bs-space-64));
-}
-
-.footer__details a,
-.footer__policies a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.footer__bottom {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--bs-space-16);
-}
-
-.footer__image {
-  width: 100%;
-}
-
-.footer__image img {
+/* "BrewSociety." drawn as one shape (snippets/bs-wordmark.liquid), exactly the content width. */
+.footer__wordmark {
   display: block;
   width: 100%;
   height: auto;
+  color: rgb(var(--color-foreground));
 }
 
 .footer__legal {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  gap: var(--bs-space-16);
-  width: 100%;
-  color: var(--bs-color-grey-text);
+  gap: 0 var(--bs-space-16);
+  color: var(--bs-color-black);
   font-size: 1.3rem;
   font-weight: var(--bs-weight-medium);
   line-height: var(--bs-leading-body);
@@ -121,135 +150,28 @@
   gap: 0 var(--bs-space-8);
 }
 
-.footer__copyright {
+.footer__credit {
   margin-left: auto;
   white-space: nowrap;
 }
 
-@media screen and (min-width: 750px) {
-  .footer__inner {
-    gap: var(--bs-space-192);
+@media screen and (min-width: 990px) {
+  .footer__main {
+    grid-template-areas: 'copyright columns year';
+    align-content: end;
+    align-items: start;
+    column-gap: var(--bs-space-24);
   }
 
-
-  .footer__wholesale.button {
-    min-height: 15.2rem;
-    padding: 0 var(--bs-space-8);
-    font-size: var(--bs-text-4x-large);
-  }
-
-  .footer__image {
-    width: min(100%, 100.4rem);
+  .footer__figure {
+    height: 15.12cqi;
   }
 }
 
-/* Optional call-to-action band (hidden layer "Frame 156" in Figma). */
-.footer__cta {
-  text-align: center;
-}
-
-.footer__cta-eyebrow {
-  margin: 0 0 var(--bs-space-40);
-  color: var(--bs-color-grey-text);
-  font-size: var(--bs-text-paragraph);
-  line-height: var(--bs-leading-heading);
-}
-
-.footer__cta-heading {
-  max-width: 104.8rem;
-  margin: 0 auto;
-  line-height: 0.85;
-  letter-spacing: -0.025em;
-}
-
-.footer__cta-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--bs-space-16);
-  margin-top: var(--bs-space-64);
-}
-
-/* Same oversized pill as Order Wholesale, sized to its label. */
-.footer__pill.button {
-  --buttons-radius: 999px;
-  --buttons-radius-outset: 999px;
-  min-height: 14rem;
-  padding: 0 var(--bs-space-48);
-  font-size: var(--bs-text-3x-large);
-  font-weight: var(--bs-weight-medium);
-  line-height: var(--bs-leading-heading);
-  letter-spacing: var(--bs-tracking-button);
-}
-
-/* Secondary pill: a tint of the scheme's button colour (blue tint on the default schemes). */
-.footer__pill--tint.button {
-  --color-button-text: var(--color-button);
-  --alpha-button-background: 0.15;
-}
-
-/* Optional pricing sign-up (hidden layer "Newsletter" in Figma). */
-.footer__signup {
-  text-align: left;
-}
-
-.footer__signup-heading {
-  margin: 0 0 var(--bs-space-16);
-  font-size: var(--bs-text-large);
-  line-height: var(--bs-leading-body);
-  letter-spacing: 0;
-}
-
-.footer__signup-field {
-  display: flex;
-  align-items: center;
-  gap: var(--bs-space-8);
-  min-height: 6.4rem;
-  padding: var(--bs-space-8) var(--bs-space-8) var(--bs-space-8) var(--bs-space-24);
-  border-radius: var(--bs-space-16);
-  background-color: rgba(var(--color-foreground), 0.06);
-}
-
-.footer__signup-field input {
-  flex: 1;
-  min-width: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  font-weight: var(--bs-weight-regular);
-}
-
-.footer__signup-field input::placeholder {
-  color: inherit;
-  opacity: 1;
-}
-
-.footer__signup-field button {
-  align-self: stretch;
-  padding: 0 var(--bs-space-16);
-  border: 0;
-  border-radius: var(--bs-space-16);
-  background-color: rgb(var(--color-background));
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.footer__signup-note {
-  margin: var(--bs-space-8) 0 0;
-  padding: 0 calc(var(--bs-space-8) + var(--bs-space-4));
-  color: var(--bs-color-grey-text);
-  font-size: var(--bs-text-small);
-  line-height: var(--bs-leading-body);
-}
-
-@media screen and (min-width: 750px) {
-  .footer__pill.button {
-    min-height: 15.2rem;
-    padding: 0 7.8rem;
-    font-size: var(--bs-text-4x-large);
+/* The large link size from Figma once the columns are wide enough for the email address. */
+@media screen and (min-width: 1440px) {
+  .footer__columns {
+    font-size: var(--bs-text-large);
   }
 }
 
