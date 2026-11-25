@@ -11,7 +11,6 @@
   "sections": {
     "bs_hero_trail_7JLm4F": {
       "type": "bs-hero-trail",
-      "name": "Hero with image trail",
       "blocks": {
         "image_1": {
           "type": "image",
@@ -100,13 +99,14 @@
         "image_11",
         "image_12"
       ],
+      "name": "Hero with image trail",
       "settings": {
         "heading": "Earth’s best food + drink brands, door to door",
         "text": "Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
         "primary_label": "Order Wholesale",
         "secondary_label": "Shop for Home",
         "secondary_link": "shopify://collections/all",
-        "collection": "sodas",
+        "collection": "ordinary-beverage-co",
         "image_scale": 100,
         "blend_images": false,
         "enable_trail": true,
@@ -141,6 +141,7 @@
         "heading",
         "button"
       ],
+      "disabled": true,
       "settings": {
         "image_overlay_opacity": 40,
         "image_height": "large",
@@ -152,11 +153,11 @@
         "stack_images_on_mobile": false,
         "mobile_content_alignment": "center",
         "show_text_below": false
-      },
-      "disabled": true
+      }
     },
     "featured_collection": {
       "type": "featured-collection",
+      "disabled": true,
       "settings": {
         "collection": "all",
         "products_to_show": 8,
@@ -181,8 +182,7 @@
         "swipe_on_mobile": false,
         "padding_top": 44,
         "padding_bottom": 36
-      },
-      "disabled": true
+      }
     },
     "bs_brand_ring_gGaJKC": {
       "type": "bs-brand-ring",
@@ -222,24 +222,24 @@
         "card_1": {
           "type": "card",
           "settings": {
-            "title": "Importer",
             "image_fit": "cover",
+            "title": "Importer",
             "text": "We bring exclusive food and drink brands from around the world to Australian cafés, grocers and venues."
           }
         },
         "card_2": {
           "type": "card",
           "settings": {
-            "title": "Developer",
             "image_fit": "cover",
+            "title": "Developer",
             "text": "We grow brands with their makers, from a first listing to a regular place on shelves and menus."
           }
         },
         "card_3": {
           "type": "card",
           "settings": {
-            "title": "Distributor",
             "image_fit": "cover",
+            "title": "Distributor",
             "text": "We deliver across Victoria and NSW from Melbourne, with online ordering and a $300 minimum order."
           }
         }
