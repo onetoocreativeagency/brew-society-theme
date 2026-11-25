@@ -1,5 +1,29 @@
 {{ 'bs-feature-cards.css' | asset_url | stylesheet_tag }}
 
+{%- liquid
+  assign bs_has_illustration = false
+  assign bs_has_flags = false
+  for block in section.blocks
+    if block.settings.illustration != blank and block.settings.illustration != 'image'
+      assign bs_has_illustration = true
+    endif
+    if block.settings.illustration == 'flags'
+      assign bs_has_flags = true
+    endif
+  endfor
+-%}
+
+{%- if bs_has_illustration -%}
+  {{ 'bs-feature-illustrations.css' | asset_url | stylesheet_tag }}
+  {%- comment -%} Static Figma frames in the theme editor: no motion scripts there. {%- endcomment -%}
+  {%- unless request.design_mode -%}
+    {%- if bs_has_flags -%}
+      <script src="{{ 'matter.min.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    <script src="{{ 'bs-feature-illustrations.js' | asset_url }}" defer="defer"></script>
+  {%- endunless -%}
+{%- endif -%}
+
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -25,6 +49,20 @@
         {%- for block in section.blocks -%}
           <li class="bs-feature-cards__item" {{ block.shopify_attributes }}>
             <div class="bs-feature-cards__media{% if block.settings.image_fit == 'cover' %} bs-feature-cards__media--cover{% endif %}">
+              {%- case block.settings.illustration -%}
+                {%- when 'flags' -%}
+                  <bs-feature-illustration class="bs-illustration bs-flags" data-kind="flags" aria-hidden="true">
+                    {%- render 'bs-feature-flags' -%}
+                  </bs-feature-illustration>
+                {%- when 'products' -%}
+                  <bs-feature-illustration class="bs-illustration" data-kind="products" aria-hidden="true">
+                    {%- render 'bs-feature-products' -%}
+                  </bs-feature-illustration>
+                {%- when 'map' -%}
+                  <bs-feature-illustration class="bs-illustration" data-kind="map" aria-hidden="true">
+                    {%- render 'bs-feature-map' -%}
+                  </bs-feature-illustration>
+                {%- else -%}
               {%- if block.settings.image != blank -%}
                 {{
                   block.settings.image
@@ -35,6 +73,7 @@
                     loading: 'lazy'
                 }}
               {%- endif -%}
+              {%- endcase -%}
             </div>
             {%- if block.settings.title != blank or block.settings.text != blank -%}
               <div class="bs-feature-cards__content">
@@ -99,6 +138,19 @@
       "type": "card",
       "name": "Card",
       "settings": [
+        {
+          "type": "select",
+          "id": "illustration",
+          "label": "Illustration",
+          "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "flags", "label": "Importer flags (animated)" },
+            { "value": "products", "label": "Developer products (animated)" },
+            { "value": "map", "label": "Distributor map (animated)" }
+          ],
+          "default": "image",
+          "info": "The animated illustrations replace the image. They stay still in the theme editor and for visitors who turn off motion."
+        },
         {
           "type": "image_picker",
           "id": "image",

@@ -294,6 +294,10 @@
     }
   },
   "sections": {
+    "feature_cards": {
+      "map_nsw": "NSW",
+      "map_vic": "VIC"
+    },
     "faq": {
       "groups": "Show questions about",
       "no_answer": "No answer yet. This question stays hidden on the live site until it has one."

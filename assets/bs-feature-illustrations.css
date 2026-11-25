@@ -1,0 +1,145 @@
+/*
+  Animated feature card illustrations (Importer flags, Developer products, Distributor map).
+  Each is drawn at the Figma frame size (549 x 373) and fitted, centred, inside the card's
+  illustration panel, which keeps its own size. Without JS, with reduced motion and in the theme
+  editor this is the static Figma frame. Motion: assets/bs-feature-illustrations.js.
+
+  The blues are the illustration artwork from Figma; the two that are theme tokens use them.
+*/
+
+.bs-illustration {
+  --bs-illo-blue: var(--bs-color-blue);
+  --bs-illo-blue-80: #4C70FF;
+  --bs-illo-blue-60: #7698FF;
+  --bs-illo-blue-40: #A2BCFF;
+  --bs-illo-blue-20: var(--bs-color-blue-tint);
+
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bs-illustration > svg,
+.bs-flags__stage {
+  display: block;
+  flex: none;
+  width: min(100%, calc(100cqh * 549 / 373));
+  height: auto;
+  aspect-ratio: 549 / 373;
+}
+
+/* The panel is a size container so the frame fits it both ways (100cqh above). */
+.bs-feature-cards__media:has(.bs-illustration) {
+  position: relative;
+  container-type: size;
+}
+
+/* Developer products (GSAP turns each about its base). */
+.bs-products {
+  overflow: visible;
+}
+
+.bs-illustration.is-armed .bs-products__item {
+  opacity: 0;
+}
+
+/* Distributor map */
+.bs-map__nsw {
+  fill: var(--bs-illo-blue-60);
+}
+
+.bs-map__vic {
+  fill: var(--bs-illo-blue-80);
+}
+
+.bs-map__act {
+  fill: var(--bs-illo-blue-40);
+}
+
+.bs-map__roads path {
+  fill: none;
+  stroke: var(--bs-illo-blue-20);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Towns only show while a delivery arrives. */
+.bs-map__towns circle {
+  fill: var(--bs-color-white);
+  opacity: 0;
+}
+
+.bs-map__pulse {
+  fill: var(--bs-illo-blue-20);
+  opacity: 0;
+}
+
+.bs-map__halo {
+  fill: var(--bs-illo-blue-20);
+}
+
+.bs-map__hub,
+.bs-map__truck-dot {
+  fill: var(--bs-illo-blue);
+}
+
+.bs-map__label {
+  fill: var(--bs-color-white);
+  font-family: var(--font-heading-family);
+  font-size: 13px;
+  font-weight: var(--bs-weight-demibold);
+  letter-spacing: 0.08em;
+}
+
+/* Importer flags: positioned at their Figma centres until physics takes them over. */
+.bs-flags__stage {
+  position: relative;
+}
+
+.bs-flags__flag {
+  position: absolute;
+  top: calc(var(--y) / 373 * 100%);
+  left: calc(var(--x) / 549 * 100%);
+  width: calc(72 / 549 * 100%);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(var(--r));
+}
+
+.bs-flags__flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.bs-illustration.is-armed .bs-flags__flag {
+  visibility: hidden;
+}
+
+/* Physics: the whole panel is the world, chips are moved by transform only. */
+.bs-flags.is-physics .bs-flags__stage {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  aspect-ratio: auto;
+}
+
+.bs-flags.is-physics .bs-flags__flag {
+  top: 0;
+  left: 0;
+  width: var(--bs-flag-size, 72px);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  will-change: transform;
+  visibility: visible;
+}
+
+.bs-flags.is-dragging .bs-flags__flag {
+  cursor: grabbing;
+}
