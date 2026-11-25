@@ -3,8 +3,10 @@
 
   - flags:    the Importer flag chips drop in and bounce with Matter.js physics (assets/matter.min.js,
               loaded by the section only when a card uses it). Visitors can grab and throw them with
-              a mouse or a finger, and they hop when the pointer comes onto the card.
+              a mouse or a finger, and the mouse pushes them away as it moves through the pile.
   - products: the Developer silhouettes pop in, then each keeps its own small springy move (GSAP).
+              With a mouse, each reacts in its own way when the cursor reaches it, and they all
+              lean a little towards the cursor while it is over the card.
   - map:      the Distributor map sends delivery dots out of Melbourne along the highways; a town
               pops while a delivery reaches it, then fades, and the hub's halo pulses (GSAP).
 
@@ -21,6 +23,9 @@
 
   const FRAME_WIDTH = 549;
   const FRAME_HEIGHT = 373;
+
+  // Hover effects are for a mouse or pen; touch only drags (flags) or scrolls.
+  const isFinePointer = (event) => event.pointerType === 'mouse' || event.pointerType === 'pen';
 
   /* Importer: Matter.js flag chips. */
   class Flags {
@@ -49,9 +54,8 @@
         pointermove: this.onPointerMove.bind(this),
         pointerup: this.onPointerUp.bind(this),
         pointercancel: this.onPointerUp.bind(this),
-        pointerenter: this.onPointerEnter.bind(this),
+        pointerenter: this.forgetRect.bind(this),
       };
-      this.forgetRect = () => (this.rect = null);
       this.resizeObserver = new ResizeObserver(([entry]) => this.resize(entry.contentRect));
     }
 
@@ -78,7 +82,7 @@
       this.render(true);
 
       Object.entries(this.handlers).forEach(([type, handler]) => this.root.addEventListener(type, handler));
-      window.addEventListener('scroll', this.forgetRect, { passive: true });
+      window.addEventListener('scroll', this.handlers.pointerenter, { passive: true });
       this.resizeObserver.observe(this.root);
       this.started = true;
     }
@@ -100,7 +104,7 @@
       this.pause();
       if (!this.started) return;
       this.resizeObserver.disconnect();
-      window.removeEventListener('scroll', this.forgetRect);
+      window.removeEventListener('scroll', this.handlers.pointerenter);
       Object.entries(this.handlers).forEach(([type, handler]) => this.root.removeEventListener(type, handler));
       window.Matter.Engine.clear(this.engine);
       window.Matter.Composite.clear(this.engine.world, false);
@@ -174,6 +178,10 @@
       });
     }
 
+    forgetRect() {
+      this.rect = null;
+    }
+
     point(event) {
       if (!this.rect) this.rect = this.root.getBoundingClientRect();
       return { x: event.clientX - this.rect.left, y: event.clientY - this.rect.top };
@@ -203,9 +211,39 @@
     }
 
     onPointerMove(event) {
-      if (!this.drag || event.pointerId !== this.drag.id) return;
-      this.drag.constraint.pointA = this.point(event);
-      window.Matter.Sleeping.set(this.drag.body, false);
+      if (this.drag) {
+        if (event.pointerId !== this.drag.id) return;
+        this.drag.constraint.pointA = this.point(event);
+        window.Matter.Sleeping.set(this.drag.body, false);
+        return;
+      }
+      // Mouse or pen only, and not while a button is held, so touch stays drag-only.
+      if (isFinePointer(event) && !event.buttons) this.repel(this.point(event));
+    }
+
+    // Moving the mouse through the pile sends the chips flying: every chip within reach is pushed
+    // away from the pointer, harder the closer it is. Chips right under the pointer are left alone
+    // (a dead zone of 30px, or the chip's radius if bigger) so one can still be caught. limitSpeed() keeps the result catchable and inside the walls.
+    repel(point) {
+      const { Body, Sleeping } = window.Matter;
+      const reach = 140;
+      const deadZone = 30;
+      const strength = 9;
+      this.bodies.forEach((body) => {
+        const dx = body.position.x - point.x;
+        const dy = body.position.y - point.y;
+        const distance = Math.hypot(dx, dy);
+        // A chip the pointer is over is never pushed, however big the chip is.
+        const inner = Math.max(deadZone, body.circleRadius);
+        if (distance < inner || distance > reach) return;
+        const push = strength * (1 - (distance - inner) / (reach - inner)) ** 1.5;
+        Sleeping.set(body, false);
+        Body.setVelocity(body, {
+          x: body.velocity.x + (dx / distance) * push,
+          y: body.velocity.y + (dy / distance) * push - push * 0.35,
+        });
+        Body.setAngularVelocity(body, body.angularVelocity + (dx > 0 ? 1 : -1) * push * 0.01);
+      });
     }
 
     onPointerUp(event) {
@@ -213,24 +251,6 @@
       window.Matter.Composite.remove(this.engine.world, this.drag.constraint);
       this.drag = null;
       this.root.classList.remove('is-dragging');
-    }
-
-    // The chips scatter a little when the mouse comes onto the card.
-    onPointerEnter(event) {
-      if (event.pointerType !== 'mouse' || this.drag) return;
-      const now = performance.now();
-      if (now - (this.lastScatter || 0) < 600) return;
-      this.lastScatter = now;
-      const { Body, Sleeping } = window.Matter;
-      const kick = 4 * this.scale + 2;
-      this.bodies.forEach((body) => {
-        Sleeping.set(body, false);
-        Body.setVelocity(body, {
-          x: body.velocity.x + (Math.random() - 0.5) * kick,
-          y: body.velocity.y - kick * (0.6 + Math.random() * 0.6),
-        });
-        Body.setAngularVelocity(body, body.angularVelocity + (Math.random() - 0.5) * 0.12);
-      });
     }
   }
 
@@ -243,7 +263,73 @@
     constructor(root) {
       this.root = root;
       this.items = {};
+      this.hovers = {};
+      this.reactions = {};
       root.querySelectorAll('[data-product]').forEach((item) => (this.items[item.dataset.product] = item));
+      root.querySelectorAll('[data-hover]').forEach((group) => (this.hovers[group.dataset.hover] = group));
+      this.leans = Array.from(root.querySelectorAll('[data-lean]'));
+
+      this.onEnterProduct = (event) => {
+        if (isFinePointer(event)) this.react(event.currentTarget.dataset.hover);
+      };
+      this.onMove = (event) => {
+        if (!isFinePointer(event)) return;
+        if (!this.rect) this.rect = this.root.getBoundingClientRect();
+        this.lean(
+          ((event.clientX - this.rect.left) / this.rect.width) * 2 - 1,
+          ((event.clientY - this.rect.top) / this.rect.height) * 2 - 1
+        );
+      };
+      this.onLeave = () => this.lean(0, 0);
+      this.forgetRect = () => (this.rect = null);
+    }
+
+    // How far each product leans towards the cursor, nearer ones more (DOM order: carton, bottle,
+    // pouch, box, can), and each one's reaction when the cursor reaches it, in the spirit of its idle move.
+    static DEPTH = { carton: 0.6, bottle: 0.8, pouch: 1.1, box: 1, can: 1.4 };
+
+    static REACTIONS = {
+      bottle: (tl, el) =>
+        tl
+          .to(el, { rotation: -9, scale: 1.04, duration: 0.14, ease: 'power2.out' })
+          .to(el, { rotation: 0, scale: 1, duration: 1.1, ease: 'elastic.out(1.2, 0.25)' }),
+      pouch: (tl, el) =>
+        tl
+          .to(el, { scaleX: 1.12, scaleY: 0.86, duration: 0.14, ease: 'power2.out' })
+          .to(el, { scaleX: 1, scaleY: 1, duration: 1, ease: 'elastic.out(1.3, 0.3)' }),
+      carton: (tl, el) =>
+        tl
+          .to(el, { scaleX: 1.06, scaleY: 0.92, duration: 0.1, ease: 'power2.out' })
+          .to(el, { y: -34, scaleX: 0.96, scaleY: 1.06, duration: 0.3, ease: 'power2.out' })
+          .to(el, { y: 0, scaleX: 1, scaleY: 1, duration: 0.7, ease: 'bounce.out' }),
+      can: (tl, el) =>
+        tl
+          .to(el, { rotation: -28, scale: 1.08, duration: 0.2, ease: 'power2.out' })
+          .to(el, { rotation: 0, scale: 1, duration: 1, ease: 'elastic.out(1.2, 0.3)' }),
+      box: (tl, el) =>
+        tl
+          .to(el, { y: -14, scale: 1.08, duration: 0.18, ease: 'power2.out' })
+          .to(el, { y: 0, scale: 1, duration: 0.9, ease: 'elastic.out(1.3, 0.3)' }),
+    };
+
+    // A reaction plays to the end before the same product can react again, so a cursor resting on
+    // its edge can't restart it every frame.
+    react(name) {
+      const group = this.hovers[name];
+      const build = Products.REACTIONS[name];
+      if (!group || !build || (this.reactions[name] && this.reactions[name].isActive())) return;
+      this.context.add(() => {
+        this.reactions[name] = build(window.gsap.timeline(), group);
+      });
+    }
+
+    // x and y run from -1 to 1 across the card; 0, 0 is upright.
+    lean(x, y) {
+      this.leanTo.forEach(({ to, depth }) => {
+        to.x(x * 7 * depth);
+        to.y(y * 4 * depth);
+        to.rotation(x * 2.5 * depth);
+      });
     }
 
     start() {
@@ -252,6 +338,13 @@
       const all = Object.values(items);
       this.context = gsap.context(() => {
         gsap.set(all, { transformOrigin: '50% 100%' });
+        gsap.set([...Object.values(this.hovers), ...this.leans], { transformOrigin: '50% 100%' });
+        if (this.hovers.can) gsap.set(this.hovers.can, { transformOrigin: '50% 50%' });
+        this.leanTo = this.leans.map((group) => {
+          const name = group.querySelector('[data-hover]').dataset.hover;
+          const quick = (property) => gsap.quickTo(group, property, { duration: 0.8, ease: 'power3.out' });
+          return { depth: Products.DEPTH[name] || 1, to: { x: quick('x'), y: quick('y'), rotation: quick('rotation') } };
+        });
         this.intro = gsap.fromTo(
           all,
           { opacity: 0, y: 50, scale: 0.5 },
@@ -294,6 +387,10 @@
           ),
         ].filter(Boolean);
       }, this.root);
+      Object.values(this.hovers).forEach((group) => group.addEventListener('pointerenter', this.onEnterProduct));
+      this.root.addEventListener('pointermove', this.onMove);
+      this.root.addEventListener('pointerleave', this.onLeave);
+      window.addEventListener('scroll', this.forgetRect, { passive: true });
       this.root.classList.remove('is-armed');
       this.started = true;
     }
@@ -311,7 +408,12 @@
     }
 
     destroy() {
-      if (this.context) this.context.revert();
+      if (!this.started) return;
+      Object.values(this.hovers).forEach((group) => group.removeEventListener('pointerenter', this.onEnterProduct));
+      this.root.removeEventListener('pointermove', this.onMove);
+      this.root.removeEventListener('pointerleave', this.onLeave);
+      window.removeEventListener('scroll', this.forgetRect);
+      this.context.revert();
     }
   }
 
