@@ -64,7 +64,7 @@
     animation-name: button-071-translate;
     animation-play-state: running;
     /* One pass. Osmo loops it and relies on a timer to stop it; a late timer (Safari on a busy
-       page) let a second roll start, which read as a glitch. */
+       page) let a second roll start, which read as a glitch on hover. */
     animation-iteration-count: 1;
     animation-duration: var(--button-071-speed);
     animation-timing-function: var(--button-071-ease-hover);
