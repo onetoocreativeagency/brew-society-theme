@@ -103,6 +103,32 @@
   text-box: trim-both cap alphabetic;
 }
 
+/* Rolling last digit (assets/bs-roll-number.js). The number's box is trimmed to the digits'
+   height (cap to baseline, text-box above), so clipping to it shows the digits only inside that
+   band, like a counter's window; the digits sit 1.1em apart. */
+.bs-steps__number:has(bs-roll-number) {
+  clip-path: inset(-0.03em 0);
+}
+
+.bs-roll-number__column {
+  position: relative;
+  display: inline-block;
+}
+
+.bs-roll-number__strip {
+  position: relative;
+  display: inline-block;
+  transform: translateY(calc(var(--bs-roll, 0) * 1.1em));
+}
+
+.bs-roll-number__ghost {
+  position: absolute;
+  top: calc(var(--bs-roll-offset) * 1.1em);
+  right: 0;
+  left: 0;
+  text-align: center;
+}
+
 .bs-steps__content {
   display: flex;
   flex-direction: column;
