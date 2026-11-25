@@ -20,6 +20,17 @@
   gap: var(--bs-space-40);
 }
 
+/* Phones: the cards stack, so each card's text sits nearer its own image than the next card. */
+@media screen and (max-width: 749px) {
+  .bs-feature-cards__list {
+    row-gap: calc(var(--bs-space-48) + var(--bs-space-8));
+  }
+
+  .bs-feature-cards__item {
+    gap: var(--bs-space-24);
+  }
+}
+
 /* Neutral panel on any colour scheme; also the empty state before an image is uploaded. */
 .bs-feature-cards__media,
 .bs-feature-cards__media:empty {
