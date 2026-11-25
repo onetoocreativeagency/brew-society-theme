@@ -181,6 +181,37 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   flex-grow: 1;
 }
 
+/* The same space under every page's last content, above the footer: the last section's own
+   bottom padding gives way to it. Not when the page ends on a coloured steps block (home), whose
+   small inset frames it. */
+.content-for-layout {
+  --bs-page-end: 72px;
+}
+
+@media screen and (min-width: 750px) {
+  .content-for-layout {
+    --bs-page-end: var(--bs-space-96);
+  }
+}
+
+.content-for-layout > .shopify-section:last-child:not(:has(.bs-steps.gradient))
+  [class*='section-template--'][class*='-padding'] {
+  padding-bottom: var(--bs-page-end);
+}
+
+/* The empty cart: its items section drops its padding and the footer section is hidden. */
+.content-for-layout cart-items.is-empty {
+  padding-bottom: var(--bs-page-end);
+}
+
+.content-for-layout cart-items.is-empty .cart__warnings {
+  padding-bottom: 0;
+}
+
+.content-for-layout cart-items.is-empty .cart__login-paragraph {
+  margin-bottom: 0;
+}
+
 .section + .section {
   margin-top: var(--spacing-sections-mobile);
 }
@@ -3538,7 +3569,7 @@ details-disclosure > details {
 .content-for-layout .shopify-policy__container {
   max-width: none;
   margin: 0;
-  padding: var(--bs-space-64) var(--bs-gutter) var(--bs-space-96);
+  padding: var(--bs-space-64) var(--bs-gutter) var(--bs-page-end);
 }
 
 .shopify-policy__title h1 {
@@ -3553,7 +3584,7 @@ details-disclosure > details {
 @media screen and (min-width: 750px) {
   .content-for-layout .shopify-policy__container {
     padding-top: var(--bs-space-128);
-    padding-bottom: var(--bs-space-128);
+    padding-bottom: var(--bs-page-end);
   }
 
   .shopify-policy__title h1 {
