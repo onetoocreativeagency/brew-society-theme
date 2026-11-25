@@ -407,7 +407,11 @@
       "categories": "Categories",
       "empty": "No products found",
       "title": "Collection",
-      "use_fewer_filters_html": "Use fewer filters or <a class=\"{{ class }}\" href=\"{{ link }}\">remove all</a>"
+      "use_fewer_filters_html": "Use fewer filters or <a class=\"{{ class }}\" href=\"{{ link }}\">remove all</a>",
+      "wholesale_only_title": "Not in the online store yet",
+      "wholesale_only_text": "{{ title }} isn't available to buy here yet, but trade customers can order the range wholesale.",
+      "wholesale_only_button": "Order Wholesale",
+      "wholesale_only_browse": "Shop all products"
     },
     "video": {
       "load_video": "Load video: {{ description }}"

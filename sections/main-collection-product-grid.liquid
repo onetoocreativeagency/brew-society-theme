@@ -169,16 +169,40 @@
           {%- if collection.products.size == 0 -%}
             <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
               <div class="loading-overlay gradient"></div>
-              <div class="title-wrapper center">
-                <h2 class="title title--primary">
-                  {{ 'sections.collection_template.empty' | t -}}
-                  <br>
-                  {{
-                    'sections.collection_template.use_fewer_filters_html'
-                    | t: link: collection.url, class: 'underlined-link link'
-                  }}
-                </h2>
-              </div>
+              {%- if collection.all_products_count == 0 -%}
+                {%- comment -%}
+                  Nothing from this collection is in the online store (as opposed to filters hiding
+                  everything): it may still be ordered wholesale, so say so and point there.
+                {%- endcomment -%}
+                <div class="title-wrapper center bs-collection-wholesale">
+                  <h2 class="title title--primary">{{ 'sections.collection_template.wholesale_only_title' | t }}</h2>
+                  <p class="bs-collection-wholesale__text">
+                    {%- assign bs_collection_title = collection.title | escape -%}
+                    {{ 'sections.collection_template.wholesale_only_text' | t: title: bs_collection_title }}
+                  </p>
+                  <div class="bs-collection-wholesale__actions">
+                    {%- if settings.wholesale_portal_url != blank -%}
+                      <a href="{{ settings.wholesale_portal_url }}" class="button">
+                        {{- 'sections.collection_template.wholesale_only_button' | t -}}
+                      </a>
+                    {%- endif -%}
+                    <a href="{{ routes.all_products_collection_url }}" class="button button--secondary">
+                      {{- 'sections.collection_template.wholesale_only_browse' | t -}}
+                    </a>
+                  </div>
+                </div>
+              {%- else -%}
+                <div class="title-wrapper center">
+                  <h2 class="title title--primary">
+                    {{ 'sections.collection_template.empty' | t -}}
+                    <br>
+                    {{
+                      'sections.collection_template.use_fewer_filters_html'
+                      | t: link: collection.url, class: 'underlined-link link'
+                    }}
+                  </h2>
+                </div>
+              {%- endif -%}
             </div>
           {%- else -%}
             <div
