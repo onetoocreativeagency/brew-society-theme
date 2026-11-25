@@ -7,8 +7,9 @@
 (function () {
   if (!window.gsap || !window.SplitText) return;
 
-  // Dawn text buttons and pills, plus the Steps cards' buttons (their own class, same pill).
-  const BUTTONS = '.button, .bs-steps__button';
+  // Dawn text buttons and pills, the Steps cards' buttons (their own class, same pill), and
+  // the linked pills in a brand page's header (category, website, Instagram, info pack).
+  const BUTTONS = '.button, .bs-steps__button, a.bs-brand-hero__pill';
   const SKIP = '.skip-to-content-link, .button--icon-only, .bs-pill--close, .slider-button, .quantity__button, [data-button-071-off]';
   // Elements that may sit beside a label without making the button "not text-only".
   const ALLOWED_SIBLINGS = '.visually-hidden, .loading__spinner';

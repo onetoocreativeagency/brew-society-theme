@@ -36,6 +36,7 @@
         "break_after_bold": false,
         "paragraph": true,
         "as_heading": false,
+        "scroll_reveal": true,
         "alignment": "left",
         "max_width": "full",
         "color_scheme": "scheme-2",

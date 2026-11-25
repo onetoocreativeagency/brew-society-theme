@@ -170,7 +170,11 @@
           }}
         </div>
       {%- else -%}
-        <span class="header__wordmark">{{ shop.name }}</span>
+        {%- comment -%} The wordmark is set with no space ("BrewSociety."); screen readers get the shop name. {%- endcomment -%}
+        <span class="header__wordmark">
+          <span aria-hidden="true">{{ shop.name | remove: ' ' }}</span>
+          <span class="visually-hidden">{{ shop.name }}</span>
+        </span>
       {%- endif -%}
     </a>
 
