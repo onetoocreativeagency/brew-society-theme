@@ -23,6 +23,10 @@
 
   const FRAME_WIDTH = 549;
   const FRAME_HEIGHT = 373;
+  // Flag chips in the physics are 1.5 times their Figma size (72), so the seven pile up and fill the card.
+  const CHIP_SCALE = 1.5;
+  // Walls sit this far inside the panel, so a chip in a corner clears the rounded corner.
+  const WALL_INSET = 8;
 
   // Hover effects are for a mouse or pen; touch only drags (flags) or scrolls.
   const isFinePointer = (event) => event.pointerType === 'mouse' || event.pointerType === 'pen';
@@ -44,10 +48,12 @@
       }));
       this.size = { width: root.clientWidth, height: root.clientHeight };
 
-      this.engine = Engine.create({ enableSleeping: true });
+      // Extra solver passes so a fast chip is pushed back out of a wall within a frame (11 bodies, cheap).
+      this.engine = Engine.create({ enableSleeping: true, positionIterations: 10, velocityIterations: 6 });
       this.runner = Runner.create({ delta: 1000 / 60 });
       Events.on(this.runner, 'afterTick', () => this.render());
       Events.on(this.engine, 'beforeUpdate', () => this.limitSpeed());
+      Events.on(this.engine, 'afterUpdate', () => this.closeLid());
 
       this.handlers = {
         pointerdown: this.onPointerDown.bind(this),
@@ -63,16 +69,23 @@
       const { Bodies, Composite } = window.Matter;
       this.layout();
       const offsetX = (this.size.width - FRAME_WIDTH * this.scale) / 2;
-      // Drop in from just above the card, a few at a time, each in its Figma column and turn.
+      const minX = WALL_INSET + this.radius;
+      const maxX = this.size.width - WALL_INSET - this.radius;
+      // Drop in from just above the card one after another, each in its Figma column and turn.
       this.bodies = this.design.map((flag, index) =>
-        Bodies.circle(offsetX + flag.x * this.scale, -this.radius - index * 45 - Math.random() * 30, this.radius, {
+        Bodies.circle(
+          Math.min(maxX, Math.max(minX, offsetX + flag.x * this.scale)),
+          -this.radius - index * this.radius * 1.6 - Math.random() * 20,
+          this.radius,
+          {
           angle: flag.angle,
           restitution: 0.55,
           friction: 0.06,
           frictionAir: 0.012,
           density: 0.0015,
           sleepThreshold: 90,
-        })
+          }
+        )
       );
       this.walls = this.makeWalls();
       Composite.add(this.engine.world, [...this.walls, ...this.bodies]);
@@ -116,7 +129,7 @@
     // The Figma frame fitted inside the panel sets the chip size (72 at full size).
     layout() {
       this.scale = Math.min(this.size.width / FRAME_WIDTH, this.size.height / FRAME_HEIGHT);
-      this.radius = 36 * this.scale;
+      this.radius = 36 * CHIP_SCALE * this.scale;
       this.root.style.setProperty('--bs-flag-size', `${this.radius * 2}px`);
     }
 
@@ -125,16 +138,28 @@
       const { width, height } = this.size;
       const thick = 200;
       const tall = height * 4;
-      // 8px in from the edges, so a chip in a corner clears the panel's rounded corner.
-      const inset = 8;
+      const inset = WALL_INSET;
       const options = { isStatic: true, friction: 0.2, restitution: 0.4 };
+      // The lid starts high above the card for the drop-in, then closes on the card's top edge.
+      const lidY = this.lidClosed ? inset - thick / 2 : height - tall - thick / 2;
       return [
         Bodies.rectangle(width / 2, height - inset + thick / 2, width + thick * 2, thick, options),
         Bodies.rectangle(inset - thick / 2, height - tall / 2, thick, tall, options),
         Bodies.rectangle(width - inset + thick / 2, height - tall / 2, thick, tall, options),
-        // A lid well above the card, so a thrown chip always falls back in.
-        Bodies.rectangle(width / 2, height - tall - thick / 2, width + thick * 2, thick, options),
+        Bodies.rectangle(width / 2, lidY, width + thick * 2, thick, options),
       ];
+    }
+
+    // Once every chip has dropped fully into the card, the lid closes on its top edge, so thrown
+    // and scattered chips bounce off the top and stay in view.
+    closeLid() {
+      if (this.lidClosed) return;
+      if (this.bodies.some((body) => body.position.y - body.circleRadius < WALL_INSET + 1)) return;
+      const { Composite } = window.Matter;
+      this.lidClosed = true;
+      Composite.remove(this.engine.world, this.walls);
+      this.walls = this.makeWalls();
+      Composite.add(this.engine.world, this.walls);
     }
 
     resize({ width, height }) {
@@ -171,7 +196,7 @@
     // A hard throw stays catchable and never tunnels through a wall.
     limitSpeed() {
       const { Body } = window.Matter;
-      const max = 28;
+      const max = 20;
       this.bodies.forEach((body) => {
         const speed = Body.getSpeed(body);
         if (speed > max) Body.setSpeed(body, max);
