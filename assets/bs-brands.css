@@ -394,8 +394,17 @@
 }
 
 /* The thumbnail is the logo alone: no panel colour, the logo across the thumbnail's width.
-   bs-brands.js animates both between the views. */
+   bs-brands.js animates both between the views.
+   It sits out of the flow, in a first row of its height: going to the list, Flip animates its
+   real size (scaling the small thumbnail up pixelated the logo), and that must not move the rows. */
+.bs-brands[data-view='list'] .bs-brand-card {
+  grid-template-rows: calc(var(--bs-brand-thumb) * 611 / 408) auto;
+}
+
 .bs-brands[data-view='list'] .bs-brand-card__panel {
+  position: absolute;
+  top: 0;
+  left: 0;
   background: transparent;
 }
 

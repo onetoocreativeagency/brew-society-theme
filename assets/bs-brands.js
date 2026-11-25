@@ -206,7 +206,9 @@ if (!customElements.get('bs-brand-catalogue')) {
         const endRadii = flipElements.map(cornerRadius);
         const endLooks = panels.map((el) => this.panelLook(el));
         const timeline = gsap.timeline();
-        timeline.add(Flip.from(state, { duration: 0.8, ease: 'expo.inOut', scale: true }), 0);
+        // Scaling from a smaller box up pixelates (the logo is drawn at the small size), so going to
+        // the list the panels animate their real size; they are out of the flow there (CSS).
+        timeline.add(Flip.from(state, { duration: 0.8, ease: 'expo.inOut', scale: view === 'grid' }), 0);
         flipElements.forEach((el, index) => {
           timeline.fromTo(
             el,
