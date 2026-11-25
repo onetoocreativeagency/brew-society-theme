@@ -109,13 +109,28 @@
   }
 }
 
+/* Desktop: the switch starts on column four (Figma), and grows leftwards when column four is
+   narrower than it (990px to about 1300px), taking the room from the category links, which wrap.
+   Pinned to column four it ran off the page there. */
 @media screen and (min-width: 990px) {
+  .bs-collection-bar.bs-brands__bar {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--bs-grid-gap);
+  }
+
+  /* Three columns wide; it gives up room when the switch needs more than column four. */
+  .bs-brands__bar .bs-category-nav {
+    flex: 0 1 calc(100% - (100% - 3 * var(--bs-grid-gap)) / 4 - var(--bs-grid-gap));
+    min-width: 0;
+  }
+
   .bs-brands__views {
-    grid-column: 4;
+    flex: none;
   }
 }
 
-/* Grid of brand cards: 2 columns, 4 on desktop */
+/* Grid of brand cards: 2 columns, 3 on tablets, 4 on desktop */
 .bs-brand-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -290,6 +305,7 @@
 
 @media screen and (min-width: 750px) {
   .bs-brand-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     row-gap: var(--bs-space-64);
   }
 
