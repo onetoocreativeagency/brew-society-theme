@@ -3,8 +3,8 @@
 
   Products around Order Wholesale: tucked behind the pill at rest, they burst out to their Figma
   places on hover of the cluster or keyboard focus on the pill, and tuck back on leave. Without
-  hover (touch), they burst out once when the cluster scrolls into view and stay out. With
-  reduced motion, or without GSAP, they stay where the CSS puts them: out, as in Figma.
+  hover (touch), the burst is scrubbed by the scroll (ScrollTrigger). With reduced motion, or
+  without GSAP, they stay where the CSS puts them: out, as in Figma.
 
   "BrewSociety. ©2026" strip: a CSS loop; this pauses it while it is off screen.
 */
@@ -80,6 +80,41 @@
       // Keep the tuck in step with the pill when the layout changes size.
       window.addEventListener('resize', () => {
         if (!open) gsap.set(products, tucked);
+      });
+    } else if (window.ScrollTrigger) {
+      // No hover (touch): the burst follows the scroll. Tucked as the cluster comes up into view,
+      // fully out by the time the pill reaches the middle of the screen (or the page ends first),
+      // tucked again on the way back up. Each product takes its own slice of the range.
+      const tl = gsap.timeline({ paused: true }).fromTo(products, tucked, {
+        x: 0,
+        y: 0,
+        rotation: (i, el) => rotation(el),
+        scale: 1,
+        duration: 1,
+        ease: 'back.inOut(1.2)',
+        stagger: { each: 0.12, from: 'center' },
+      });
+      // Measured live because the footer parallax moves the cluster while it scrolls in.
+      const inner = cluster.closest('[data-footer-parallax-inner]') || cluster;
+      const update = () => {
+        const vh = window.innerHeight;
+        const c = cluster.getBoundingClientRect();
+        const p = pill.getBoundingClientRect();
+        const range = Math.min(vh / 2 + (p.top + p.height / 2 - c.top), inner.getBoundingClientRect().bottom - c.top);
+        const progress = gsap.utils.clamp(0, 1, (vh - c.top) / range);
+        gsap.to(tl, { progress, duration: 0.4, ease: 'power1.out', overwrite: true });
+      };
+      ScrollTrigger.create({
+        trigger: cluster.closest('[data-footer-parallax]') || cluster,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: update,
+        onRefresh: update,
+        onLeaveBack: () => gsap.to(tl, { progress: 0, duration: 0.4, overwrite: true }),
+      });
+      window.addEventListener('resize', () => {
+        tl.invalidate();
+        update();
       });
     } else {
       pill.addEventListener('focus', burst);
