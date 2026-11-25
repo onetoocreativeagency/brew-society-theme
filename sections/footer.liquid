@@ -45,122 +45,161 @@
     data-footer-parallax-inner
   >
     <div class="footer__inner page-width">
-      {%- if settings.wholesale_portal_url != blank and section.settings.wholesale_label != blank -%}
-        <a
-          href="{{ settings.wholesale_portal_url }}"
-          class="footer__wholesale button bs-pill-xl"
-          target="_blank"
-          rel="noopener"
-        >
-          {{- section.settings.wholesale_label | escape -}}
-          <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
-        </a>
-      {%- endif -%}
-
-      <div class="footer__main">
-        {%- render 'bs-display-figures', text: '©', class: 'footer__figure footer__figure--copyright' -%}
-
-        <div class="footer__columns">
-          {%- if section.settings.menu.links.size > 0 -%}
-            <nav class="footer__nav" aria-label="{{ 'sections.footer.navigation' | t }}">
-              <ul class="footer__list list-unstyled" role="list">
-                {%- for link in section.settings.menu.links -%}
-                  <li>
-                    <a
-                      href="{{ link.url }}"
-                      class="footer__link"
-                      {% if link.current %}
-                        aria-current="page"
-                      {% endif %}
-                    >
-                      <span>{{ link.title | escape }}</span>
-                      {%- render 'bs-menu-count', link: link -%}
-                    </a>
-                  </li>
-                {%- endfor -%}
-              </ul>
-            </nav>
-          {%- endif -%}
-
-          <address class="footer__contact">
-            <ul class="footer__list list-unstyled" role="list" aria-label="{{ 'sections.footer.contact' | t }}">
-              {%- if section.settings.address != blank -%}
-                <li>{{ section.settings.address | escape | newline_to_br }}</li>
-              {%- endif -%}
-              {%- if section.settings.email != blank -%}
+      <div class="footer__columns">
+        {%- if section.settings.menu.links.size > 0 -%}
+          <nav class="footer__nav" aria-label="{{ 'sections.footer.navigation' | t }}">
+            <ul class="footer__list list-unstyled" role="list">
+              {%- for link in section.settings.menu.links -%}
                 <li>
-                  <a href="mailto:{{ section.settings.email | strip | escape }}">{{ section.settings.email | escape }}</a>
+                  <a
+                    href="{{ link.url }}"
+                    class="footer__link"
+                    {% if link.current %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    <span>{{ link.title | escape }}</span>
+                    {%- render 'bs-menu-count', link: link -%}
+                  </a>
                 </li>
-              {%- endif -%}
-              {%- if section.settings.phone != blank -%}
-                <li>
-                  <a href="tel:{{ section.settings.phone | remove: ' ' | escape }}">{{ section.settings.phone | escape }}</a>
-                </li>
-              {%- endif -%}
-              {%- for network in bs_networks -%}
-                {%- liquid
-                  if network == 'linkedin'
-                    assign social_url = section.settings.linkedin_url
-                  else
-                    assign social_setting = 'social_' | append: network | append: '_link'
-                    assign social_url = settings[social_setting]
-                  endif
-                  assign social_label = 'general.social.links.' | append: network
-                -%}
-                {%- if social_url != blank -%}
-                  <li>
-                    <a href="{{ social_url }}" target="_blank" rel="noopener">
-                      {{- social_label | t -}}
-                      <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
-                    </a>
-                  </li>
-                {%- endif -%}
               {%- endfor -%}
             </ul>
-          </address>
-        </div>
+          </nav>
+        {%- endif -%}
 
-        {%- render 'bs-display-figures', text: bs_year, class: 'footer__figure footer__figure--year' -%}
+        <address class="footer__contact">
+          <ul class="footer__list list-unstyled" role="list" aria-label="{{ 'sections.footer.contact' | t }}">
+            {%- if section.settings.address != blank -%}
+              <li>{{ section.settings.address | escape | newline_to_br }}</li>
+            {%- endif -%}
+            {%- if section.settings.email != blank -%}
+              <li>
+                <a href="mailto:{{ section.settings.email | strip | escape }}">{{ section.settings.email | escape }}</a>
+              </li>
+            {%- endif -%}
+            {%- if section.settings.phone != blank -%}
+              <li>
+                <a href="tel:{{ section.settings.phone | remove: ' ' | escape }}">{{ section.settings.phone | escape }}</a>
+              </li>
+            {%- endif -%}
+            {%- for network in bs_networks -%}
+              {%- liquid
+                if network == 'linkedin'
+                  assign social_url = section.settings.linkedin_url
+                else
+                  assign social_setting = 'social_' | append: network | append: '_link'
+                  assign social_url = settings[social_setting]
+                endif
+                assign social_label = 'general.social.links.' | append: network
+              -%}
+              {%- if social_url != blank -%}
+                <li>
+                  <a href="{{ social_url }}" target="_blank" rel="noopener">
+                    {{- social_label | t -}}
+                    <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </address>
       </div>
 
-      <div class="footer__end">
-        {%- render 'bs-wordmark', label: shop.name, class: 'footer__wordmark' -%}
-
-        <div class="footer__legal">
-          <ul class="footer__policies list-unstyled" role="list">
-            {%- if shop.privacy_policy != blank -%}
-              <li>
-                <a href="{{ shop.privacy_policy.url }}">{{ 'sections.footer.legal' | t }}</a>
-              </li>
-            {%- endif -%}
-            {%- if shop.shipping_policy != blank -%}
-              <li>
-                <a href="{{ shop.shipping_policy.url }}">{{ 'sections.footer.shipping' | t }}</a>
-              </li>
-            {%- endif -%}
-            {%- if shop.refund_policy != blank -%}
-              <li>
-                <a href="{{ shop.refund_policy.url }}">{{ 'sections.footer.returns' | t }}</a>
-              </li>
-            {%- endif -%}
-            {%- if shop.terms_of_service != blank -%}
-              <li>
-                <a href="{{ shop.terms_of_service.url }}">{{ 'sections.footer.terms' | t }}</a>
-              </li>
-            {%- endif -%}
-          </ul>
-          <p class="visually-hidden">{{ 'sections.footer.copyright' | t: year: bs_year, name: shop.name }}</p>
-          <a class="footer__credit" href="https://www.onetoo.com.au" target="_blank" rel="noopener">
-            {{- 'sections.footer.site_by' | t -}}
-            <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
-          </a>
+      {%- if settings.wholesale_portal_url != blank and section.settings.wholesale_label != blank -%}
+        {%- comment -%}
+          The pill with products fanned around it (Figma Footer V3). The products are decorative
+          and sit behind the pill; assets/bs-footer-motion.js tucks them away and bursts them out
+          on hover or focus (on scroll into view without hover). Per product: name, centre x and
+          y and width as % of the cluster, rotation, file size in px, and the distance to the
+          pill centre in cluster widths (for the tuck).
+        {%- endcomment -%}
+        {%- liquid
+          assign bs_products = 'sprout|11.029|31.522|10.345|-30|168|425|0.3897|0.2072,sticky-chai|14.354|59.891|15.071|-52.07|245|348|0.3565|0.0819,smart-ass|27.447|27.145|18.22|-24.83|296|270|0.2255|0.2266,johnny-cashew|84.969|40.57|16.743|14.36|272|356|-0.3497|0.1672,tonys|73.813|46.166|21.761|-60|353|192|-0.2381|0.1425,matcha|84.969|71.502|13.964|39.57|227|343|-0.3497|0.0306,prana-chai|31.826|44.897|11.15|-8.93|181|345|0.1817|0.1481,ordinary|60.508|43.008|11.208|15|182|312|-0.1051|0.1565' | split: ','
+        -%}
+        <div class="footer__middle">
+          <div class="footer__cluster" data-footer-cluster>
+            {%- for bs_product in bs_products -%}
+              {%- assign bs_p = bs_product | split: '|' -%}
+              <img
+                class="footer__product"
+                src="{{ 'bs-footer-' | append: bs_p[0] | append: '.webp' | asset_url }}"
+                alt=""
+                width="{{ bs_p[5] }}"
+                height="{{ bs_p[6] }}"
+                loading="lazy"
+                style="--x: {{ bs_p[1] }}%; --y: {{ bs_p[2] }}%; --w: {{ bs_p[3] }}%; --r: {{ bs_p[4] }}deg;"
+                data-rotation="{{ bs_p[4] }}"
+                data-tuck-x="{{ bs_p[7] }}"
+                data-tuck-y="{{ bs_p[8] }}"
+              >
+            {%- endfor -%}
+            <a
+              href="{{ settings.wholesale_portal_url }}"
+              class="footer__wholesale button bs-pill-xl"
+              target="_blank"
+              rel="noopener"
+            >
+              {{- section.settings.wholesale_label | escape -}}
+              <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
+            </a>
+          </div>
         </div>
+      {%- endif -%}
+
+      {%- comment -%}
+        "BrewSociety. ©2026" loops sideways (assets/bs-footer-motion.js pauses it off screen).
+        Two identical units, so moving the track by half its width is seamless. The second is
+        hidden from screen readers; the year is also in the copyright line below.
+      {%- endcomment -%}
+      <div class="footer__strip" data-footer-marquee>
+        <div class="footer__track">
+          {%- for i in (1..2) -%}
+            <div class="footer__unit"{% if forloop.first == false %} aria-hidden="true"{% endif %}>
+              {%- render 'bs-wordmark', label: shop.name, class: 'footer__wordmark' -%}
+              <span class="footer__marks">
+                {%- render 'bs-display-figures', text: '©', class: 'footer__mark' -%}
+                {%- render 'bs-display-figures', text: bs_year, class: 'footer__mark' -%}
+              </span>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="footer__legal">
+        <ul class="footer__policies list-unstyled" role="list">
+          {%- if shop.privacy_policy != blank -%}
+            <li>
+              <a href="{{ shop.privacy_policy.url }}">{{ 'sections.footer.legal' | t }}</a>
+            </li>
+          {%- endif -%}
+          {%- if shop.shipping_policy != blank -%}
+            <li>
+              <a href="{{ shop.shipping_policy.url }}">{{ 'sections.footer.shipping' | t }}</a>
+            </li>
+          {%- endif -%}
+          {%- if shop.refund_policy != blank -%}
+            <li>
+              <a href="{{ shop.refund_policy.url }}">{{ 'sections.footer.returns' | t }}</a>
+            </li>
+          {%- endif -%}
+          {%- if shop.terms_of_service != blank -%}
+            <li>
+              <a href="{{ shop.terms_of_service.url }}">{{ 'sections.footer.terms' | t }}</a>
+            </li>
+          {%- endif -%}
+        </ul>
+        <p class="visually-hidden">{{ 'sections.footer.copyright' | t: year: bs_year, name: shop.name }}</p>
+        <a class="footer__credit" href="https://www.onetoo.com.au" target="_blank" rel="noopener">
+          {{- 'sections.footer.site_by' | t -}}
+          <span class="visually-hidden">{{ 'accessibility.link_messages.new_window' | t }}</span>
+        </a>
       </div>
     </div>
   </footer>
   <div class="footer-parallax__dark" data-footer-parallax-dark aria-hidden="true"></div>
 </div>
 <script src="{{ 'bs-footer-parallax.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'bs-footer-motion.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
   comment

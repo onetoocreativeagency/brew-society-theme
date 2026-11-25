@@ -1,58 +1,27 @@
-/* Brew Society footer (Figma: Footer V2, desktop 4317:3884, mobile 4317:4075).
-   The footer is at least the height of the screen. The pill, "©", year and wordmark scale with
-   the footer's width (cqi: 1% of the content width between the gutters), as in Figma, so they
-   always run edge to edge. Below 990px the layout is the mobile frame; from 990px the desktop. */
+/* Brew Society footer (Figma: Footer V3, desktop 4317:3884; mobile adapted from it).
+   At least the height of the screen: links at the top, the Order Wholesale pill with products
+   fanned around it in the middle, then the looping "BrewSociety. ©2026" strip and the legal row.
+   Motion (product burst, strip loop) is in assets/bs-footer-motion.js. */
 
 .footer {
-  --footer-gap: var(--bs-space-24);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
 }
 
-/* Short phones: tighter gaps keep the wordmark on screen. */
-@media screen and (max-width: 989px) and (max-height: 700px) {
-  .footer {
-    --footer-gap: var(--bs-space-8);
-  }
-}
-
 .footer__inner {
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--footer-gap);
   width: 100%;
   container-type: inline-size;
 }
 
-/* Order Wholesale: the pill fills the width and its label scales with it. Figma: a 209px label
-   and 160px above and below the cap height on a 1696px pill (mobile is the same proportions).
-   Sized on the cap height, so the text box is set to 1em and nudged up 0.025em to centre the
-   caps (TT Commons Pro sits its caps 0.05em low in a 1em line). */
-.footer__wholesale.button.bs-pill-xl {
-  min-height: 0;
-  height: calc(2 * 9.41cqi + 0.7 * 12.35cqi);
-  padding: 0 0 0.05em;
-  font-size: 12.35cqi;
-}
-
-.footer__main {
-  flex: 1 0 auto;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas:
-    'columns columns columns'
-    'copyright . year';
-  align-content: space-between;
-  row-gap: var(--footer-gap);
-}
-
+/* Links and contact details: two equal columns, as in Figma. The contact column never squeezes
+   the email address. */
 .footer__columns {
-  grid-area: columns;
   display: grid;
-  /* Two equal columns, as in Figma; the contact column never squeezes the email address. */
   grid-template-columns: minmax(0, 1fr) minmax(min-content, 1fr);
   column-gap: var(--bs-gutter);
   font-size: var(--bs-text-paragraph);
@@ -97,37 +66,133 @@
   text-underline-offset: 0.12em;
 }
 
-/* "©" and the year, drawn as shapes fitted to the glyphs (snippets/bs-display-figures.liquid).
-   Figma: 64px tall on a 369px content width (mobile), 254px on 1680px (desktop). The tint is
-   the scheme's text colour at 17%, the blue tint (#DBDDFF) on white in Figma. */
-.footer__figure {
+/* The cluster sits in the free space with Figma's proportions above and below it
+   (67px over 127px at 1728 x 1080). */
+.footer__middle {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: var(--bs-space-16);
+}
+
+.footer__middle::before,
+.footer__middle::after {
+  content: '';
+  min-height: 0;
+}
+
+.footer__middle::before {
+  flex: 66.87 1 0;
+}
+
+.footer__middle::after {
+  flex: 127.01 1 0;
+}
+
+/* Figma: an 811 x 359 area around the pill. Everything inside scales with it (cqi), so phones get a
+   smaller cluster. */
+.footer__cluster {
+  position: relative;
+  width: min(811.28px, 100%);
+  aspect-ratio: 811.28 / 358.51;
+  container-type: inline-size;
+}
+
+/* Short screens from tablet up: the cluster shrinks to what is left of the screen height after
+   the links, legal row, strip (17.358cqi) and spacing (280px), so the footer still fits. */
+@media screen and (min-width: 750px) {
+  .footer__cluster {
+    width: min(811.28px, 100%, calc((100svh - 280px - 17.358cqi) * 811.28 / 358.51));
+  }
+}
+
+/* Each product is placed by its centre and rotation; bs-footer-motion.js moves it from there. */
+.footer__product {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: auto;
+  transform: translate(-50%, -50%) rotate(var(--r));
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Figma: a 60px label, 45px above and below the cap height, 483px wide, on an 811px cluster. Sized
+   on the cap height, so the text box is 1em and nudged up 0.025em to centre the caps. */
+.footer__wholesale.button.bs-pill-xl {
+  position: absolute;
+  left: 50%;
+  top: 78.42%;
+  z-index: 1;
+  width: 59.49cqi;
+  min-height: 0;
+  height: calc(2 * 5.598cqi + 0.7 * 7.348cqi);
+  padding: 0 0 0.05em;
+  font-size: 7.348cqi;
+  transform: translate(-50%, -50%);
+}
+
+/* "BrewSociety. ©2026" strip. --h is the wordmark height: 292px on Figma's 1680px content width.
+   It runs off both edges of the screen, starting cropped as in Figma; the loop moves the track
+   by one unit (half its width). */
+.footer__strip {
+  --h: 17.358cqi;
+  height: var(--h);
+  margin-inline: calc(-1 * var(--bs-gutter));
+  padding-inline-start: var(--bs-gutter);
+  overflow: hidden;
+  overflow: clip;
+}
+
+.footer__track {
+  display: flex;
+  width: max-content;
+  margin-left: calc(-1.7688 * var(--h));
+}
+
+.footer__unit {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(0.0823 * var(--h));
+  padding-right: calc(0.0823 * var(--h));
+}
+
+.footer__wordmark {
   display: block;
   width: auto;
-  height: 17.34cqi;
+  height: var(--h);
+  color: rgb(var(--color-foreground));
+}
+
+.footer__marks {
+  display: flex;
+}
+
+/* "©" and the year: 254px tall against the wordmark's 292px. The tint is the scheme's text colour
+   at 17%, the blue tint (#DBDDFF) on white in Figma. */
+.footer__mark {
+  display: block;
+  width: auto;
+  height: calc(0.8718 * var(--h));
   color: rgba(var(--color-foreground), 0.17);
 }
 
-.footer__figure--copyright {
-  grid-area: copyright;
+@media (prefers-reduced-motion: no-preference) {
+  .footer__track {
+    animation: footer-strip 45s linear infinite;
+  }
+
+  .footer__strip.is-paused .footer__track {
+    animation-play-state: paused;
+  }
 }
 
-.footer__figure--year {
-  grid-area: year;
-  justify-self: end;
-}
-
-.footer__end {
-  display: flex;
-  flex-direction: column;
-  gap: var(--footer-gap);
-}
-
-/* "BrewSociety." drawn as one shape (snippets/bs-wordmark.liquid), exactly the content width. */
-.footer__wordmark {
-  display: block;
-  width: 100%;
-  height: auto;
-  color: rgb(var(--color-foreground));
+@keyframes footer-strip {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .footer__legal {
@@ -153,26 +218,6 @@
 .footer__credit {
   margin-left: auto;
   white-space: nowrap;
-}
-
-@media screen and (min-width: 990px) {
-  .footer__main {
-    grid-template-areas: 'copyright columns year';
-    align-content: end;
-    align-items: start;
-    column-gap: var(--bs-space-24);
-  }
-
-  .footer__figure {
-    height: 15.12cqi;
-  }
-}
-
-/* The large link size from Figma once the columns are wide enough for the email address. */
-@media screen and (min-width: 1440px) {
-  .footer__columns {
-    font-size: var(--bs-text-large);
-  }
 }
 
 /* Footer parallax (Osmo Footer Parallax Effect, assets/bs-footer-parallax.js). The wrapper clips the
