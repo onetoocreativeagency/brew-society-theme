@@ -72,6 +72,9 @@
 .bs-brands__view[aria-pressed='true'] {
   color: rgb(var(--color-button-text));
   cursor: default;
+  /* Turns white as the indicator arrives (its slide is 0.8s), not before: white on the
+     track read as an empty pill. */
+  transition: color 0.2s linear 0.3s;
 }
 
 /* Two squares side by side for the grid, two dots stacked for the list. */

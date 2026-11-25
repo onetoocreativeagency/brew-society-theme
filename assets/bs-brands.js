@@ -6,8 +6,10 @@
   The switch animates with GSAP Flip, after Osmo Supply's "List/Grid Toggle (Flip)":
   - [data-list-grid-flip] elements (each brand's panel, the toggle's indicator) move and
     resize from their old place to their new one;
-  - [data-list-grid-fade] elements fade out, then those shown in the new view fade back in
-    ("" shows in both views, "grid" or "list" in that one only).
+  - [data-list-grid-fade] elements fade out where they are before the layout changes, then
+    those shown in the new view fade back in ("" shows in both views, "grid" or "list" in that
+    one only). They are not part of the Flip: scaled from one view's box to the other's, the
+    text stretched (giant category labels, smeared list rows).
   Changes from Osmo: the view is data-view (set before first paint by the section's inline
   script), the switch runs through render() so the URL, back button and category filter share
   it, brands hidden by the filter are not animated (their fades are set straight away), and the
@@ -59,7 +61,15 @@ if (!customElements.get('bs-brand-catalogue')) {
         event.preventDefault();
         if (!isFilter && control.dataset.listGridToggle === this.dataset.view) return;
 
-        this.render(isFilter ? control.dataset.brandsFilter : this.category, isFilter ? this.dataset.view : control.dataset.listGridToggle);
+        if (isFilter) {
+          this.update(control.dataset.brandsFilter, this.dataset.view, true);
+        } else {
+          this.fadeOut(() => this.update(this.category, control.dataset.listGridToggle, false));
+        }
+      }
+
+      update(category, view, isFilter) {
+        this.render(category, view);
 
         const url = new URL(window.location.href);
         this.category ? url.searchParams.set('category', this.category) : url.searchParams.delete('category');
@@ -110,6 +120,19 @@ if (!customElements.get('bs-brand-catalogue')) {
         this.querySelector('[data-brands-count-text]').textContent = this.countText;
       }
 
+      // Before a view switch the text fades out in place; render() then flips the panels.
+      fadeOut(done) {
+        if (!this.animates || this.reduceMotion || !this.rendered) return done();
+        if (this.flip) this.flip.kill();
+        this.flip = gsap.to(this.visible('[data-list-grid-fade]'), {
+          autoAlpha: 0,
+          duration: 0.15,
+          ease: 'power1.in',
+          overwrite: 'auto',
+          onComplete: done,
+        });
+      }
+
       shownIn(el, view) {
         return ['', view].includes(el.getAttribute('data-list-grid-fade'));
       }
@@ -137,10 +160,8 @@ if (!customElements.get('bs-brand-catalogue')) {
         if (this.flip) this.flip.kill();
         gsap.killTweensOf(fadeTargets, 'opacity,visibility');
         gsap.killTweensOf(flipElements);
-        const opacities = fadeTargets.map((el) => gsap.getProperty(el, 'opacity'));
         const startRadii = flipElements.map((el) => cornerRadius(el) * gsap.getProperty(el, 'scaleX'));
-        const state = Flip.getState([...flipElements, ...fadeTargets]);
-        gsap.set(fadeTargets, { autoAlpha: (index) => opacities[index] });
+        const state = Flip.getState(flipElements);
         gsap.set(flipElements, { clearProps: 'borderRadius' });
         return { fadeTargets, flipElements, startRadii, state, cornerRadius };
       }
@@ -158,22 +179,11 @@ if (!customElements.get('bs-brand-catalogue')) {
           return;
         }
 
+        // Normally already faded out by fadeOut(); after the back button they go at once.
+        gsap.set(fadeTargets, { autoAlpha: 0 });
         const endRadii = flipElements.map(cornerRadius);
         const timeline = gsap.timeline();
-        timeline.add(
-          Flip.from(state, {
-            duration: 0.8,
-            ease: 'expo.inOut',
-            scale: true,
-            onComplete() {
-              gsap.set(
-                fadeTargets.filter((el) => !fadeIn.includes(el)),
-                { autoAlpha: 0 }
-              );
-            },
-          }),
-          0
-        );
+        timeline.add(Flip.from(state, { duration: 0.8, ease: 'expo.inOut', scale: true }), 0);
         flipElements.forEach((el, index) => {
           timeline.fromTo(
             el,
@@ -182,9 +192,7 @@ if (!customElements.get('bs-brand-catalogue')) {
             0
           );
         });
-        timeline
-          .to(fadeTargets, { autoAlpha: 0, duration: 0.2, ease: 'power1.out' }, 0)
-          .to(fadeIn, { autoAlpha: 1, duration: 0.3, ease: 'power1.out', stagger: { amount: 0.2 } }, 0.55);
+        timeline.to(fadeIn, { autoAlpha: 1, duration: 0.3, ease: 'power1.out', stagger: { amount: 0.2 } }, 0.55);
         // Measuring every brand can take longer than a frame. The clock starts on the next tick,
         // so that time is not taken out of the start of the animation.
         timeline.pause();
