@@ -52,7 +52,7 @@
       {%- if section.settings.category_menu == blank and collection.template_suffix != 'brand' -%}
         {%- paginate collections by 250 -%}
           {%- for bs_collection in collections -%}
-            {%- if bs_collection.template_suffix == 'brand' or bs_collection.handle == 'all' or bs_collection.all_products_count == 0 -%}
+            {%- if bs_collection.template_suffix == 'brand' or bs_collection.handle == 'all' or bs_collection.handle == section.settings.all_collection.handle or bs_collection.all_products_count == 0 -%}
               {%- continue -%}
             {%- endif -%}
             <li>
@@ -167,16 +167,27 @@
             {%- if bs_category_links.size == 0 and bs_auto_categories != blank -%}
               <nav class="bs-category-nav" aria-label="{{ 'sections.collection_template.categories' | t }}">
                 <ul class="bs-category-nav__list list-unstyled" role="list">
+                  {%- liquid
+                    comment
+                      "All" is the chosen collection (e.g. Shop for Home, sorted best selling), or else
+                      Shopify's all-products page, which cannot be sorted in the admin.
+                    endcomment
+                    assign bs_all = section.settings.all_collection
+                    assign bs_all_current = false
+                    if collection.handle == 'all' or bs_all != blank and collection.handle == bs_all.handle
+                      assign bs_all_current = true
+                    endif
+                  -%}
                   <li>
                     <a
-                      href="{{ routes.all_products_collection_url }}"
-                      class="bs-category-nav__link{% if collection.handle == 'all' %} bs-category-nav__link--current{% endif %}"
-                      {% if collection.handle == 'all' %}
+                      href="{{ bs_all.url | default: routes.all_products_collection_url }}"
+                      class="bs-category-nav__link{% if bs_all_current %} bs-category-nav__link--current{% endif %}"
+                      {% if bs_all_current %}
                         aria-current="page"
                       {% endif %}
                     >
                       {{- 'sections.collection_template.all' | t -}}
-                      <span class="bs-menu-count">{{ collections.all.products_count }}</span>
+                      <span class="bs-menu-count">{{ bs_all.all_products_count | default: collections.all.products_count }}</span>
                     </a>
                   </li>
                   {{ bs_auto_categories }}
@@ -321,6 +332,12 @@
       "id": "category_menu",
       "label": "t:sections.main-collection-product-grid.settings.category_menu.label",
       "info": "t:sections.main-collection-product-grid.settings.category_menu.info"
+    },
+    {
+      "type": "collection",
+      "id": "all_collection",
+      "label": "\"All\" link",
+      "info": "The collection the All category link opens, e.g. a Shop for Home collection sorted by best selling. Leave empty for all products (always A-Z)."
     },
     {
       "type": "checkbox",
