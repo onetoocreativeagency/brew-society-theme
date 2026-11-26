@@ -46,7 +46,23 @@
   opacity: 0;
 }
 
-/* Distributor map */
+/* Distributor map (Figma 4343:3591): each state its own blue, neighbours always different. */
+.bs-map__wa {
+  fill: #3D55FF;
+}
+
+.bs-map__nt {
+  fill: #6184FF;
+}
+
+.bs-map__sa {
+  fill: var(--bs-illo-blue-40);
+}
+
+.bs-map__qld {
+  fill: var(--bs-illo-blue);
+}
+
 .bs-map__nsw {
   fill: var(--bs-illo-blue-60);
 }
@@ -55,8 +71,12 @@
   fill: var(--bs-illo-blue-80);
 }
 
+.bs-map__tas {
+  fill: #8CAAFF;
+}
+
 .bs-map__act {
-  fill: var(--bs-illo-blue-40);
+  fill: #C9CDFF;
 }
 
 .bs-map__roads path {
@@ -65,6 +85,7 @@
   stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
+  stroke-dasharray: 2 10;
 }
 
 /* Towns only show while a delivery arrives. */
@@ -85,6 +106,11 @@
 .bs-map__hub,
 .bs-map__truck-dot {
   fill: var(--bs-illo-blue);
+}
+
+/* VIC and TAS are labelled just off the coast, in blue. */
+.bs-map__label.bs-map__label--outside {
+  fill: var(--bs-illo-blue-80);
 }
 
 .bs-map__label {

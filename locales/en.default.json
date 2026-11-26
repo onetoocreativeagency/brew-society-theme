@@ -296,7 +296,12 @@
   "sections": {
     "feature_cards": {
       "map_nsw": "NSW",
-      "map_vic": "VIC"
+      "map_nt": "NT",
+      "map_qld": "QLD",
+      "map_sa": "SA",
+      "map_tas": "TAS",
+      "map_vic": "VIC",
+      "map_wa": "WA"
     },
     "faq": {
       "groups": "Show questions about",
