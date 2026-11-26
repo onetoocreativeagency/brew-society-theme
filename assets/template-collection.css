@@ -57,7 +57,8 @@
   margin-bottom: 15rem;
 }
 
-/* Nothing from the collection in the online store: a note pointing to wholesale. */
+/* Nothing from the collection in the online store: a note pointing to wholesale
+   (sections/main-collection-product-grid.liquid). */
 .bs-collection-wholesale {
   display: flex;
   flex-direction: column;
