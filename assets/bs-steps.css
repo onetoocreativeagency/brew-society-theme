@@ -90,6 +90,10 @@
   min-height: 54rem;
   padding: var(--bs-space-32) var(--bs-space-8);
   border-radius: var(--bs-space-40);
+  /* The rolling number's digit strip (bs-roll-number.js) sits far below the number until it has
+     counted; clipped here so it never makes the page taller than the footer. */
+  overflow: hidden;
+  overflow: clip;
 }
 
 .bs-steps__number {
