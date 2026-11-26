@@ -24,8 +24,12 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
+        "category_menu": "",
+        "all_collection": "shop-for-home",
+        "hide_when_empty": false,
         "products_per_page": 16,
         "columns_desktop": 4,
+        "columns_mobile": "2",
         "color_scheme": "scheme-1",
         "image_ratio": "adapt",
         "image_shape": "default",
@@ -36,7 +40,6 @@
         "enable_filtering": true,
         "filter_type": "drawer",
         "enable_sorting": true,
-        "columns_mobile": "2",
         "padding_top": 28,
         "padding_bottom": 100
       }
