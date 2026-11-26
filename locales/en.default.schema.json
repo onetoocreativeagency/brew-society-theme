@@ -1774,7 +1774,7 @@
       "settings": {
         "category_menu": {
           "label": "Category links menu",
-          "info": "Links shown above the grid, each with its product count. Leave empty to list every category collection (not brand collections) that has products."
+          "info": "Links shown above the grid, each with its product count. Leave empty to list every category collection (not brand collections), with or without products."
         },
         "products_per_page": {
           "label": "Products per page"

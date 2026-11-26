@@ -45,14 +45,16 @@
   <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
     {%- comment -%}
       Category links above the grid: the chosen menu, or else (not on brand pages) every category
-      collection (not a brand collection) with products in the store, after All. Built here because Liquid cannot
+      collection (not a brand collection), after All: the same categories as the Brands page, with
+      or without products online (an empty one says the range is available wholesale). The count
+      shows when there are products. Built here because Liquid cannot
       nest paginate, and paginated so more than 50 collections are all read.
     {%- endcomment -%}
     {%- capture bs_auto_categories -%}
       {%- if section.settings.category_menu == blank and collection.template_suffix != 'brand' -%}
         {%- paginate collections by 250 -%}
           {%- for bs_collection in collections -%}
-            {%- if bs_collection.template_suffix == 'brand' or bs_collection.handle == 'all' or bs_collection.handle == section.settings.all_collection.handle or bs_collection.all_products_count == 0 -%}
+            {%- if bs_collection.template_suffix == 'brand' or bs_collection.handle == 'all' or bs_collection.handle == section.settings.all_collection.handle -%}
               {%- continue -%}
             {%- endif -%}
             <li>
@@ -64,7 +66,9 @@
                 {% endif %}
               >
                 {{- bs_collection.title | escape -}}
-                <span class="bs-menu-count">{{ bs_collection.all_products_count }}</span>
+                {%- if bs_collection.all_products_count > 0 -%}
+                  <span class="bs-menu-count">{{ bs_collection.all_products_count }}</span>
+                {%- endif -%}
               </a>
             </li>
           {%- endfor -%}
