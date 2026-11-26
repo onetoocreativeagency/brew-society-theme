@@ -278,7 +278,7 @@
         "category_1": {
           "type": "category",
           "settings": {
-            "link": "shopify://collections",
+            "link": "shopify://collections/all",
             "label": "Explore All",
             "highlight": true
           }
@@ -286,7 +286,7 @@
         "category_2": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=alt-milks",
+            "collection": "alt-milks",
             "label": "Alt. Milks",
             "highlight": false
           }
@@ -294,7 +294,7 @@
         "category_3": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=confectionery",
+            "collection": "confectionery",
             "label": "Confectionery",
             "highlight": false
           }
@@ -302,7 +302,7 @@
         "category_4": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=snack",
+            "collection": "snacks",
             "label": "Snacks",
             "highlight": false
           }
@@ -310,7 +310,7 @@
         "category_5": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=drink",
+            "collection": "drinks",
             "label": "Drinks",
             "highlight": false
           }
@@ -318,7 +318,7 @@
         "category_6": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=tea",
+            "collection": "tea",
             "label": "Tea",
             "highlight": false
           }
@@ -326,7 +326,7 @@
         "category_7": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=coffee",
+            "collection": "coffee",
             "label": "Coffee",
             "highlight": false
           }
@@ -334,7 +334,7 @@
         "category_8": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=bakery",
+            "collection": "bakery",
             "label": "Bakery",
             "highlight": false
           }
@@ -342,7 +342,7 @@
         "category_9": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=water",
+            "collection": "water",
             "label": "Water",
             "highlight": false
           }
@@ -350,7 +350,7 @@
         "category_10": {
           "type": "category",
           "settings": {
-            "link": "/collections?category=packaging",
+            "collection": "packaging",
             "label": "Packaging",
             "highlight": false
           }
