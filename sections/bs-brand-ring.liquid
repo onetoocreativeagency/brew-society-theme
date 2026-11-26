@@ -75,7 +75,7 @@
   {%- endstyle -%}
 
   <div class="bs-brand-ring color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
-    <div class="page-width">
+    <div class="page-width bs-brand-ring__inner">
       <bs-brand-ring
         class="bs-brand-ring__stage{% if bs_outer == 0 %} bs-brand-ring__stage--single{% endif %}{% if section.settings.blend_logos %} bs-brand-ring__stage--blend{% endif %}{% if section.settings.rotate %} bs-brand-ring__stage--rotate{% endif %}"
         style="--bs-ring-duration: {{ section.settings.rotate_seconds }}s;"
@@ -124,19 +124,23 @@
             -%}
           {%- endfor -%}
         </ul>
-        {%- if section.settings.button_label != blank -%}
-          <a
-            {% if section.settings.button_link == blank %}
-              role="link" aria-disabled="true"
-            {% else %}
-              href="{{ section.settings.button_link }}"
-            {% endif %}
-            class="button bs-brand-ring__button"
-          >
-            {{- section.settings.button_label | escape -}}
-          </a>
-        {%- endif -%}
       </bs-brand-ring>
+      {%- comment -%}
+        Over the centre of the rings on wider screens; above them on phones (CSS). Outside the
+        stage, so the rings' drag never starts on it.
+      {%- endcomment -%}
+      {%- if section.settings.button_label != blank -%}
+        <a
+          {% if section.settings.button_link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ section.settings.button_link }}"
+          {% endif %}
+          class="button bs-brand-ring__button"
+        >
+          {{- section.settings.button_label | escape -}}
+        </a>
+      {%- endif -%}
     </div>
   </div>
 {%- endif -%}

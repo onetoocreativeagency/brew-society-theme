@@ -37,6 +37,23 @@
   }
 }
 
+/*
+  Phones, two rings: the stage is sized so the inner ring (59.26% of the stage, logos included)
+  spans the screen inside the gutters; the outer ring still runs off both sides. The button
+  sits above the rings, not over them.
+*/
+@media screen and (max-width: 749px) {
+  .bs-brand-ring {
+    --bs-ring-size: calc((100vw - 2 * var(--bs-gutter)) / 0.5926);
+  }
+
+  .bs-brand-ring__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--bs-space-32);
+  }
+}
+
 @media screen and (min-width: 750px) {
   .bs-brand-ring {
     --bs-ring-size: calc(100vw - 2 * var(--bs-gutter));
@@ -50,6 +67,11 @@
 
 .bs-brand-ring__list {
   margin: 0;
+}
+
+/* The button is centred on this box, which is the stage's height. */
+.bs-brand-ring__inner {
+  position: relative;
 }
 
 .bs-brand-ring__item {
@@ -119,6 +141,19 @@
   line-height: var(--bs-leading-heading);
   letter-spacing: var(--bs-tracking-button);
   text-align: center;
+}
+
+/* Phones: above the rings (the stage follows it in the column). */
+@media screen and (max-width: 749px) {
+  .bs-brand-ring__button.button {
+    position: relative;
+    top: auto;
+    left: auto;
+    order: -1;
+    align-self: center;
+    max-width: none;
+    transform: none;
+  }
 }
 
 /*
