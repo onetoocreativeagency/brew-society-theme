@@ -177,6 +177,14 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   flex-direction: column;
 }
 
+/* No elastic bounce at the ends of the page with a mouse or trackpad: Safari pulled the footer up
+   and showed blank page under it. Touch screens keep their own bounce and pull to refresh. */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    overscroll-behavior-y: none;
+  }
+}
+
 .content-for-layout > .shopify-section:last-child {
   flex-grow: 1;
 }
