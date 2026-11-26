@@ -43,66 +43,6 @@
   data-collection-id="{{ collection.id }}"
 >
   <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
-    {%- comment -%}
-      Category links above the grid: the chosen menu, or else (not on brand pages) the same
-      categories as the Brands page: every category set on a brand (metafield brand.category),
-      each linked to its collection (the category's handle, or that plus "s": Drink -> drinks).
-      A category with no collection is left out; so are collections that are not categories
-      (e.g. one made for a brand's products). With or without products online (an empty one says
-      the range is available wholesale); the count shows when there are products.
-      Collections are read in a 250 block on page 1 only: paginate follows ?page, so later pages of
-      the grid use the plain loop (first 50), as snippets/bs-brand-each.liquid does.
-    {%- endcomment -%}
-    {%- capture bs_auto_categories -%}
-      {%- if section.settings.category_menu == blank and collection.template_suffix != 'brand' -%}
-        {%- capture bs_category_values -%}
-          {%- if current_page == 1 -%}
-            {%- paginate collections by 250 -%}
-              {%- for bs_brand in collections -%}
-                {%- if bs_brand.template_suffix == 'brand' and bs_brand.metafields.brand.category.value != blank -%}
-                  {{- bs_brand.metafields.brand.category.value | append: '|||' -}}
-                {%- endif -%}
-              {%- endfor -%}
-            {%- endpaginate -%}
-          {%- else -%}
-            {%- for bs_brand in collections -%}
-              {%- if bs_brand.template_suffix == 'brand' and bs_brand.metafields.brand.category.value != blank -%}
-                {{- bs_brand.metafields.brand.category.value | append: '|||' -}}
-              {%- endif -%}
-            {%- endfor -%}
-          {%- endif -%}
-        {%- endcapture -%}
-        {%- assign bs_categories = bs_category_values | strip_newlines | strip | split: '|||' | uniq | sort_natural -%}
-        {%- for bs_category in bs_categories -%}
-          {%- liquid
-            assign bs_handle = bs_category | handleize
-            assign bs_collection = collections[bs_handle]
-            if bs_collection == blank
-              assign bs_plural = bs_handle | append: 's'
-              assign bs_collection = collections[bs_plural]
-            endif
-            if bs_collection == blank or bs_collection.template_suffix == 'brand' or bs_collection.handle == section.settings.all_collection.handle
-              continue
-            endif
-          -%}
-          <li>
-            <a
-              href="{{ bs_collection.url }}"
-              class="bs-category-nav__link{% if bs_collection.handle == collection.handle %} bs-category-nav__link--current{% endif %}"
-              {% if bs_collection.handle == collection.handle %}
-                aria-current="page"
-              {% endif %}
-            >
-              {{- bs_collection.title | escape -}}
-              {%- if bs_collection.all_products_count > 0 -%}
-                <span class="bs-menu-count">{{ bs_collection.all_products_count }}</span>
-              {%- endif -%}
-            </a>
-          </li>
-        {%- endfor -%}
-      {%- endif -%}
-    {%- endcapture -%}
-    {%- assign bs_auto_categories = bs_auto_categories | strip -%}
     {%- paginate collection.products by section.settings.products_per_page -%}
       {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
       {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
@@ -168,6 +108,10 @@
         <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
         {%- liquid
           assign bs_category_links = linklists[section.settings.category_menu].links
+          assign bs_show_all = false
+          if collection.template_suffix != 'brand'
+            assign bs_show_all = true
+          endif
           assign bs_show_facets = false
           if section.settings.enable_filtering or section.settings.enable_sorting
             assign bs_show_facets = true
@@ -192,42 +136,47 @@
         {%- endcapture -%}
         {%- if section.settings.filter_type == 'vertical' -%}
           {{ bs_facets }}
-        {%- elsif bs_category_links.size > 0 or bs_auto_categories != blank or bs_show_facets -%}
+        {%- elsif bs_show_all or bs_category_links.size > 0 or bs_show_facets -%}
           {% comment %} Category links on the left, Filter & Sort on the fourth column. {% endcomment %}
           <div class="bs-collection-bar page-width">
-            {%- if bs_category_links.size == 0 and bs_auto_categories != blank -%}
+            {%- if bs_show_all or bs_category_links.size > 0 -%}
+              {%- comment -%}
+                The category links: All first (not on brand pages), then exactly the collections in
+                the chosen menu, in its order. No menu: All only.
+                All opens the chosen collection (e.g. Shop for Home, sorted best selling), or else
+                Shopify's all-products page, which cannot be sorted in the admin.
+              {%- endcomment -%}
               <nav class="bs-category-nav" aria-label="{{ 'sections.collection_template.categories' | t }}">
                 <ul class="bs-category-nav__list list-unstyled" role="list">
-                  {%- liquid
-                    comment
-                      "All" is the chosen collection (e.g. Shop for Home, sorted best selling), or else
-                      Shopify's all-products page, which cannot be sorted in the admin.
-                    endcomment
-                    assign bs_all = section.settings.all_collection
-                    assign bs_all_current = false
-                    if collection.handle == 'all' or bs_all != blank and collection.handle == bs_all.handle
-                      assign bs_all_current = true
-                    endif
-                  -%}
-                  <li>
-                    <a
-                      href="{{ bs_all.url | default: routes.all_products_collection_url }}"
-                      class="bs-category-nav__link{% if bs_all_current %} bs-category-nav__link--current{% endif %}"
-                      {% if bs_all_current %}
-                        aria-current="page"
-                      {% endif %}
-                    >
-                      {{- 'sections.collection_template.all' | t -}}
-                      <span class="bs-menu-count">{{ bs_all.all_products_count | default: collections.all.products_count }}</span>
-                    </a>
-                  </li>
-                  {{ bs_auto_categories }}
-                </ul>
-              </nav>
-            {%- elsif bs_category_links.size > 0 -%}
-              <nav class="bs-category-nav" aria-label="{{ 'sections.collection_template.categories' | t }}">
-                <ul class="bs-category-nav__list list-unstyled" role="list">
+                  {%- if bs_show_all -%}
+                    {%- liquid
+                      assign bs_all = section.settings.all_collection
+                      assign bs_all_current = false
+                      if collection.handle == 'all' or bs_all != blank and collection.handle == bs_all.handle
+                        assign bs_all_current = true
+                      endif
+                    -%}
+                    <li>
+                      <a
+                        href="{{ bs_all.url | default: routes.all_products_collection_url }}"
+                        class="bs-category-nav__link{% if bs_all_current %} bs-category-nav__link--current{% endif %}"
+                        {% if bs_all_current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{- 'sections.collection_template.all' | t -}}
+                        <span class="bs-menu-count">{{ bs_all.all_products_count | default: collections.all.products_count }}</span>
+                      </a>
+                    </li>
+                  {%- endif -%}
                   {%- for link in bs_category_links -%}
+                    {%- comment -%} All is already first: skip a menu link to the same place. {%- endcomment -%}
+                    {%- if bs_show_all and link.type == 'catalog_link' -%}
+                      {%- continue -%}
+                    {%- endif -%}
+                    {%- if bs_show_all and link.type == 'collection_link' and link.object.handle == bs_all.handle -%}
+                      {%- continue -%}
+                    {%- endif -%}
                     <li>
                       <a
                         href="{{ link.url }}"
