@@ -114,6 +114,9 @@
           on hover or focus (on scroll into view without hover). Per product: name, centre x and
           y and width as % of the cluster, rotation, file size in px, and the distance to the
           pill centre in cluster widths (for the tuck).
+          Each of the eight places can take an uploaded image (section settings Product 1-8); an
+          empty one keeps the theme's image. An upload keeps the place's width, its height
+          follows the image.
         {%- endcomment -%}
         {%- liquid
           assign bs_products = 'sprout|11.029|31.522|10.345|-30|168|425|0.3897|0.2072,sticky-chai|14.354|59.891|15.071|-52.07|245|348|0.3565|0.0819,smart-ass|27.447|27.145|18.22|-24.83|296|270|0.2255|0.2266,johnny-cashew|84.969|40.57|16.743|14.36|272|356|-0.3497|0.1672,tonys|73.813|46.166|21.761|-60|353|192|-0.2381|0.1425,matcha|84.969|71.502|13.964|39.57|227|343|-0.3497|0.0306,prana-chai|31.826|44.897|11.15|-8.93|181|345|0.1817|0.1481,ordinary|60.508|43.008|11.208|15|182|312|-0.1051|0.1565' | split: ','
@@ -121,13 +124,25 @@
         <div class="footer__middle">
           <div class="footer__cluster" data-footer-cluster>
             {%- for bs_product in bs_products -%}
-              {%- assign bs_p = bs_product | split: '|' -%}
+              {%- liquid
+                assign bs_p = bs_product | split: '|'
+                assign bs_setting = 'product_' | append: forloop.index
+                assign bs_upload = section.settings[bs_setting]
+                assign bs_width = bs_p[5]
+                if bs_upload != blank
+                  assign bs_src = bs_upload | image_url: width: 720
+                  assign bs_height = bs_width | times: 1.0 | divided_by: bs_upload.aspect_ratio | round
+                else
+                  assign bs_src = 'bs-footer-' | append: bs_p[0] | append: '.webp' | asset_url
+                  assign bs_height = bs_p[6]
+                endif
+              -%}
               <img
                 class="footer__product"
-                src="{{ 'bs-footer-' | append: bs_p[0] | append: '.webp' | asset_url }}"
+                src="{{ bs_src }}"
                 alt=""
-                width="{{ bs_p[5] }}"
-                height="{{ bs_p[6] }}"
+                width="{{ bs_width }}"
+                height="{{ bs_height }}"
                 loading="lazy"
                 style="--x: {{ bs_p[1] }}%; --y: {{ bs_p[2] }}%; --w: {{ bs_p[3] }}%; --r: {{ bs_p[4] }}deg;"
                 data-rotation="{{ bs_p[4] }}"
@@ -302,6 +317,50 @@
       "id": "wholesale_label",
       "default": "t:sections.footer.settings.wholesale_label.default",
       "label": "t:sections.footer.settings.wholesale_label.label"
+    },
+    {
+      "type": "paragraph",
+      "content": "The products fanned around the button: upload a cut-out shot (transparent PNG or WebP) for any of the eight places. An empty place keeps the theme's image."
+    },
+    {
+      "type": "image_picker",
+      "id": "product_1",
+      "label": "Product 1 (far left, top; now Sprout)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_2",
+      "label": "Product 2 (far left, low; now Sticky Chai)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_3",
+      "label": "Product 3 (left, top; now Smart Ass)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_4",
+      "label": "Product 4 (far right; now Johnny Cashew)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_5",
+      "label": "Product 5 (right, behind the pill; now Tony's)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_6",
+      "label": "Product 6 (far right, low; now Matcha)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_7",
+      "label": "Product 7 (behind the pill, left; now Prana Chai)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_8",
+      "label": "Product 8 (behind the pill, right; now Ordinary)"
     },
     {
       "type": "header",
