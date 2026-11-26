@@ -722,7 +722,14 @@ bs-brand-list {
   }
 }
 
-/* Brand page header. The breadcrumb is snippets/bs-breadcrumbs.liquid. */
+/* Brand page header. The breadcrumb is snippets/bs-breadcrumbs.liquid; on phones it sits 16px
+   under the header. */
+@media screen and (max-width: 749px) {
+  .bs-brand-hero .bs-breadcrumbs {
+    padding-top: 1rem;
+  }
+}
+
 .bs-brand-hero__grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

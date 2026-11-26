@@ -212,6 +212,13 @@ body:has(.section-header .drawer-menu) .announcement-bar-section .page-width {
   margin-bottom: 0;
 }
 
+/* Phones: the empty cart's title 64px under the header, as on every page. */
+@media screen and (max-width: 749px) {
+  .content-for-layout cart-items.is-empty .cart__empty-text {
+    margin-top: 2.8rem;
+  }
+}
+
 .section + .section {
   margin-top: var(--spacing-sections-mobile);
 }
