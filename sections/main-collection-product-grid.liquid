@@ -44,12 +44,12 @@
 >
   <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
     {%- comment -%}
-      Category links above the grid: the chosen menu, or else every category collection (not a
-      brand collection) with products in the store, after All. Built here because Liquid cannot
+      Category links above the grid: the chosen menu, or else (not on brand pages) every category
+      collection (not a brand collection) with products in the store, after All. Built here because Liquid cannot
       nest paginate, and paginated so more than 50 collections are all read.
     {%- endcomment -%}
     {%- capture bs_auto_categories -%}
-      {%- if section.settings.category_menu == blank -%}
+      {%- if section.settings.category_menu == blank and collection.template_suffix != 'brand' -%}
         {%- paginate collections by 250 -%}
           {%- for bs_collection in collections -%}
             {%- if bs_collection.template_suffix == 'brand' or bs_collection.handle == 'all' or bs_collection.all_products_count == 0 -%}
