@@ -404,6 +404,7 @@
       "website": "Website"
     },
     "collection_template": {
+      "all": "All",
       "categories": "Categories",
       "empty": "No products found",
       "title": "Collection",

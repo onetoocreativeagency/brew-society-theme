@@ -43,6 +43,35 @@
   data-collection-id="{{ collection.id }}"
 >
   <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
+    {%- comment -%}
+      Category links above the grid: the chosen menu, or else every category collection (not a
+      brand collection) with products in the store, after All. Built here because Liquid cannot
+      nest paginate, and paginated so more than 50 collections are all read.
+    {%- endcomment -%}
+    {%- capture bs_auto_categories -%}
+      {%- if section.settings.category_menu == blank -%}
+        {%- paginate collections by 250 -%}
+          {%- for bs_collection in collections -%}
+            {%- if bs_collection.template_suffix == 'brand' or bs_collection.handle == 'all' or bs_collection.all_products_count == 0 -%}
+              {%- continue -%}
+            {%- endif -%}
+            <li>
+              <a
+                href="{{ bs_collection.url }}"
+                class="bs-category-nav__link{% if bs_collection.handle == collection.handle %} bs-category-nav__link--current{% endif %}"
+                {% if bs_collection.handle == collection.handle %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{- bs_collection.title | escape -}}
+                <span class="bs-menu-count">{{ bs_collection.all_products_count }}</span>
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- endpaginate -%}
+      {%- endif -%}
+    {%- endcapture -%}
+    {%- assign bs_auto_categories = bs_auto_categories | strip -%}
     {%- paginate collection.products by section.settings.products_per_page -%}
       {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
       {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
@@ -132,10 +161,28 @@
         {%- endcapture -%}
         {%- if section.settings.filter_type == 'vertical' -%}
           {{ bs_facets }}
-        {%- elsif bs_category_links.size > 0 or bs_show_facets -%}
+        {%- elsif bs_category_links.size > 0 or bs_auto_categories != blank or bs_show_facets -%}
           {% comment %} Category links on the left, Filter & Sort on the fourth column. {% endcomment %}
           <div class="bs-collection-bar page-width">
-            {%- if bs_category_links.size > 0 -%}
+            {%- if bs_category_links.size == 0 and bs_auto_categories != blank -%}
+              <nav class="bs-category-nav" aria-label="{{ 'sections.collection_template.categories' | t }}">
+                <ul class="bs-category-nav__list list-unstyled" role="list">
+                  <li>
+                    <a
+                      href="{{ routes.all_products_collection_url }}"
+                      class="bs-category-nav__link{% if collection.handle == 'all' %} bs-category-nav__link--current{% endif %}"
+                      {% if collection.handle == 'all' %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{- 'sections.collection_template.all' | t -}}
+                      <span class="bs-menu-count">{{ collections.all.products_count }}</span>
+                    </a>
+                  </li>
+                  {{ bs_auto_categories }}
+                </ul>
+              </nav>
+            {%- elsif bs_category_links.size > 0 -%}
               <nav class="bs-category-nav" aria-label="{{ 'sections.collection_template.categories' | t }}">
                 <ul class="bs-category-nav__list list-unstyled" role="list">
                   {%- for link in bs_category_links -%}
