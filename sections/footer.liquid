@@ -36,8 +36,10 @@
 {%- capture bs_page_scheme -%}{%- render 'bs-page-scheme' -%}{%- endcapture -%}
 {%- assign bs_page_scheme = bs_page_scheme | strip -%}
 {%- comment -%}
-  Footer parallax (Osmo): the footer rises out from under the page while a dark veil over it fades
-  out (assets/bs-footer-parallax.js). The veil never takes clicks.
+  The footer parallax (Osmo, assets/bs-footer-parallax.js: the footer rose out from under the page
+  under a fading dark veil) is off at Marcel's request: its script and veil are not loaded. To bring
+  it back, add the veil (<div class="footer-parallax__dark" data-footer-parallax-dark
+  aria-hidden="true"></div>) after the footer and load the script after it.
 {%- endcomment -%}
 <div class="footer-parallax" data-footer-parallax>
   <footer
@@ -196,9 +198,7 @@
       </div>
     </div>
   </footer>
-  <div class="footer-parallax__dark" data-footer-parallax-dark aria-hidden="true"></div>
 </div>
-<script src="{{ 'bs-footer-parallax.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'bs-footer-motion.js' | asset_url }}" defer="defer"></script>
 
 {%- liquid
