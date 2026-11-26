@@ -4,9 +4,10 @@
   bs-brand-catalogue and animated by assets/bs-brands.js (GSAP Flip):
   - the panel (data-list-grid-flip) is the grid card's image tile and the list row's thumbnail;
   - data-list-grid-fade marks what fades between views: "" in both, "grid" or "list" in one only.
-  Grid: the panel with a New label or the Exclusive sticker, the category, the range size and the
-  origin, then the brand name. List: thumbnail and name, category, range size, origin and
-  relationship, a divider, and on desktop a logo square that follows the cursor.
+  Grid: the panel with a New label or the Exclusive sticker, the category, the range size (only
+  when its metafield is set) and the origin, then the brand name. List: thumbnail and name,
+  category, origin and relationship, and a divider. No product counts from the store: most of the
+  range is wholesale only, so the store's count read as tiny.
 
   Accepts:
   - brand: {Object} a brand collection
@@ -23,7 +24,7 @@
   assign bs_category = bs_meta[category_key].value
   assign bs_origin = bs_meta[origin_key].value
   assign bs_logo = bs_meta[logo_key].value
-  assign bs_range = bs_meta[range_size_key].value | default: brand.all_products_count
+  assign bs_range = bs_meta[range_size_key].value | default: 0
 
   assign bs_image = brand.image
   assign bs_image_is_logo = false
@@ -33,7 +34,6 @@
       assign bs_image_is_logo = true
     endif
   endif
-  assign bs_preview = bs_logo | default: brand.image
 -%}
 <a href="{{ brand.url }}" class="bs-brand-card">
   <div class="bs-brand-card__panel color-{{ panel_scheme }} gradient" data-list-grid-flip>
@@ -93,11 +93,6 @@
         <span class="visually-hidden">{{ 'sections.brands.category' | t }}: </span>{{ bs_category | escape }}
       {%- endif -%}
     </span>
-    <span class="bs-brand-card__cell bs-brand-card__cell--products">
-      {%- if bs_range > 0 -%}
-        <span class="visually-hidden">{{ 'sections.brands.products' | t }}: </span>{{ bs_range }}
-      {%- endif -%}
-    </span>
     <span class="bs-brand-card__cell bs-brand-card__cell--origin">
       {%- if bs_origin != blank -%}
         <span class="visually-hidden">{{ 'sections.brands.origin' | t }}: </span>{{ bs_origin | escape }}
@@ -114,13 +109,4 @@
     </span>
   </span>
   <span class="bs-brand-card__line" data-list-grid-fade="list"></span>
-  {%- if bs_preview != blank -%}
-    <span class="bs-brand-list__preview color-{{ panel_scheme }} gradient">
-      {{-
-        bs_preview
-        | image_url: width: 600
-        | image_tag: loading: 'lazy', widths: '300, 600', sizes: '233px', alt: '', class: 'bs-brand-list__image'
-      -}}
-    </span>
-  {%- endif -%}
 </a>

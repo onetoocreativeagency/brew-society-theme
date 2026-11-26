@@ -141,21 +141,19 @@
 
     {%- comment -%}
       One set of brands for both views (snippets/bs-brand-card.liquid). The column heads show in
-      the list view only. bs-brand-list moves the list view's logo square after the cursor.
+      the list view only.
     {%- endcomment -%}
-    <script src="{{ 'bs-brand-list.js' | asset_url }}" defer="defer"></script>
-    <bs-brand-list class="bs-brands__items">
+    <div class="bs-brands__items">
       <div class="bs-brands__head" aria-hidden="true" data-list-grid-fade="list">
         <span class="bs-brands__head-name">{{ 'sections.brands.name' | t }}</span>
         <span class="bs-brand-card__cell--category">{{ 'sections.brands.category' | t }}</span>
-        <span class="bs-brand-card__cell--products">{{ 'sections.brands.products' | t }}</span>
         <span class="bs-brand-card__cell--origin">{{ 'sections.brands.origin' | t }}</span>
         <span class="bs-brand-card__cell--type">{{ 'sections.brands.type' | t }}</span>
       </div>
       <ul class="bs-brand-grid list-unstyled" role="list">
         {%- render 'bs-brand-each', item: 'card', config: section.settings -%}
       </ul>
-    </bs-brand-list>
+    </div>
   </div>
 </bs-brand-catalogue>
 

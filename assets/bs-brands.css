@@ -459,9 +459,7 @@
   grid-column: 10 / span 3;
 }
 
-.bs-brands__head .bs-brand-card__cell--products,
 .bs-brands__head .bs-brand-card__cell--type,
-.bs-brands[data-view='list'] .bs-brand-card__cell--products,
 .bs-brands[data-view='list'] .bs-brand-card__cell--type {
   display: none;
 }
@@ -499,9 +497,7 @@
     font-size: var(--bs-text-large);
   }
 
-  .bs-brands__head .bs-brand-card__cell--products,
   .bs-brands__head .bs-brand-card__cell--type,
-  .bs-brands[data-view='list'] .bs-brand-card__cell--products,
   .bs-brands[data-view='list'] .bs-brand-card__cell--type {
     display: block;
   }
@@ -510,39 +506,22 @@
   .bs-brands[data-view='list'] .bs-brand-card__panel,
   .bs-brands[data-view='list'] .bs-brand-card__meta,
   .bs-brands[data-view='list'] .bs-brand-card__name {
-    grid-column: 1 / span 3;
+    grid-column: 1 / span 4;
   }
 
   .bs-brands__head .bs-brand-card__cell--category,
   .bs-brands[data-view='list'] .bs-brand-card__cell--category {
-    grid-column: 4 / span 3;
-  }
-
-  .bs-brands__head .bs-brand-card__cell--products,
-  .bs-brands[data-view='list'] .bs-brand-card__cell--products {
-    grid-column: 7 / span 2;
+    grid-column: 5 / span 3;
   }
 
   .bs-brands__head .bs-brand-card__cell--origin,
   .bs-brands[data-view='list'] .bs-brand-card__cell--origin {
-    grid-column: 9 / span 2;
+    grid-column: 8 / span 3;
   }
 
   .bs-brands__head .bs-brand-card__cell--type,
   .bs-brands[data-view='list'] .bs-brand-card__cell--type {
     grid-column: 11 / span 2;
-  }
-}
-
-@media screen and (min-width: 1500px) {
-  .bs-brands__head .bs-brand-card__cell--origin,
-  .bs-brands[data-view='list'] .bs-brand-card__cell--origin {
-    grid-column: 11;
-  }
-
-  .bs-brands__head .bs-brand-card__cell--type,
-  .bs-brands[data-view='list'] .bs-brand-card__cell--type {
-    grid-column: 12;
   }
 }
 
@@ -602,7 +581,6 @@ bs-brand-list {
   grid-column: 10 / span 3;
 }
 
-.bs-brand-list__products,
 .bs-brand-list__type {
   display: none;
 }
@@ -617,10 +595,6 @@ bs-brand-list {
   content: '';
   position: absolute;
   inset: 0;
-}
-
-.bs-brand-list__preview {
-  display: none;
 }
 
 .bs-brand-list tbody .bs-brand-list__row:hover,
@@ -639,86 +613,24 @@ bs-brand-list {
     font-size: var(--bs-text-large);
   }
 
-  .bs-brand-list__products,
   .bs-brand-list__type {
     display: block;
   }
 
   .bs-brand-list__name {
-    grid-column: 1 / span 3;
+    grid-column: 1 / span 4;
   }
 
   .bs-brand-list__category {
-    grid-column: 4 / span 3;
-  }
-
-  .bs-brand-list__products {
-    grid-column: 7 / span 2;
+    grid-column: 5 / span 3;
   }
 
   .bs-brand-list__origin {
-    grid-column: 9 / span 2;
+    grid-column: 8 / span 3;
   }
 
   .bs-brand-list__type {
     grid-column: 11 / span 2;
-  }
-}
-
-@media screen and (min-width: 1500px) {
-  .bs-brand-list__origin {
-    grid-column: 11;
-  }
-
-  .bs-brand-list__type {
-    grid-column: 12;
-  }
-}
-
-/* The highlighted row shows the brand's logo on a square panel. With a mouse it eases after
-   the cursor (assets/bs-brand-list.js sets --bs-follow-x/y and .is-following); from the
-   keyboard it sits over the row. */
-@media screen and (min-width: 990px) and (hover: hover) {
-  .bs-brand-list tbody .bs-brand-list__row:hover,
-  .bs-brand-list tbody .bs-brand-list__row:focus-within,
-  .bs-brands[data-view='list'] .bs-brand-card:hover,
-  .bs-brands[data-view='list'] .bs-brand-card:focus-visible {
-    z-index: 1;
-  }
-
-  .bs-brand-list__row:hover .bs-brand-list__preview,
-  .bs-brand-list__row:focus-within .bs-brand-list__preview,
-  .bs-brands[data-view='list'] .bs-brand-card:hover .bs-brand-list__preview,
-  .bs-brands[data-view='list'] .bs-brand-card:focus-visible .bs-brand-list__preview {
-    position: absolute;
-    top: 50%;
-    left: 42%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: 23.3rem;
-    aspect-ratio: 1;
-    padding: var(--bs-space-32);
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-  .bs-brand-list.is-following .bs-brand-list__row:hover .bs-brand-list__preview,
-  .bs-brands[data-view='list'] .bs-brand-grid.is-following .bs-brand-card:hover .bs-brand-list__preview {
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform: translate3d(calc(var(--bs-follow-x) - 50%), calc(var(--bs-follow-y) - 50%), 0);
-  }
-
-  .bs-brand-list__image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    /* Logos on white take on the panel colour. */
-    mix-blend-mode: multiply;
   }
 }
 

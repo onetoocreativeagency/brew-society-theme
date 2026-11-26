@@ -1,8 +1,7 @@
 {% comment %}
   Renders the list view of every brand collection (Figma Brands - All [List View] 4166:4532):
-  a table of name, category, range size, origin and relationship. A hovered or
-  focused row is highlighted and shows that brand's logo on a square, which eases
-  after the cursor (assets/bs-brand-list.js).
+  a table of name, category, origin and relationship. A hovered or focused row is
+  highlighted.
   Used under the brand page. The Brands catalogue has its own list view (snippets/bs-brand-card.liquid).
 
   Accepts:
@@ -11,9 +10,7 @@
   Usage:
   {% render 'bs-brand-list', config: section.settings %}
 {% endcomment %}
-<script src="{{ 'bs-brand-list.js' | asset_url }}" defer="defer"></script>
 {%- comment -%} The rows are laid out with CSS grid, so the table roles are stated explicitly. {%- endcomment -%}
-<bs-brand-list>
 <table class="bs-brand-list" role="table">
   <caption class="visually-hidden">
     {{ 'sections.brands.table_caption' | t }}
@@ -22,7 +19,6 @@
     <tr class="bs-brand-list__row bs-brand-list__row--head" role="row">
       <th class="bs-brand-list__name" scope="col" role="columnheader">{{ 'sections.brands.name' | t }}</th>
       <th class="bs-brand-list__category" scope="col" role="columnheader">{{ 'sections.brands.category' | t }}</th>
-      <th class="bs-brand-list__products" scope="col" role="columnheader">{{ 'sections.brands.products' | t }}</th>
       <th class="bs-brand-list__origin" scope="col" role="columnheader">{{ 'sections.brands.origin' | t }}</th>
       <th class="bs-brand-list__type" scope="col" role="columnheader">{{ 'sections.brands.type' | t }}</th>
     </tr>
@@ -31,4 +27,3 @@
     {%- render 'bs-brand-each', item: 'row', config: config -%}
   </tbody>
 </table>
-</bs-brand-list>
