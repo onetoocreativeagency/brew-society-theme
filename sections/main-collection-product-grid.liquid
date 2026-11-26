@@ -44,35 +44,62 @@
 >
   <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
     {%- comment -%}
-      Category links above the grid: the chosen menu, or else (not on brand pages) every category
-      collection (not a brand collection), after All: the same categories as the Brands page, with
-      or without products online (an empty one says the range is available wholesale). The count
-      shows when there are products. Built here because Liquid cannot
-      nest paginate, and paginated so more than 50 collections are all read.
+      Category links above the grid: the chosen menu, or else (not on brand pages) the same
+      categories as the Brands page: every category set on a brand (metafield brand.category),
+      each linked to its collection (the category's handle, or that plus "s": Drink -> drinks).
+      A category with no collection is left out; so are collections that are not categories
+      (e.g. one made for a brand's products). With or without products online (an empty one says
+      the range is available wholesale); the count shows when there are products.
+      Collections are read in a 250 block on page 1 only: paginate follows ?page, so later pages of
+      the grid use the plain loop (first 50), as snippets/bs-brand-each.liquid does.
     {%- endcomment -%}
     {%- capture bs_auto_categories -%}
       {%- if section.settings.category_menu == blank and collection.template_suffix != 'brand' -%}
-        {%- paginate collections by 250 -%}
-          {%- for bs_collection in collections -%}
-            {%- if bs_collection.template_suffix == 'brand' or bs_collection.handle == 'all' or bs_collection.handle == section.settings.all_collection.handle -%}
-              {%- continue -%}
-            {%- endif -%}
-            <li>
-              <a
-                href="{{ bs_collection.url }}"
-                class="bs-category-nav__link{% if bs_collection.handle == collection.handle %} bs-category-nav__link--current{% endif %}"
-                {% if bs_collection.handle == collection.handle %}
-                  aria-current="page"
-                {% endif %}
-              >
-                {{- bs_collection.title | escape -}}
-                {%- if bs_collection.all_products_count > 0 -%}
-                  <span class="bs-menu-count">{{ bs_collection.all_products_count }}</span>
+        {%- capture bs_category_values -%}
+          {%- if current_page == 1 -%}
+            {%- paginate collections by 250 -%}
+              {%- for bs_brand in collections -%}
+                {%- if bs_brand.template_suffix == 'brand' and bs_brand.metafields.brand.category.value != blank -%}
+                  {{- bs_brand.metafields.brand.category.value | append: '|||' -}}
                 {%- endif -%}
-              </a>
-            </li>
-          {%- endfor -%}
-        {%- endpaginate -%}
+              {%- endfor -%}
+            {%- endpaginate -%}
+          {%- else -%}
+            {%- for bs_brand in collections -%}
+              {%- if bs_brand.template_suffix == 'brand' and bs_brand.metafields.brand.category.value != blank -%}
+                {{- bs_brand.metafields.brand.category.value | append: '|||' -}}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endcapture -%}
+        {%- assign bs_categories = bs_category_values | strip_newlines | strip | split: '|||' | uniq | sort_natural -%}
+        {%- for bs_category in bs_categories -%}
+          {%- liquid
+            assign bs_handle = bs_category | handleize
+            assign bs_collection = collections[bs_handle]
+            if bs_collection == blank
+              assign bs_plural = bs_handle | append: 's'
+              assign bs_collection = collections[bs_plural]
+            endif
+            if bs_collection == blank or bs_collection.template_suffix == 'brand' or bs_collection.handle == section.settings.all_collection.handle
+              continue
+            endif
+          -%}
+          <li>
+            <a
+              href="{{ bs_collection.url }}"
+              class="bs-category-nav__link{% if bs_collection.handle == collection.handle %} bs-category-nav__link--current{% endif %}"
+              {% if bs_collection.handle == collection.handle %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{- bs_collection.title | escape -}}
+              {%- if bs_collection.all_products_count > 0 -%}
+                <span class="bs-menu-count">{{ bs_collection.all_products_count }}</span>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
       {%- endif -%}
     {%- endcapture -%}
     {%- assign bs_auto_categories = bs_auto_categories | strip -%}
