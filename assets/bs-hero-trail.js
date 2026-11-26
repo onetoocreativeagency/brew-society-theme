@@ -1,21 +1,16 @@
 /*
   Image effects for the homepage hero.
 
-  At rest the images sit where CSS puts them. Two effects reuse those same
-  image elements, so no elements are created, and animate transform and
-  opacity only:
+  At rest the images sit where CSS puts them. The cycle reuses those same
+  image elements, so no elements are created, and animates transform and
+  opacity only: images arrive in bursts of two or three, popping in one after
+  another as a loose cluster, hold, and pop out as the next cluster arrives
+  somewhere else, working through the list in order. Phones place clusters
+  around set spots from Figma; wider screens pick a random place clear of the
+  last clusters. The images do not follow the mouse (the client found the
+  trail distracting).
 
-  - Cycle (every device, and the opening state): images arrive in bursts of
-    two or three, popping in one after another as a loose cluster, hold, and
-    pop out as the next cluster arrives somewhere else, working through the
-    list in order. Phones place clusters around set spots from Figma; wider
-    screens pick a random place clear of the last clusters.
-  - Trail (mouse): the first pointer move over the hero hurries the cycle's
-    images away. Every time the pointer has travelled far enough, the next
-    image eases in at the pointer, lingers, then shrinks away. When the pointer
-    stops or leaves and the last trail image has gone, the cycle starts again.
-
-  Visitors who prefer reduced motion get neither and see the resting arc.
+  Visitors who prefer reduced motion see the resting arc.
 */
 if (!customElements.get('bs-hero-trail')) {
   // Where images pop on phones: centre x and y, percent of the image area.
@@ -40,13 +35,10 @@ if (!customElements.get('bs-hero-trail')) {
 
         this.items = Array.from(this.stage.children);
         this.motion = window.matchMedia('(prefers-reduced-motion: no-preference)');
-        this.mouse = window.matchMedia('(hover: hover) and (pointer: fine)');
         this.narrow = window.matchMedia('(max-width: 749px)');
-        this.queries = [this.motion, this.mouse, this.narrow];
+        this.queries = [this.motion, this.narrow];
         this.onQueryChange = () => this.toggle();
         this.queries.forEach((query) => query.addEventListener('change', this.onQueryChange));
-        this.onPointerMove = this.onPointerMove.bind(this);
-        this.tick = this.tick.bind(this);
         this.toggle();
       }
 
@@ -57,8 +49,7 @@ if (!customElements.get('bs-hero-trail')) {
       }
 
       toggle() {
-        let mode = null;
-        if (this.motion.matches) mode = this.mouse.matches ? 'trail' : 'cycle';
+        const mode = this.motion.matches ? 'cycle' : null;
         if (mode === this.mode) return;
         this.disable();
         if (mode) this.enable(mode);
@@ -78,15 +69,6 @@ if (!customElements.get('bs-hero-trail')) {
         });
         this.intersectionObserver.observe(this);
 
-        if (mode === 'trail') {
-          this.lastSpawn = 0;
-          this.anchor = null;
-          // How long one image lives. Shorter when there are few images, so one
-          // is rarely needed again while it is still on screen.
-          this.life = Math.min(1100, Math.max(500, this.items.length * 70));
-          this.trailing = false;
-          this.addEventListener('pointermove', this.onPointerMove, { passive: true });
-        }
         this.spot = 0;
         this.recent = [];
         this.cycling = false;
@@ -95,11 +77,8 @@ if (!customElements.get('bs-hero-trail')) {
       disable() {
         if (!this.mode) return;
         this.mode = null;
-        this.removeEventListener('pointermove', this.onPointerMove);
         this.resizeObserver.disconnect();
         this.intersectionObserver.disconnect();
-        cancelAnimationFrame(this.frame);
-        this.frame = 0;
         this.clearBursts();
         this.cycling = false;
         this.animations.forEach((animation) => animation.cancel());
@@ -107,12 +86,10 @@ if (!customElements.get('bs-hero-trail')) {
         this.classList.remove('is-enhanced');
       }
 
-      // Each image's resting centre, relative to the stage, and the distance the
-      // pointer must travel between images.
+      // Each image's resting centre, relative to the stage.
       measure() {
         this.origins = this.items.map((item) => [item.offsetLeft, item.offsetTop]);
-        this.distance = Math.max(60, this.items[0].offsetWidth * 0.55);
-        if (!this.cycling && !this.trailing) this.startCycle();
+        if (!this.cycling) this.startCycle();
       }
 
       // Opens with a cluster straight away, then one every interval.
@@ -145,16 +122,6 @@ if (!customElements.get('bs-hero-trail')) {
         }
       }
 
-      // The cursor takes over: no new pops, and the ones showing leave quickly.
-      stopCycle() {
-        if (!this.cycling) return;
-        this.cycling = false;
-        this.clearBursts();
-        this.animations.forEach((animation) => {
-          if (animation.playState === 'running') animation.playbackRate = 4;
-        });
-      }
-
       // Plays one appearance of the next image in the list. `keyframes` receives
       // a function that builds a transform for a point in the stage and a scale.
       show(keyframes, duration) {
@@ -172,65 +139,6 @@ if (!customElements.get('bs-hero-trail')) {
         const previous = this.animations.get(item);
         if (previous) previous.cancel();
         this.animations.set(item, item.animate(keyframes(at), { duration }));
-      }
-
-      onPointerMove(event) {
-        if (event.pointerType === 'touch' || !this.onScreen) return;
-        this.trailing = true;
-        this.stopCycle();
-        this.pointer = [event.clientX, event.clientY];
-        if (!this.anchor) {
-          this.lag = [...this.pointer];
-          this.anchor = [...this.pointer];
-        }
-        if (!this.frame) this.frame = requestAnimationFrame(this.tick);
-      }
-
-      tick(now) {
-        this.frame = 0;
-        if (document.hidden || !this.onScreen || !this.origins) return;
-
-        const [x, y] = this.pointer;
-        this.lag[0] += (x - this.lag[0]) * 0.2;
-        this.lag[1] += (y - this.lag[1]) * 0.2;
-
-        const travelled = Math.hypot(x - this.anchor[0], y - this.anchor[1]);
-        if (travelled >= this.distance && now - this.lastSpawn >= 70) {
-          this.spawn();
-          this.anchor = [x, y];
-          this.lastSpawn = now;
-        }
-
-        // Keep going until the lagging point has caught up with the pointer.
-        if (Math.hypot(x - this.lag[0], y - this.lag[1]) > 0.5) {
-          this.frame = requestAnimationFrame(this.tick);
-        }
-      }
-
-      spawn() {
-        const stage = this.stage.getBoundingClientRect();
-        const toX = this.pointer[0] - stage.left;
-        const toY = this.pointer[1] - stage.top;
-        const fromX = this.lag[0] - stage.left;
-        const fromY = this.lag[1] - stage.top;
-
-        this.show(
-          (at) => [
-            { opacity: 0, transform: at(fromX, fromY, 0.7), easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
-            { opacity: 1, transform: at(toX, toY, 1), offset: 0.3 },
-            { opacity: 1, transform: at(toX, toY, 1), offset: 0.6, easing: 'cubic-bezier(0.5, 0, 0.75, 0)' },
-            { opacity: 0, transform: at(toX, toY, 0.6) },
-          ],
-          this.life
-        );
-
-        // Back to the cycle once the last image of the trail has gone.
-        clearTimeout(this.restTimer);
-        this.restTimer = setTimeout(() => {
-          this.trailing = false;
-          this.anchor = null;
-          this.startCycle();
-        }, this.life + 50);
       }
 
       pop(duration, spot) {
@@ -291,7 +199,6 @@ if (!customElements.get('bs-hero-trail')) {
       }
 
       rest() {
-        clearTimeout(this.restTimer);
         this.classList.remove('is-active');
         this.depth = 1;
         this.items.forEach((item) => item.style.removeProperty('z-index'));
