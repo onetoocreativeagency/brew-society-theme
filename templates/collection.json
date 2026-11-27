@@ -24,7 +24,7 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
-        "category_menu": "",
+        "category_menu": "shop-for-home",
         "all_collection": "shop-for-home",
         "hide_when_empty": false,
         "products_per_page": 16,
