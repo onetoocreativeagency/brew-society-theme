@@ -20,18 +20,6 @@
     },
     "team": {
       "type": "bs-team-photo",
-      "blocks": {
-        "person_1": {
-          "type": "person",
-          "settings": {
-            "name": "Harry, Director",
-            "show_by_default": true
-          }
-        }
-      },
-      "block_order": [
-        "person_1"
-      ],
       "settings": {
         "color_scheme": "scheme-2",
         "padding_top": 0,
@@ -41,7 +29,7 @@
     "intro": {
       "type": "bs-statement",
       "settings": {
-        "text": "<strong>BrewSociety imports and distributes food and drink brands to independent retailers, cafes and offices across Australia. We’re based in Melbourne, VIC and we’ve been doing this since 2019.</strong>",
+        "text": "<strong>BrewSociety imports and distributes food and drink brands to independent retailers and food-service venues across Australia. We’re based in Melbourne, VIC and we’ve been doing this since 2019.</strong>",
         "break_after_bold": false,
         "paragraph": true,
         "scroll_reveal": true,
