@@ -118,7 +118,7 @@
     "statement_intro": {
       "type": "bs-statement",
       "settings": {
-        "text": "Brew Society is Melbourne’s premium distributor for exclusive food and drink brands in Victoria and NSW.",
+        "text": "Brew Society is Australia’s premium distributor for exclusive food and drink brands.",
         "break_after_bold": false,
         "paragraph": false,
         "scroll_reveal": true,
@@ -139,7 +139,7 @@
             "illustration": "flags",
             "image_fit": "cover",
             "title": "Importer",
-            "text": "We bring exclusive food and drink brands from around the world to Australian cafés, grocers and venues."
+            "text": "We bring exclusive food and drink brands from around the world to Australian retail and food-service venues."
           }
         },
         "card_2": {
@@ -147,8 +147,8 @@
           "settings": {
             "illustration": "products",
             "image_fit": "cover",
-            "title": "Developer",
-            "text": "We grow brands with their makers, from a first listing to a regular place on shelves and menus."
+            "title": "Brand Development",
+            "text": "We team up with founders and put our industry connections to work, turning great brands into household names."
           }
         },
         "card_3": {
@@ -157,7 +157,7 @@
             "illustration": "map",
             "image_fit": "cover",
             "title": "Distributor",
-            "text": "We deliver across Victoria and NSW from Melbourne, with online ordering and a $300 minimum order."
+            "text": "We distribute to retail and food-service venues nationwide, with reliable delivery and easy online ordering."
           }
         }
       },
@@ -324,7 +324,7 @@
           "type": "step",
           "settings": {
             "title": "Browse Brands + Pricing",
-            "text": "Tell us about your business and we'll send wholesale pricing within 24 hours.",
+            "text": "Browse our full range of brands online. No sign-up needed. Just follow the link below.",
             "button_label": "View Catalogue",
             "button_link": "shopify://collections",
             "use_wholesale_link": false
@@ -334,7 +334,7 @@
           "type": "step",
           "settings": {
             "title": "Set up your account",
-            "text": "You'll need an ABN. Minimum order is $300.",
+            "text": "Signing up is easy: fill in a few details and have your ABN ready to go.",
             "button_label": "Create Account",
             "button_link": "",
             "use_wholesale_link": true
@@ -343,8 +343,8 @@
         "step_3": {
           "type": "step",
           "settings": {
-            "title": "Order Online, Any Time, Delivered",
-            "text": "Browse the range and order on Pepper. We deliver across Victoria + NSW.",
+            "title": "Order online, any time.",
+            "text": "Browse the range and order through the Brew Society app.",
             "button_label": "Order Wholesale",
             "button_link": "",
             "use_wholesale_link": true

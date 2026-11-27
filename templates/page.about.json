@@ -41,11 +41,11 @@
     "intro": {
       "type": "bs-statement",
       "settings": {
-        "text": "<strong>BrewSociety imports and distributes food and drink brands to independent retailers, cafes and offices across Victoria and NSW. We’re based in Melbourne, VIC and we’ve been doing this since 2019.</strong>",
+        "text": "<strong>BrewSociety imports and distributes food and drink brands to independent retailers, cafes and offices across Australia. We’re based in Melbourne, VIC and we’ve been doing this since 2019.</strong>",
         "break_after_bold": false,
         "paragraph": true,
-        "as_heading": false,
         "scroll_reveal": true,
+        "as_heading": false,
         "alignment": "left",
         "max_width": "full",
         "color_scheme": "scheme-2",
@@ -132,6 +132,7 @@
             "title": "Import",
             "text": "We find brands local and overseas, bring them in, and handle the customs and compliance so a retailer here can order them like any local line.",
             "button_label": "",
+            "button_link": "",
             "use_wholesale_link": false
           }
         },
@@ -141,6 +142,7 @@
             "title": "Develop",
             "text": "Our own deliveries across Victoria and NSW.",
             "button_label": "",
+            "button_link": "",
             "use_wholesale_link": false
           }
         },
@@ -150,6 +152,7 @@
             "title": "Distribute",
             "text": "Brands we import get marketing here, a page on this site, and a sales team talking about them in store. We’re not a warehouse that waits for orders.",
             "button_label": "",
+            "button_link": "",
             "use_wholesale_link": false
           }
         }
@@ -160,11 +163,12 @@
         "distribute"
       ],
       "settings": {
-        "style": "plain",
         "label_left": "",
         "label_right": "",
         "heading": "",
+        "scroll_reveal": false,
         "closing": "",
+        "style": "plain",
         "color_scheme": "scheme-6",
         "card_color_scheme": "scheme-6",
         "padding_top": 0,
